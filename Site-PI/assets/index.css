@@ -198,7 +198,7 @@ section{
 }
 
 #Fabio{
-    background-image: url("imgs/fabio.png");
+    background-image: url("imgs/fabio.jpeg");
 }
 
 #Luis{
@@ -293,3 +293,4 @@ section{
     top: -150px;
     visibility: hidden;
 }
+
