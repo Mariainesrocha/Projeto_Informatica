@@ -451,4 +451,48 @@ CREATE TABLE pmate.EnunciadoTreinoNivelResposta(  -- FALTAM AQUI ATTRS!!!!!!!!!!
 
 -- DROP TABLES 
 
+------------------------------------ EXAMS  RELATED -----------------------------------
+DROP TABLE pmate.EnunciadoEquipaNivelResposta;
+DROP TABLE pmate.EnunciadoEquipaNivelUserResposta;
+DROP TABLE pmate.EnunciadoEquipaNivel;
+DROP TABLE pmate.EnunciadoEquipa;
+DROP TABLE pmate.ProvaModelo;
+DROP TABLE pmate.AlunoEquipa;
+DROP TABLE pmate.Equipa;
+DROP TABLE pmate.EscolaProva;
+DROP TABLE pmate.Categoria;
+DROP TABLE pmate.Competicao;
 
+------------------------------------ TRAINNING_TESTS  RELATED -----------------------------------
+DROP TABLE pmate.EnunciadoTreinoNivelResposta;
+DROP TABLE pmate.EnunciadoTreinoNivelUserResposta;
+DROP TABLE pmate.EnunciadoTreinoNivel;
+DROP TABLE pmate.EnunciadoTreino;
+DROP TABLE pmate.TreinoModelo;
+DROP TABLE pmate.Treino;
+
+
+------------------------------------ MODELS  RELATED -----------------------------------
+DROP TABLE pmate.Modelo;
+
+------------------------------------ SCHOOL RELATED -----------------------------------
+
+DROP TABLE pmate.EscolaInfoExtra;
+DROP TABLE pmate.UserEscolaHistorico;
+DROP TABLE pmate.UserRoleEscola;
+DROP TABLE pmate.Escola;
+DROP TABLE pmate.AnoLetivo;
+DROP TABLE pmate.AnoEscolar;
+DROP TABLE pmate.TipoEscola;
+
+
+------------------------------------ USER RELATED -----------------------------------
+DROP TABLE pmate.UserContacto;
+DROP TABLE pmate.Users;
+DROP TABLE pmate.UserContactoTipo;
+
+------------------------------------ LOCATIONS RELATED -----------------------------------
+DROP TABLE pmate.Pais;
+DROP TABLE pmate.Distrito;
+DROP TABLE pmate.Concelho;
+DROP TABLE pmate.freguesia;
