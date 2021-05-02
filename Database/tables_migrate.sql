@@ -170,27 +170,15 @@ from [pmate2-demo].dbo.AspNetUsers
 where Id is not NULL
 -----------------------------------
 
+
+
+    
 -- Fix tblUsers before Migration --
-Update [pmate-Equamat2000].dbo.tblUsers
+Update [pmate].dbo.tblUsers
 set Nome = 'Empty'
 where Nome is null
 -----------------------------------
 
--- Fix AspNetUsers after Migration --
-Update [pmate2-demo].dbo.AspNetUsers
-Set EmailConfirmed=1
-Set NormalizedUserName= Upper(UserName)
-Set SecurityStamp = 'abc'
--------------------------------------
-
--- Migrate Users from tblUsers to AspNetUsers --
-BEGIN TRANSACTION;
-
-INSERT INTO [pmate2-demo].dbo.AspNetUsers(Id,UserName,PasswordHash, EmailConfirmed, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, Age, Name, Roles, UserId) 
-SELECT IdUser,Login, [pmate2-demo].dbo.encodebase64(HASHBYTES('SHA2_512',cast(Password as varchar(max)))), 0, 0, 0, 0, 0, 0, Left(Nome,80), 0, 0
-FROM [pmate-Equamat2000].dbo.tblUsers
-
-COMMIT;
 ------------------------------------------------
 
 -- Scalar-valued Function to Convert Sha512 to Base64 --
@@ -217,6 +205,23 @@ BEGIN
 END 
 GO
 ----------------------------------------------------------
+
+-- Migrate Users from tblUsers to AspNetUsers --
+BEGIN TRANSACTION;
+
+INSERT INTO [pmate2-demo].dbo.AspNetUsers(Id,UserName,PasswordHash, EmailConfirmed, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, Age, Name, Roles, UserId) 
+SELECT IdUser,Login, [pmate2-demo].dbo.encodebase64(HASHBYTES('SHA2_512',cast(Password as varchar(max)))), 0, 0, 0, 0, 0, 0, Left(Nome,80), 0, 0
+FROM [pmate].dbo.tblUsers
+
+COMMIT;
+
+
+
+-- Fix AspNetUsers after Migration --
+Update [pmate2-demo].dbo.AspNetUsers
+Set EmailConfirmed=1, NormalizedUserName = Upper(UserName), SecurityStamp = 'abc'
+-------------------------------------
+
 
 --AspNetUsers 
 --NOTA: Devido á encprytion de Passwords automatica do ASPNET CORE Talvez esta transaction não sejam aplicavel
