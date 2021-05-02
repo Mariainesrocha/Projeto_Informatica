@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Identity;
 
 namespace Pmat_PI
 {
@@ -20,6 +21,7 @@ namespace Pmat_PI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Console.WriteLine("Starting up...........");
         }
 
         public IConfiguration Configuration { get; }
@@ -32,14 +34,18 @@ namespace Pmat_PI
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<Pmat_PI.Models.User>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+             //services.AddIdentity<Pmat_PI.Models.User, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = true)
+              //  .AddEntityFrameworkStores<ApplicationDbContext>();
+
+             services.AddDefaultIdentity<Pmat_PI.Models.User>(options => options.SignIn.RequireConfirmedAccount = true)
+               .AddEntityFrameworkStores<ApplicationDbContext>().AddRoles<IdentityRole>();
             services.AddControllersWithViews();
-            services.AddScoped<IPasswordHasher<Pmat_PI.Models.User>, CPH<Pmat_PI.Models.User>>();
+            services.AddScoped<IPasswordHasher<Pmat_PI.Models.User>, CPH<Models.User>>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -59,7 +65,6 @@ namespace Pmat_PI
 
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -67,6 +72,32 @@ namespace Pmat_PI
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+           // CreateRoles(serviceProvider).GetAwaiter().GetResult();
         }
-    }
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            Console.WriteLine("Inside create_roles");
+            //initializing custom roles 
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+ 
+            // var UserManager = serviceProvider.GetRequiredService<UserManager<Models.User>>();
+            string[] roleNames = { "Admin", "Professor", "Aluno" };
+            IdentityResult roleResult;
+
+            foreach (var roleName in roleNames)
+            {
+            
+                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    //create the roles and seed them to the database: Question 1
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+        }
+
+
+        }
 }
