@@ -251,6 +251,47 @@ SET IDENTITY_INSERT pmate.Users OFF
 COMMIT;
 
 
+-- AspNetRoles 
+-- NOTA : Fazer Insert das ROLES : 1.ADMIN, 2.PROFESSOR E 3.ALUNO
+
+
+--AspNetUserRoles -> ADMINS
+--NOTA: Falta confirmar os nomes dos attrs desta tbl do NetCore
+BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.AspNetUserRole ON
+
+INSERT INTO pmate.AspNetUserRole(IdUser,_role)
+SELECT IdUser, 1 -- ADMIN Role ID
+FROM dbo.tblAdm
+
+SET IDENTITY_INSERT pmate.AspNetUserRole OFF
+COMMIT;
+
+
+
+--AspNetUserRoles -> PROFESSORES
+BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.AspNetUserRole ON
+
+INSERT INTO pmate.AspNetUserRole(IdUser,_role)
+SELECT IdUser, 2 -- PROFESSOR Role ID
+FROM dbo.tblprofessores 
+
+SET IDENTITY_INSERT pmate.AspNetUserRole OFF
+COMMIT;
+
+
+
+--AspNetUserRoles -> ALUNOS
+BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.AspNetUserRole ON
+
+INSERT INTO pmate.AspNetUserRole(IdUser,_role)
+SELECT IdUser, 3 -- ALUNO Role Id
+FROM dbo.tblalunos
+
+SET IDENTITY_INSERT pmate.AspNetUserRole OFF
+COMMIT;
 
 
 -- UserContactoTipo
@@ -344,71 +385,6 @@ SET IDENTITY_INSERT pmate.AnoEscolar OFF
 COMMIT;
 
 
-
-
--- AspNetRoles 
--- NOTA : Fazer Insert das ROLES : 1.ADMIN, 2.PROFESSOR E 3.ALUNO
-
-
-
---AspNetUserRoles -> ADMINS
---NOTA: Falta confirmar os nomes dos attrs desta tbl do NetCore
-BEGIN TRANSACTION;
-SET IDENTITY_INSERT pmate.AspNetUserRole ON
-
-ALTER TABLE dbo.tblAdm 
-ADD _role int;
-
-UPDATE dbo.tblAdm
-SET _role = 1 -- should be admin's role id 
-WHERE _role is NULL
-
-INSERT INTO pmate.AspNetUserRole(IdUser,_role)
-SELECT IdUser, _role
-FROM dbo.tblAdm
-
-SET IDENTITY_INSERT pmate.AspNetUserRole OFF
-COMMIT;
-
-
-
---AspNetUserRoles -> PROFESSORES
-BEGIN TRANSACTION;
-SET IDENTITY_INSERT pmate.AspNetUserRole ON
-
-ALTER TABLE dbo.tblprofessores 
-ADD _role int;
-
-UPDATE dbo.tblprofessores 
-SET _role = 2 -- should be professor's role id 
-WHERE _role is NULL
-
-INSERT INTO pmate.AspNetUserRole(IdUser,_role)
-SELECT IdUser, _role
-FROM dbo.tblprofessores 
-
-SET IDENTITY_INSERT pmate.AspNetUserRole OFF
-COMMIT;
-
-
-
---AspNetUserRoles -> ALUNOS
-BEGIN TRANSACTION;
-SET IDENTITY_INSERT pmate.AspNetUserRole ON
-
-ALTER TABLE dbo.tblalunos 
-ADD _role int;
-
-UPDATE dbo.tblalunos
-SET _role = 3 -- should be aluno's role id 
-WHERE _role is NULL
-
-INSERT INTO pmate.AspNetUserRole(IdUser,_role)
-SELECT IdUser, _role
-FROM dbo.tblalunos
-
-SET IDENTITY_INSERT pmate.AspNetUserRole OFF
-COMMIT;
 
 
 
