@@ -34,13 +34,23 @@ namespace Pmat_PI
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-             //services.AddIdentity<Pmat_PI.Models.User, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = true)
-              //  .AddEntityFrameworkStores<ApplicationDbContext>();
+            //services.AddIdentity<Pmat_PI.Models.User, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = true)
+            //.AddEntityFrameworkStores<ApplicationDbContext>();
 
-             services.AddDefaultIdentity<Pmat_PI.Models.User>(options => options.SignIn.RequireConfirmedAccount = true)
-               .AddEntityFrameworkStores<ApplicationDbContext>().AddRoles<IdentityRole>();
+            services.AddIdentity<Pmat_PI.Models.User, IdentityRole >(config =>
+            {
+                config.Password.RequireNonAlphanumeric = false; //optional
+                config.SignIn.RequireConfirmedEmail = true; //optional
+            })
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders()
+.AddRoles<IdentityRole>();
+
+            //services.AddDefaultIdentity<Pmat_PI.Models.User>(options => options.SignIn.RequireConfirmedAccount = true)
+               //.AddEntityFrameworkStores<ApplicationDbContext>().AddRoles<IdentityRole>();
             services.AddControllersWithViews();
             services.AddScoped<IPasswordHasher<Pmat_PI.Models.User>, CPH<Models.User>>();
+            services.AddRazorPages();
             
         }
 
