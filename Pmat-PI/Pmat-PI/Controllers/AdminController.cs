@@ -2,6 +2,10 @@
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Pmat_PI.Models;
+using System;
+using Pmat_PI;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Controllers
 {
@@ -17,9 +21,24 @@ namespace Identity.Controllers
             passwordHasher = passwordHash;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string sortOrder,string currentFilter,string searchString,int? pageNumber)
         {
-            return View(userManager.Users);
+            ViewData["CurrentSort"] = sortOrder;
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+
+            var users = userManager.Users;
+
+            int pageSize = 10;
+            return View(await PaginatedList<User>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize));
+            //return View(userManager.Users);
         }
 
         [HttpPost]

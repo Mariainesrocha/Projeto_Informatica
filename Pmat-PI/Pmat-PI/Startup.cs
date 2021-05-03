@@ -32,10 +32,20 @@ namespace Pmat_PI
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<Pmat_PI.Models.User>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<Pmat_PI.Models.User, IdentityRole>(config =>
+            {
+                config.Password.RequireNonAlphanumeric = false; //optional
+                config.SignIn.RequireConfirmedEmail = true; //optional
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders()
+            .AddRoles<IdentityRole>();
+
+            //services.AddDefaultIdentity<Pmat_PI.Models.User>(options => options.SignIn.RequireConfirmedAccount = true)
+            //.AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddScoped<IPasswordHasher<Pmat_PI.Models.User>, CPH<Pmat_PI.Models.User>>();
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
