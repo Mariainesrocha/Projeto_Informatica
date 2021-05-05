@@ -18,6 +18,8 @@ namespace Pmat_PI.Identity.Controllers
 
         public ViewResult Index() => View(roleManager.Roles);
 
+        public ViewResult Index1() => View(roleManager.Roles);
+
         private void Errors(IdentityResult result)
         {
             foreach (IdentityError error in result.Errors)
