@@ -98,49 +98,59 @@ GO
 BEGIN TRANSACTION;
 SET IDENTITY_INSERT pmate.Concelho ON
 
- ----- 1 -----
-CREATE TABLE ConcelhosTemp(
-   code1 varchar(300),
-   distrito varchar(300),
-   code2 varchar(300),
-   concelho varchar(300),
-   code3 varchar(300),
-   freguesia varchar(300),
-   code4 varchar(300),
-   -- some_weird_type varchar(300)
-);
+ -- BULK INSERT feito pelo Management Studio: Database -> rightclick -> Tasks -> Import Flat File - > Choose File -> Magic Done 
 
-BULK INSERT ConcelhosTemp
-    FROM 'C:\Users\Lenovo\Desktop\PI\DistritosConcelhosFreguesias_CAOP2013_Populacao_Censos2011.csv'
-    WITH
-    (
-	CODEPAGE = 'OEM',
-	DATAFILETYPE ='char',
-	FIRSTROW = 2,          --Ignorar cabeçalho do file
-    FIELDTERMINATOR = ';',  --CSV field delimiter
-    ROWTERMINATOR = ';;',   --Use to shift the control to next row
-    ERRORFILE = 'C:\Users\Lenovo\Desktop\PI\BulkInsertErrors.csv',
-    TABLOCK )
+-- DELETE DUPE CONCELHO (BECAUSE THEY ARE SO SMART)
+ UPDATE dbo.tblescolas
+ SET refidconcelho = 303
+ WHERE refidconcelho = 313
+
+ DELETE FROM dbo.tblconcelhos
+ WHERE idConcelho=313
+
+ -- FIX CONCELHO NAME 
+UPDATE dbo.tblconcelhos
+ SET NomeConcelho = 'Torre de Moncorvo'
+ WHERE NomeConcelho = 'Torres de Moncorvo'
 
  ----- 2 & 3 -----
 INSERT INTO pmate.Concelho(id,nome,distrito)
-SELECT  idConcelho,NomeConcelho,distrito
-FROM tblconcelhos INNER JOIN ConcelhosTemp ON NomeConcelho=concelho;
+SELECT  distinct idConcelho,NomeConcelho,pmate.Distrito.id
+FROM (tblconcelhos LEFT JOIN DistritoConcelhoFreguesia ON NomeConcelho=concelho COLLATE Latin1_general_CI_AI)
+				   LEFT JOIN pmate.Distrito ON pmate.distrito.nome=DistritoConcelhoFreguesia.distrito 
 
+
+			
 SET IDENTITY_INSERT pmate.Concelho OFF
 COMMIT;
 
-select * from ConcelhosTemp;
-select * from pmate.concelho;
-select * from tblconcelhos;
 
 
 
 -- Freguesias -> Estrategia igual ao dos Concelhos
 BEGIN TRANSACTION;
-SET IDENTITY_INSERT pmate.Freguesia ON
+--select nomeFreguesia, count(nomeFreguesia) from tblfreguesias
+--group by nomeFreguesia
+--having count(nomeFreguesia) >1
 
-SET IDENTITY_INSERT pmate.Freguesia OFF
+ UPDATE dbo.tblescolas
+ SET refIdFreguesia = 107
+ WHERE refIdFreguesia = 148
+
+  UPDATE dbo.tblescolas
+ SET refIdFreguesia = 332
+ WHERE refIdFreguesia = 333
+
+ DELETE FROM dbo.tblfreguesias
+ WHERE idFreguesia= 148
+
+ DELETE FROM dbo.tblfreguesias
+ WHERE idFreguesia= 333
+
+ 
+ INSERT INTO pmate.Freguesia(nome,concelho)
+SELECT  distinct freguesia,pmate.Concelho.id as concelho
+FROM  DistritoConcelhoFreguesia LEFT JOIN pmate.Concelho ON pmate.concelho.nome=DistritoConcelhoFreguesia.concelho  COLLATE Latin1_general_CI_AI
 COMMIT;
 GO
 
@@ -165,8 +175,7 @@ where UserName='AS'
 ------------------------------------------
 
 -- Delete users from AspNetUsers --
-Delete
-from [pmate2-demo].dbo.AspNetUsers
+Delete from [pmate2-demo].dbo.AspNetUsers
 where Id is not NULL
 -----------------------------------
 
@@ -340,11 +349,20 @@ COMMIT;
 
 --Escola
 BEGIN TRANSACTION;
+
+UPDATE [pmate-Equamat2000].dbo.tblescolas 
+SET refidconcelho=NULL
+WHERE refidconcelho < 0
+
+UPDATE [pmate-Equamat2000].dbo.tblescolas
+SET refidconcelho=NULL
+WHERE  refidconcelho > 314
+
 SET IDENTITY_INSERT pmate.Escola ON
 
-INSERT INTO pmate.Escola(id,IdTipoEscola,NomeEscola,Morada,CodigoPostal,ExtensaoCodPostal,Localidade,Telefone,Fax,Email,Website,Idconcelho,IdFreguesia,estado,COD_DGEEC,COD_DGPGF,ENSINOS,GRUPONATUREZA,LATITUDE,LONGITUDE)
-SELECT IdEscola,IdTipoEscola, NomeEscola, Morada, CodigoPostal, ExtensaoCodPostal, Localidade, Telefone, Fax, Email, Http, refidconcelho, refIdFreguesia, estado, COD_DGEEC, COD_DGPGF, ENSINOS, GRUPONATUREZA, LATITUDE, LONGITUDE
-FROM dbo.tblescolas
+INSERT INTO pmate.Escola(id,IdTipoEscola,NomeEscola,Morada,CodigoPostal,ExtensaoCodPostal,Localidade,Telefone,Fax,Email,Website,Idconcelho,estado,COD_DGEEC,COD_DGPGF,ENSINOS,GRUPONATUREZA,LATITUDE,LONGITUDE)
+SELECT IdEscola,IdTipoEscola, NomeEscola, Morada, CodigoPostal, ExtensaoCodPostal, Localidade, Telefone, Fax, Email, Http, refidconcelho, estado, COD_DGEEC, COD_DGPGF, ENSINOS, GRUPONATUREZA, LATITUDE, LONGITUDE
+FROM [pmate-Equamat2000].dbo.tblescolas
 
 SET IDENTITY_INSERT pmate.Escola OFF
 COMMIT;

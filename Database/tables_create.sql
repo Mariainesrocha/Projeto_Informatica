@@ -30,9 +30,9 @@ CREATE TABLE pmate.Concelho(
 	CONSTRAINT distrito_concelho_unico UNIQUE (nome,distrito),
 );
 
-CREATE TABLE pmate.freguesia(
+CREATE TABLE pmate.Freguesia(
 	id int IDENTITY(1,1) PRIMARY KEY, 
-	nome VARCHAR(50),
+	nome VARCHAR(200),
 	concelho int,
 
 	FOREIGN KEY (concelho) REFERENCES pmate.Concelho(id),
@@ -105,7 +105,7 @@ CREATE TABLE pmate.UserContacto(      -- OLD tblcontacto
 ------------------------------------ SCHOOL RELATED -----------------------------------
 
 CREATE TABLE pmate.TipoEscola(
-    id_tipo_escola int NOT NULL,
+    id_tipo_escola int IDENTITY(1,1) NOT NULL,
     TipoEscola char(10) ,
     DescricaoTipoEscola char(100) ,
     PRIMARY KEY(id_tipo_escola)
@@ -113,7 +113,7 @@ CREATE TABLE pmate.TipoEscola(
 
 
 CREATE TABLE pmate.Escola(
-    id int NOT NULL,
+    id int IDENTITY(1,1) NOT NULL,
     IdTipoEscola int NOT NULL,
     NomeEscola nvarchar(100) NOT NULL,
     -- IdDistrito int NOT NULL,
@@ -128,7 +128,7 @@ CREATE TABLE pmate.Escola(
     Website nvarchar(255) , -- OLD Http
     Idconcelho int ,
     IdFreguesia int , --s� usado em 72 linhas das 23902, remover?
-    estado bit ,
+    estado bit,
     ENSINOS nvarchar(30) ,
     LATITUDE nvarchar(30) ,
     LONGITUDE nvarchar(30) ,
@@ -163,7 +163,7 @@ CREATE TABLE pmate.AnoLetivo(
 	Fim datetime NOT NULL
 );
 
-CREATE TABLE pmate.AnoEscolar(
+CREATE TABLE pmate.AnoEscolar( -- OLD tblDicAnoEscolaridade
 	id int PRIMARY KEY,
 	Ano char(50) NOT NULL
 );
@@ -487,12 +487,12 @@ DROP TABLE pmate.TipoEscola;
 
 
 ------------------------------------ USER RELATED -----------------------------------
-DROP TABLE pmate.UserContacto;
 DROP TABLE pmate.Users;
+DROP TABLE pmate.UserContacto;
 DROP TABLE pmate.UserContactoTipo;
 
 ------------------------------------ LOCATIONS RELATED -----------------------------------
-DROP TABLE pmate.Pais;
-DROP TABLE pmate.Distrito;
+DROP TABLE pmate.Freguesia;
 DROP TABLE pmate.Concelho;
-DROP TABLE pmate.freguesia;
+DROP TABLE pmate.Distrito;
+DROP TABLE pmate.Pais;
