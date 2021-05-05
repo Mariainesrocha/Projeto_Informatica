@@ -396,7 +396,7 @@ BEGIN TRANSACTION;
 SET IDENTITY_INSERT pmate.AnoEscolar ON
 
 INSERT INTO pmate.AnoEscolar(id,Ano)
-SELECT idanoescolariedade, descri��o
+SELECT idanoescolariedade, descricao
 FROM dbo.tblDicAnoEscolaridade
 
 SET IDENTITY_INSERT pmate.AnoEscolar OFF
