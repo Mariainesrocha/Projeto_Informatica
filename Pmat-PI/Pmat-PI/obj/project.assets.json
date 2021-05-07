@@ -7594,19 +7594,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\danie\\.nuget\\packages\\": {}
+    "C:\\Users\\Lenovo\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\danie\\Desktop\\PI\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj",
+      "projectUniqueName": "C:\\Users\\Lenovo\\Desktop\\PI\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj",
       "projectName": "Pmat-PI",
-      "projectPath": "C:\\Users\\danie\\Desktop\\PI\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj",
-      "packagesPath": "C:\\Users\\danie\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\danie\\Desktop\\PI\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\obj\\",
+      "projectPath": "C:\\Users\\Lenovo\\Desktop\\PI\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj",
+      "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Lenovo\\Desktop\\PI\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\danie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -7685,7 +7685,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }

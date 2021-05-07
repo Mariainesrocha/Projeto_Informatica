@@ -12,7 +12,7 @@
             <td>@role.Name</td>
             <td>
                 <form asp-action="Delete" asp-route-id="@role.Id" method="post" align="center">
-                    <i type="submit" style="font-size:30px; color:red" class="fa fa-trash"></i>
+                    <button type="submit" style="background:transparent; border:none"><i style="font-size:30px; color:red" class="fa fa-trash"></i> </button>
                 </form>
             </td>
         </tr>

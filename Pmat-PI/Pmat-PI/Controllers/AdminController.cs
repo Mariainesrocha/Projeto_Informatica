@@ -6,9 +6,11 @@ using System;
 using Pmat_PI;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Identity.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private UserManager<User> userManager;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Pmat_PI.Models;
 
 namespace Pmat_PI
 {
+    [Authorize(Roles = "Admin")]
     public class EscolasController : Controller
     {
         private readonly pmate2demoContext _context;
