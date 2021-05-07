@@ -28,6 +28,7 @@ namespace Pmat_PI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // APP CONTEXTS x DATABASE
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -38,11 +39,13 @@ namespace Pmat_PI
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            // USE IDENTITY ROLES
             services.AddIdentity<Pmat_PI.Models.User, IdentityRole>(config =>
             {
                 config.Password.RequireNonAlphanumeric = false; //optional
                 config.SignIn.RequireConfirmedEmail = true; //optional
             })
+
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders()
             .AddRoles<IdentityRole>();
@@ -52,10 +55,16 @@ namespace Pmat_PI
             services.AddControllersWithViews();
             services.AddScoped<IPasswordHasher<Pmat_PI.Models.User>, CPH<Pmat_PI.Models.User>>();
             services.AddRazorPages();
+
+            // MAKES LOGIN PAGE THE START UP PAGE
+            services.AddMvc().AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -80,9 +89,40 @@ namespace Pmat_PI
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    //pattern: "{action=/Identity/Account/Login}/{id?}");
+                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            CreateRoles(serviceProvider);
         }
+
+        private void CreateRoles(IServiceProvider serviceProvider)
+        {
+
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            Task<IdentityResult> roleResult;
+            string[] roleNames = { "Admin", "Professor", "Aluno" };
+            
+            // Check if the roles exist. If not, create them.
+            Task<bool> hasRole;
+            foreach (var roleName in roleNames)
+            {
+                hasRole = roleManager.RoleExistsAsync(roleName);
+                hasRole.Wait();
+
+                if (!hasRole.Result)
+                {
+                    roleResult = roleManager.CreateAsync(new IdentityRole(roleName));
+                    roleResult.Wait();
+                }
+            }
+        
+        }
+
+
+
+
+
     }
 }
