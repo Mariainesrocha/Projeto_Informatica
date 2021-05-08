@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "8vz4V8EIyukSYF7dxbVZEaa1GfrCIIg5/YFDjVT4+RCPy71p1FQ5WsrFBO5vOf2PTyt/yd8ntmWMcOAwK0fORw==",
+  "dgSpecHash": "Z7GRHm/2hgs9mtssHNaG21mYvI79ja2Qjl9uYFhsnn74/vxM12oyrnZeCvZLEyuCLCtWLKedNgve8adguXEdsQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Lenovo\\Desktop\\PI\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.aspnetcore.authentication.google\\5.0.5\\microsoft.aspnetcore.authentication.google.5.0.5.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\5.0.5\\microsoft.aspnetcore.cryptography.internal.5.0.5.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\5.0.5\\microsoft.aspnetcore.cryptography.keyderivation.5.0.5.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\5.0.5\\microsoft.aspnetcore.diagnostics.entityframeworkcore.5.0.5.nupkg.sha512",

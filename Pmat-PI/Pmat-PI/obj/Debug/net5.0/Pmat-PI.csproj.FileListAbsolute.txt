@@ -1453,3 +1453,4 @@ C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\
 C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Pmat-PI.pdb
 C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Pmat-PI.genruntimeconfig.cache
 C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Page0\Index.cshtml.g.cs
+C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.Google.dll
