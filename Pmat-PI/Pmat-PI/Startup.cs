@@ -43,17 +43,18 @@ namespace Pmat_PI
             services.AddIdentity<Pmat_PI.Models.User, IdentityRole>(config =>
             {
                 config.Password.RequireNonAlphanumeric = false; //optional
-                config.SignIn.RequireConfirmedEmail = true; //optional
+                config.SignIn.RequireConfirmedEmail = false; //optional
             })
 
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders()
+            .AddDefaultUI()
             .AddRoles<IdentityRole>();
 
             //services.AddDefaultIdentity<Pmat_PI.Models.User>(options => options.SignIn.RequireConfirmedAccount = true)
             //.AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
-            services.AddScoped<IPasswordHasher<Pmat_PI.Models.User>, CPH<Pmat_PI.Models.User>>();
+            services.AddScoped<IPasswordHasher<Models.User>, CPH<Models.User>>();
             services.AddRazorPages();
 
             // MAKES LOGIN PAGE THE START UP PAGE
@@ -61,6 +62,16 @@ namespace Pmat_PI
             {
                 options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
             });
+
+            services.AddAuthentication()
+        .AddGoogle(options =>
+        {
+            IConfigurationSection googleAuthNSection =
+                Configuration.GetSection("Authentication:Google");
+
+            options.ClientId = googleAuthNSection["ClientId"];
+            options.ClientSecret = googleAuthNSection["ClientSecret"];
+        });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
