@@ -9,41 +9,20 @@ using Pmat_PI.Models;
 
 namespace Pmat_PI
 {
-    public class EscolasController : Controller
+    public class EscolaController : Controller
     {
         private readonly EscolasContext _context;
 
-        public EscolasController(EscolasContext context)
+        public EscolaController(EscolasContext context)
         {
             _context = context;
         }
 
         // GET: Escola
-        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        public async Task<IActionResult> Index()
         {
-            ViewData["CurrentSort"] = sortOrder;
-
-            var escolas = from e in _context.Escolas.Include(e => e.IdTipoEscolaNavigation).Include(e => e.IdconcelhoNavigation) select e;
-          
-            if (searchString != null)
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-
-            ViewData["CurrentFilter"] = searchString;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                escolas = escolas.Where(e => e.NomeEscola.Contains(searchString));
-            }
-
-            int pageSize = 50;
-
-            //var escolasContext = _context.Escolas.Include(e => e.IdTipoEscolaNavigation).Include(e => e.IdconcelhoNavigation);
-            return View(await PaginatedList<Escola>.CreateAsync(escolas.AsNoTracking(), pageNumber ?? 1, pageSize));
+            var escolasContext = _context.Escolas.Include(e => e.IdTipoEscolaNavigation).Include(e => e.IdconcelhoNavigation).AsNoTracking();
+            return View(await escolasContext.ToListAsync());
         }
 
         // GET: Escola/Details/5
@@ -56,7 +35,7 @@ namespace Pmat_PI
 
             var escola = await _context.Escolas
                 .Include(e => e.IdTipoEscolaNavigation)
-                .Include(e => e.IdconcelhoNavigation).AsNoTracking()
+                .Include(e => e.IdconcelhoNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (escola == null)
             {
@@ -69,11 +48,11 @@ namespace Pmat_PI
         // GET: Escola/Create
         public IActionResult Create()
         {
-            PopulateDropDownList();
+            ViewData["IdTipoEscola"] = new SelectList(_context.TipoEscolas, "IdTipoEscola", "IdTipoEscola");
+            ViewData["Idconcelho"] = new SelectList(_context.Concelhos, "Id", "Id");
             return View();
         }
 
-       
         // POST: Escola/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -85,10 +64,10 @@ namespace Pmat_PI
             {
                 _context.Add(escola);
                 await _context.SaveChangesAsync();
-                TempData["successMessage"] = "Escola " + escola.NomeEscola + " criada com sucesso!";
                 return RedirectToAction(nameof(Index));
             }
-            PopulateDropDownList(escola.IdconcelhoNavigation, escola.IdTipoEscolaNavigation);
+            ViewData["IdTipoEscola"] = new SelectList(_context.TipoEscolas, "IdTipoEscola", "IdTipoEscola", escola.IdTipoEscola);
+            ViewData["Idconcelho"] = new SelectList(_context.Concelhos, "Id", "Id", escola.Idconcelho);
             return View(escola);
         }
 
@@ -100,12 +79,13 @@ namespace Pmat_PI
                 return NotFound();
             }
 
-            var escola = await _context.Escolas.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+            var escola = await _context.Escolas.FindAsync(id);
             if (escola == null)
             {
                 return NotFound();
             }
-            PopulateDropDownList(escola.IdconcelhoNavigation, escola.IdTipoEscolaNavigation);
+            ViewData["IdTipoEscola"] = new SelectList(_context.TipoEscolas, "IdTipoEscola", "IdTipoEscola", escola.IdTipoEscola);
+            ViewData["Idconcelho"] = new SelectList(_context.Concelhos, "Id", "Id", escola.Idconcelho);
             return View(escola);
         }
 
@@ -139,21 +119,32 @@ namespace Pmat_PI
                         throw;
                     }
                 }
-                TempData["successMessage"] = "Escola " + escola.NomeEscola + " editada com sucesso!";
                 return RedirectToAction(nameof(Index));
             }
-            PopulateDropDownList(escola.IdconcelhoNavigation, escola.IdTipoEscolaNavigation);
+            ViewData["IdTipoEscola"] = new SelectList(_context.TipoEscolas, "IdTipoEscola", "IdTipoEscola", escola.IdTipoEscola);
+            ViewData["Idconcelho"] = new SelectList(_context.Concelhos, "Id", "Id", escola.Idconcelho);
             return View(escola);
         }
-        private void PopulateDropDownList(object selectedTipoEscola = null, object selectedConcelho = null)
+
+        // GET: Escola/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            var escolaQuery = from e in _context.TipoEscolas  orderby e.TipoEscola1 select e;
-            var concelhoQuery = from c in _context.Concelhos orderby c.Nome select c;
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            ViewData["IdTipoEscola"] = new SelectList(escolaQuery.AsNoTracking(), "IdTipoEscola", "TipoEscola1", selectedTipoEscola);
-            ViewData["Idconcelho"] = new SelectList(concelhoQuery.AsNoTracking(), "Id", "Nome", selectedConcelho);
+            var escola = await _context.Escolas
+                .Include(e => e.IdTipoEscolaNavigation)
+                .Include(e => e.IdconcelhoNavigation)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (escola == null)
+            {
+                return NotFound();
+            }
+
+            return View(escola);
         }
-
 
         // POST: Escola/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -163,7 +154,6 @@ namespace Pmat_PI
             var escola = await _context.Escolas.FindAsync(id);
             _context.Escolas.Remove(escola);
             await _context.SaveChangesAsync();
-            TempData["successMessage"] = "Escola apagada.";
             return RedirectToAction(nameof(Index));
         }
 

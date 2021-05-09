@@ -12,6 +12,7 @@ namespace Pmat_PI.Models
         public string NomeEscola { get; set; }
         public string Morada { get; set; }
         public string CodigoPostal { get; set; }
+        
         public string ExtensaoCodPostal { get; set; }
         public string Localidade { get; set; }
         public string Telefone { get; set; }
@@ -27,5 +28,8 @@ namespace Pmat_PI.Models
         public string Gruponatureza { get; set; }
         public int? CodDgeec { get; set; }
         public int? CodDgpgf { get; set; }
+
+        public virtual TipoEscola IdTipoEscolaNavigation { get; set; }
+        public virtual Concelho IdconcelhoNavigation { get; set; }
     }
 }

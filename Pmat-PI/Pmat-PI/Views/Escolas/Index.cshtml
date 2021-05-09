@@ -6,77 +6,147 @@
 }
 
 <h1>Lista de escolas</h1>
-
-<p style="text-align:center; padding-bottom: 2%; padding-top: 2%">
-    <a asp-action="Create" class="btn btn-success">Criar Nova Escola</a>
-</p>
-<table class="table table-sm table-bordered text-md-center">
-    <thead>
-        <tr>
-            <th> ID</th>
-            <th>  Nome de Escola </th>
-            <th>  Morada </th>
-            <th> Código Postal </th>
-            <th> Localidade </th>
-            <th> Grupo </th>
-            <th> Editar </th>
-            <th> Ver Detalhes </th>
-            <th> Eliminar</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NomeEscola)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Morada)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CodigoPostal)-@Html.DisplayFor(modelItem => item.ExtensaoCodPostal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Localidade)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gruponatureza)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: dodgerblue ;" class="fa fa-eye"> </i></a>
-            </td>
-            <td>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: red ;" class="fa fa-trash"> </i></a>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
-@{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-}
-
-<div style="text-align:center">
-    <a style="margin-right:2%" asp-action="Index"
-       asp-route-sortOrder="@ViewData["CurrentSort"]"
-       asp-route-pageNumber="@(Model.PageIndex - 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       class="btn btn-info @prevDisabled">
-        Anterior
-    </a>
-    <a asp-action="Index"
-       asp-route-sortOrder="@ViewData["CurrentSort"]"
-       asp-route-pageNumber="@(Model.PageIndex + 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       class="btn btn-info @nextDisabled">
-        Próximo
-    </a>
+<div class="col-lg-12">
+    <div class="form-row">
+        <div class="form-actions no-color form-group col-md-8">
+            <form asp-action="Index" method="get">
+                <label>Pesquisar escola: </label>
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <input type="text" name="SearchString" class="form-control" value="@ViewData["CurrentFilter"]" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button type="submit" value="Pesquisa" class="btn btn-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-info"><i class="fa fa-close"></i></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="form-group col-md-2" style="padding-top: 3%">
+            <a asp-action="Create" class="btn btn-success">Criar Nova Escola</a>
+        </div>
+    </div>
 </div>
+@if (Model.Count == 0)
+{
+    <p> Escola(s) não encontrada(s) </p>
+}
+else
+{
+    <table class="table table-sm table-bordered  table-hover text-md-center">
+        <thead>
+            <tr>
+                <th style="display: table-cell; vertical-align: middle;"> ID</th>
+                <th style="display: table-cell; vertical-align: middle;">  Nome de Escola </th>
+                <th style="display: table-cell; vertical-align: middle;">  Morada </th>
+                <th style="display: table-cell; vertical-align: middle;"> Código Postal </th>
+                <th style="display: table-cell; vertical-align: middle;"> Localidade </th>
+                <th style="display: table-cell; vertical-align: middle;"> Grupo </th>
+                <th style="display: table-cell; vertical-align: middle;"> Editar </th>
+                <th style="display: table-cell; vertical-align: middle;"> Ver Detalhes </th>
+                <th style="display: table-cell; vertical-align: middle;"> Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td style="width: 2%">
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td style="width: 25%">
+                    @Html.DisplayFor(modelItem => item.NomeEscola)
+                </td>
+                <td style="width: 25%">
+                    @Html.DisplayFor(modelItem => item.Morada)
+                </td>
+                <td style="width: 8.33%">
+                    @Html.DisplayFor(modelItem => item.CodigoPostal)-@Html.DisplayFor(modelItem => item.ExtensaoCodPostal)
+                </td>
+                <td style="width:16.66%">
+                    @Html.DisplayFor(modelItem => item.Localidade)
+                </td>
+                <td style="width: 5%">
+                    @Html.DisplayFor(modelItem => item.Gruponatureza)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: dodgerblue ;" class="fa fa-eye"> </i></a>
+                </td>
+                <td>
+                    <form asp-action="Delete" asp-route-id="@item.Id">
+                        <button type="button" class="btn" data-toggle="modal" data-target="#deleteModal">
+                            <i style="font-size:30px; color: red;" class="fa fa-trash"></i>
+                        </button>
+                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Apagar Escola</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Deseja realmente apagar este registo?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Não</button>
+                                        <button type="submit" class="btn btn-danger">Sim</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel" style="color: forestgreen; bold">Sucesso</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @TempData["successMessage"]
+                </div>
+            </div>
+        </div>
+    </div>
+}   
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+    @if (TempData["successMessage"] != null)
+    {
+        <script>
+            $("#mymodal").modal('show');
+        </script>
+    }
+
+    <div style="text-align:center">
+        <a style="margin-right:2%" asp-action="Index"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-pageNumber="@(Model.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-info @prevDisabled">
+            Anterior
+        </a>
+        <a asp-action="Index"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-pageNumber="@(Model.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-info @nextDisabled">
+            Próximo
+        </a>
+    </div>

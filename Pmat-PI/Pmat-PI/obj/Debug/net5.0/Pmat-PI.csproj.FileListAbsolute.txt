@@ -966,3 +966,8 @@ C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\R
 C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Escolas\Details.cshtml.g.cs
 C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Escolas\Edit.cshtml.g.cs
 C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Escolas\Index.cshtml.g.cs
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\TipoEscolas\Create.cshtml.g.cs
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\TipoEscolas\Delete.cshtml.g.cs
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\TipoEscolas\Details.cshtml.g.cs
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\TipoEscolas\Edit.cshtml.g.cs
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\TipoEscolas\Index.cshtml.g.cs
