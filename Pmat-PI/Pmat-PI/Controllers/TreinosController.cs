@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Pmat_PI.Models;
 
 namespace Pmat_PI
 {
+    //[Authorize(Roles = "Admin")]
     public class TreinosController : Controller
     {
         private readonly treinoContext _context;
@@ -19,10 +21,21 @@ namespace Pmat_PI
         }
 
         // GET: Treinos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            var treinoContext = _context.Treinos.Include(t => t.IdAuthorNavigation).Include(t => t.IdCompeticaoNavigation);
-            return View(await treinoContext.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            var treinos = from t in _context.Treinos select t;
+
+            int pageSize = 10;
+            return View(await PaginatedList<Treino>.CreateAsync(treinos.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Treinos/Details/5
