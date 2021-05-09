@@ -10,117 +10,111 @@
     <h4>Escola</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdTipoEscola)
+        <dt class="col-sm-2">
+            Tipo de Escola
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdTipoEscola)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdTipoEscolaNavigation.TipoEscola1)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NomeEscola)
+        <dt class="col-sm-2">
+            Nome da Escola
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.NomeEscola)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Morada)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Morada)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CodigoPostal)-@Html.DisplayNameFor(model => model.ExtensaoCodPostal)
+            Código Postal
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CodigoPostal)-@Html.DisplayFor(model => model.ExtensaoCodPostal)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Localidade)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Localidade)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Telefone)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Telefone)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Fax)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Fax)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Email)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Email)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Website)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Website)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Idconcelho)
+        <dt class="col-sm-2">
+           Concelho
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Idconcelho)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdconcelhoNavigation.Nome)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdFreguesia)
+        <dt class="col-sm-2">
+           Freguesia
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.IdFreguesia)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Ensinos)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Ensinos)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Latitude)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Latitude)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Longitude)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Longitude)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gruponatureza)
+        <dt class="col-sm-2">
+            Natureza
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Gruponatureza)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CodDgeec)
+        <dt class="col-sm-2">
+            Código DGEEC
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CodDgeec)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CodDgpgf)
+        <dt class="col-sm-2">
+            Código DGPGF
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CodDgpgf)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit"  asp-route-id="@Model.Id" class="btn btn-outline-info"> Editar </a> |
+    <a asp-action="Edit"  asp-route-id="@Model.Id" class="btn btn-outline-warning"> Editar </a> |
     <a asp-action="Index" class="btn btn-outline-primary"> Voltar à lista de escolas </a>
 </div>

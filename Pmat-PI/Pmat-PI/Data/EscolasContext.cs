@@ -6,20 +6,20 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Pmat_PI.Models
 {
-    public partial class pmate2demoContext : DbContext
+    public partial class EscolasContext : DbContext
     {
-        public pmate2demoContext()
+        public EscolasContext()
         {
         }
 
-        public pmate2demoContext(DbContextOptions<pmate2demoContext> options)
+        public EscolasContext(DbContextOptions<EscolasContext> options)
             : base(options)
         {
         }
 
-        public virtual DbSet<Escola> Escolas { get; set; }
         public virtual DbSet<Concelho> Concelhos { get; set; }
         public virtual DbSet<Distrito> Distritos { get; set; }
+        public virtual DbSet<Escola> Escolas { get; set; }
         public virtual DbSet<Freguesia> Freguesia { get; set; }
         public virtual DbSet<Pais> Pais { get; set; }
         public virtual DbSet<TipoEscola> TipoEscolas { get; set; }
@@ -35,6 +35,50 @@ namespace Pmat_PI.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Latin1_General_CI_AS");
+
+            modelBuilder.Entity<Concelho>(entity =>
+            {
+                entity.ToTable("Concelho", "pmate");
+
+                entity.HasIndex(e => new { e.Nome, e.Distrito }, "distrito_concelho_unico")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Distrito).HasColumnName("distrito");
+
+                entity.Property(e => e.Nome)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("nome");
+
+                entity.HasOne(d => d.DistritoNavigation)
+                    .WithMany(p => p.Concelhos)
+                    .HasForeignKey(d => d.Distrito)
+                    .HasConstraintName("FK__Concelho__distri__2704CA5F");
+            });
+
+            modelBuilder.Entity<Distrito>(entity =>
+            {
+                entity.ToTable("Distrito", "pmate");
+
+                entity.HasIndex(e => new { e.Nome, e.Pais }, "pais_distrito_unico")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Nome)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("nome");
+
+                entity.Property(e => e.Pais).HasColumnName("pais");
+
+                entity.HasOne(d => d.PaisNavigation)
+                    .WithMany(p => p.Distritos)
+                    .HasForeignKey(d => d.Pais)
+                    .HasConstraintName("FK__Distrito__pais__2334397B");
+            });
 
             modelBuilder.Entity<Escola>(entity =>
             {
@@ -88,50 +132,17 @@ namespace Pmat_PI.Models
                     .IsFixedLength(true);
 
                 entity.Property(e => e.Website).HasMaxLength(255);
-            });
 
-            modelBuilder.Entity<Concelho>(entity =>
-            {
-                entity.ToTable("Concelho", "pmate");
+                entity.HasOne(d => d.IdTipoEscolaNavigation)
+                    .WithMany(p => p.Escolas)
+                    .HasForeignKey(d => d.IdTipoEscola)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Escola__IdTipoEs__11D4A34F");
 
-                entity.HasIndex(e => new { e.Nome, e.Distrito }, "distrito_concelho_unico")
-                    .IsUnique();
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Distrito).HasColumnName("distrito");
-
-                entity.Property(e => e.Nome)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("nome");
-
-                entity.HasOne(d => d.DistritoNavigation)
-                    .WithMany(p => p.Concelhos)
-                    .HasForeignKey(d => d.Distrito)
-                    .HasConstraintName("FK__Concelho__distri__2704CA5F");
-            });
-
-            modelBuilder.Entity<Distrito>(entity =>
-            {
-                entity.ToTable("Distrito", "pmate");
-
-                entity.HasIndex(e => new { e.Nome, e.Pais }, "pais_distrito_unico")
-                    .IsUnique();
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Nome)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("nome");
-
-                entity.Property(e => e.Pais).HasColumnName("pais");
-
-                entity.HasOne(d => d.PaisNavigation)
-                    .WithMany(p => p.Distritos)
-                    .HasForeignKey(d => d.Pais)
-                    .HasConstraintName("FK__Distrito__pais__2334397B");
+                entity.HasOne(d => d.IdconcelhoNavigation)
+                    .WithMany(p => p.Escolas)
+                    .HasForeignKey(d => d.Idconcelho)
+                    .HasConstraintName("FK__Escola__Idconcel__12C8C788");
             });
 
             modelBuilder.Entity<Freguesia>(entity =>
@@ -191,7 +202,6 @@ namespace Pmat_PI.Models
                     .HasColumnName("TipoEscola")
                     .IsFixedLength(true);
             });
-
 
             OnModelCreatingPartial(modelBuilder);
         }
