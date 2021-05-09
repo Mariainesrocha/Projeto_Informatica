@@ -52,14 +52,14 @@ SET IDENTITY_INSERT pmate.Pais ON
 
 INSERT INTO pmate.Pais(id,nome)
 SELECT IdPais,NomePais
-FROM [pmate].dbo.tblpais
+FROM dbo.tblpais
 
 INSERT INTO pmate.Pais (id,nome) VALUES (4,'Outros Países');
 
 SET IDENTITY_INSERT pmate.Pais OFF
 COMMIT;
 
-select * from  [pmate].dbo.tblpais
+select * from tblpais
 select * FROM pmate.Pais order by id
 -- select * FROM [pmate-Equamat2000].[pmate].[Pais] order by id
 GO
@@ -72,7 +72,7 @@ SET IDENTITY_INSERT pmate.Distrito ON
 
 INSERT INTO pmate.Distrito(id,nome)
 SELECT  IdDistrito, NomeDistrito
-FROM [pmate].dbo.tbldistritos
+FROM dbo.tbldistritos
 
 UPDATE pmate.Distrito
 SET pais = 1
@@ -85,42 +85,42 @@ WHERE id > 20;
 SET IDENTITY_INSERT pmate.Distrito OFF
 COMMIT;
 
-select * from [pmate].dbo.tbldistritos
+select * from tbldistritos
 select * FROM pmate.Distrito order by id
 GO
 
 
 
-
-
 -- Concelhos
--- 1.Bulk insert com as cenas do csv que tem DISTRITO - CONCELHO - FREGUESIA
+-- 1.Bulk insert na temporary_table com as cenas do csv que tem DISTRITO - CONCELHO - FREGUESIA
 -- 2.Fazer um Join pelos nomes dos concelhos:  temp_table com tblconcelhos.. Teremos : ID, Distrito, Concelho , FREGUESIA 
 -- 3.Fazer INSERT na tabela pmate.Concelhos. id -> ID , nome -> Concelho, Distrito(FK) -> Distrito
 BEGIN TRANSACTION;
 SET IDENTITY_INSERT pmate.Concelho ON
 
--- BULK INSERT feito pelo Management Studio: Database -> rightclick -> Tasks -> Import Flat File - > Choose File -> Magic Done 
+ -- BULK INSERT feito pelo Management Studio: Database -> rightclick -> Tasks -> Import Flat File - > Choose File -> Magic Done 
 
 -- DELETE DUPE CONCELHO (BECAUSE THEY ARE SO SMART)
- UPDATE [pmate].dbo.tblescolas
+ UPDATE dbo.tblescolas
  SET refidconcelho = 303
  WHERE refidconcelho = 313
 
- DELETE FROM [pmate].dbo.tblconcelhos
+ DELETE FROM dbo.tblconcelhos
  WHERE idConcelho=313
 
  -- FIX CONCELHO NAME 
-UPDATE [pmate].dbo.tblconcelhos
+UPDATE dbo.tblconcelhos
  SET NomeConcelho = 'Torre de Moncorvo'
  WHERE NomeConcelho = 'Torres de Moncorvo'
 
  ----- 2 & 3 -----
 INSERT INTO pmate.Concelho(id,nome,distrito)
 SELECT  distinct idConcelho,NomeConcelho,pmate.Distrito.id
-FROM ([pmate].dbo.tblconcelhos LEFT JOIN [pmate].dbo.DistritoConcelhoFreguesia ON NomeConcelho=concelho COLLATE Latin1_general_CI_AI)
-				   LEFT JOIN pmate.Distrito ON pmate.distrito.nome=[pmate].dbo.DistritoConcelhoFreguesia.distrito 
-		
+FROM (tblconcelhos LEFT JOIN DistritoConcelhoFreguesia ON NomeConcelho=concelho COLLATE Latin1_general_CI_AI)
+				   LEFT JOIN pmate.Distrito ON pmate.distrito.nome=DistritoConcelhoFreguesia.distrito 
+
+
+			
 SET IDENTITY_INSERT pmate.Concelho OFF
 COMMIT;
 
@@ -133,24 +133,24 @@ BEGIN TRANSACTION;
 --group by nomeFreguesia
 --having count(nomeFreguesia) >1
 
- UPDATE [pmate].dbo.tblescolas
+ UPDATE dbo.tblescolas
  SET refIdFreguesia = 107
  WHERE refIdFreguesia = 148
 
-  UPDATE [pmate].dbo.tblescolas
+  UPDATE dbo.tblescolas
  SET refIdFreguesia = 332
  WHERE refIdFreguesia = 333
 
- DELETE FROM [pmate].dbo.tblfreguesias
+ DELETE FROM dbo.tblfreguesias
  WHERE idFreguesia= 148
 
- DELETE FROM [pmate].dbo.tblfreguesias
+ DELETE FROM dbo.tblfreguesias
  WHERE idFreguesia= 333
 
  
  INSERT INTO pmate.Freguesia(nome,concelho)
 SELECT  distinct freguesia,pmate.Concelho.id as concelho
-FROM  [pmate].dbo.DistritoConcelhoFreguesia LEFT JOIN pmate.Concelho ON pmate.concelho.nome=[pmate].dbo.DistritoConcelhoFreguesia.concelho  COLLATE Latin1_general_CI_AI
+FROM  DistritoConcelhoFreguesia LEFT JOIN pmate.Concelho ON pmate.concelho.nome=DistritoConcelhoFreguesia.concelho  COLLATE Latin1_general_CI_AI
 COMMIT;
 GO
 
@@ -165,14 +165,21 @@ GO
 ------------------------------------ USER RELATED -----------------------------------
 
 -- Select from tblUsers and AspNetUsers --
+Select * 
+from [pmate-Equamat2000].dbo.tblUsers
+where Login=':)'
+
 SELECT *
 from [pmate2-demo].dbo.AspNetUsers
 where UserName='AS'
 ------------------------------------------
+
 -- Delete users from AspNetUsers --
 Delete from [pmate2-demo].dbo.AspNetUsers
 where Id is not NULL
 -----------------------------------
+
+
 
     
 -- Fix tblUsers before Migration --
@@ -254,45 +261,57 @@ COMMIT;
 
 
 -- AspNetRoles 
--- Insert é Automatico ao correr a App: 1.ADMIN, 2.PROFESSOR E 3.ALUNO
+-- NOTA : Fazer Insert das ROLES : 1.ADMIN, 2.PROFESSOR E 3.ALUNO
 
---AspNetUserRoles ADMINS
+
+--AspNetUserRoles -> ADMINS
+--NOTA: Falta confirmar os nomes dos attrs desta tbl do NetCore
 BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.AspNetUserRole ON
 
-INSERT INTO dbo.AspNetUserRoles(UserId,RoleId)
-SELECT distinct IdUser, (Select Id from AspNetRoles where NormalizedName='ADMIN') 
-FROM [pmate].dbo.tblAdm 
+INSERT INTO pmate.AspNetUserRole(IdUser,_role)
+SELECT IdUser, 1 -- ADMIN Role ID
+FROM dbo.tblAdm
 
+SET IDENTITY_INSERT pmate.AspNetUserRole OFF
 COMMIT;
 
 
---AspNetUserRoles PROFESSORES
+
+--AspNetUserRoles -> PROFESSORES
 BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.AspNetUserRole ON
 
-INSERT INTO dbo.AspNetUserRoles(UserId,RoleId)
-SELECT distinct IdUser, (Select Id from AspNetRoles where NormalizedName='PROFESSOR') 
-FROM [pmate].dbo.tblprofessores  JOIN AspNetUsers ON IdUser=Id
+INSERT INTO pmate.AspNetUserRole(IdUser,_role)
+SELECT IdUser, 2 -- PROFESSOR Role ID
+FROM dbo.tblprofessores 
 
+SET IDENTITY_INSERT pmate.AspNetUserRole OFF
 COMMIT;
 
 
---AspNetUserRoles ALUNOS
+
+--AspNetUserRoles -> ALUNOS
 BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.AspNetUserRole ON
 
-INSERT INTO dbo.AspNetUserRoles(UserId,RoleId)
-SELECT distinct  IdUser, (Select Id from AspNetRoles where NormalizedName='ALUNO') 
-FROM [pmate].dbo.tblalunos JOIN AspNetUsers ON IdUser=Id
+INSERT INTO pmate.AspNetUserRole(IdUser,_role)
+SELECT IdUser, 3 -- ALUNO Role Id
+FROM dbo.tblalunos
 
+SET IDENTITY_INSERT pmate.AspNetUserRole OFF
 COMMIT;
 
 
 -- UserContactoTipo
 BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.UserContactoTipo ON
 
 INSERT INTO pmate.UserContactoTipo(id,tipo) 
 SELECT idDicionario, Descricao
 FROM dbo.tbldicionariocontacto
 
+SET IDENTITY_INSERT pmate.UserContactoTipo OFF
 COMMIT;
 
 
@@ -321,7 +340,7 @@ SET IDENTITY_INSERT pmate.TipoEscola ON
 
 INSERT INTO pmate.TipoEscola(id_tipo_escola, TipoEscola, DescricaoTipoEscola)
 SELECT IdTipoEscola, TipoEscola, DescricaoTipoEscola
-FROM [pmate].dbo.tbltipoescola
+FROM dbo.tbltipoescola
 
 SET IDENTITY_INSERT pmate.TipoEscola OFF
 COMMIT;
@@ -392,8 +411,8 @@ BEGIN TRANSACTION;
 
 INSERT INTO pmate.UserRoleEscola(IdUser,IdRole,IdEscola,IdAnoEscolar,AnoLetivo)
 SELECT IdUser, IdRole,RefIdEscola,AnoEscolaridade,RefAnoLectivo
-FROM (dbo.AspNetUserRoles 
-    INNER JOIN dbo.tblUsers ON dbo.AspNetUserRoles.IdUser = dbo.tblUsers.IdUser)
+FROM (pmate.AspNetUserRoles 
+    INNER JOIN dbo.tblUsers ON pmate.AspNetUserRoles.IdUser = dbo.tblUsers.IdUser)
     INNER JOIN  (select RefIdUser, max(Data),RefAnoLectivo,AnoEscolaridade from tbluserescola group by RefIdUser) ON IdUser=RefIdUser -- max->para guardar apenas a escola mais recente... as restantes podem ser guardadas na outra tabela de historico mais tarde
 
 
@@ -458,10 +477,23 @@ BEGIN TRANSACTION;
 SET IDENTITY_INSERT pmate.Prova ON
 
 INSERT INTO pmate.Prova(id,IdAuthor, IdCompeticao, NomeProva, DataCriacao, MaxEscolas, MaxTentJogo, TempoTotalJogo, NumNiveis, VidasPorNivel, NumElemsEquipa, Calculadora, DataInscFinal, DataProva, InicioPreInscricao, FimPreInscricao, InicioInscricaoEquipas, FimInscricaoEquipas, FimProva, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma)
-SELECT IdCompeticao, IdUser, idCompeticaoEvento, NomeCompeticao, DataCriacao, NumaMaxEqEscolas, MaxTentJogo, TempoTotalJogo, NumTotNiveis, VidasPorNivel, NumEltosEquipa, Calculadora, DataInscFinal, DiaHoraCompeticao, InicioPreInscricao, FimPreInscricao, InicioInscricaoEquipas, FimInscricaoEquipas, FimProva, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma
-FROM dbo.tblcompeticao
+SELECT IdCompeticao, IdUser, idCompeticaoEvento, NomeCompeticao, DataCriacao, NumaMaxEqEscolas, MaxTentJogo, TempoTotalJogo, NumTotNiveis, VidasPorNivel, NumEltosEquipa, Calculadora, DataInscFinal, DiaHoraCompeticao, InicioPreInscricao, FimPreInscricao, InicioInscricaoEquipas, FimInscricaoEquipas, NULL, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma
+FROM [192.168.160.31].[pmate-Equamat2000].dbo.tblcompeticao
+where NomeCompeticao not like '%treino%'
 
 SET IDENTITY_INSERT pmate.Prova OFF
+COMMIT;
+
+--Treino
+BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.Treino ON
+
+INSERT INTO pmate.Treino(id,IdAuthor, IdCompeticao, NomeProva, DataCriacao, MaxEscolas, MaxTentJogo, TempoTotalJogo, NumNiveis, VidasPorNivel, NumElemsEquipa, Calculadora, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma)
+SELECT IdCompeticao, IdUser, idCompeticaoEvento, NomeCompeticao, DataCriacao, NumaMaxEqEscolas, MaxTentJogo, TempoTotalJogo, NumTotNiveis, VidasPorNivel, NumEltosEquipa, Calculadora, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma
+FROM [192.168.160.31].[pmate-Equamat2000].dbo.tblcompeticao
+Where NomeCompeticao like '%treino%'
+
+SET IDENTITY_INSERT pmate.Treino OFF
 COMMIT;
 
 

@@ -52,9 +52,6 @@ namespace Pmat_PI.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
-
-            [Required]
-            public String Username { get; set; }
         }
 
         public IActionResult OnGetAsync()
@@ -72,7 +69,7 @@ namespace Pmat_PI.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/Home/Index");
+            returnUrl = returnUrl ?? Url.Content("~/");
             if (remoteError != null)
             {
                 ErrorMessage = $"Error from external provider: {remoteError}";
@@ -87,12 +84,10 @@ namespace Pmat_PI.Areas.Identity.Pages.Account
 
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
-            Console.WriteLine("------------------");
-            Console.WriteLine(result);
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
-                return LocalRedirect("~/Home/Index");
+                return LocalRedirect(returnUrl);
             }
             if (result.IsLockedOut)
             {
@@ -107,8 +102,7 @@ namespace Pmat_PI.Areas.Identity.Pages.Account
                 {
                     Input = new InputModel
                     {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                        Username = info.Principal.FindFirstValue(ClaimTypes.Name)
+                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
                     };
                 }
                 return Page();
@@ -117,7 +111,7 @@ namespace Pmat_PI.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/Home/Index");
+            returnUrl = returnUrl ?? Url.Content("~/");
             // Get the information about the user from the external login provider
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
@@ -128,7 +122,7 @@ namespace Pmat_PI.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Username, Email = Input.Email , Name=Input.Username};
+                var user = new User { UserName = Input.Email, Email = Input.Email };
 
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
@@ -158,8 +152,7 @@ namespace Pmat_PI.Areas.Identity.Pages.Account
 
                         await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
 
-                        Console.WriteLine("HEREE!");
-                        return LocalRedirect("~/Home/Index");
+                        return LocalRedirect(returnUrl);
                     }
                 }
                 foreach (var error in result.Errors)

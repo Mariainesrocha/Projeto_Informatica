@@ -1,0 +1,125 @@
+﻿@model IEnumerable<Pmat_PI.Models.Treino>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NomeProva)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataCriacao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxEscolas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxTentJogo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TempoTotalJogo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumNiveis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VidasPorNivel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumElemsEquipa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Calculadora)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estilo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Url)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TreinoVisivel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RefIdCicloEnsino)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Plataforma)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdAuthorNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdCompeticaoNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomeProva)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataCriacao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxEscolas)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxTentJogo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TempoTotalJogo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumNiveis)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VidasPorNivel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumElemsEquipa)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Calculadora)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estilo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Url)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TreinoVisivel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RefIdCicloEnsino)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Plataforma)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdAuthorNavigation.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdCompeticaoNavigation.Etiqueta)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
