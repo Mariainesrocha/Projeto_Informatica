@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "No Access Rights";
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Pmat_PI</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/dist/css/font-awesome.min.css" />
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+</head>
+<body>
+    <div class="container" style="text-align:center; margin:50px">
+        <h1>You Have no Access Rights on this Website.</h1>
+        <h3>If You are an Admin, ask your superior to provide you the according access rights.</h3>
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button type="submit" class="btn btn-warning">Logout</button>
+        </form>
+    </div>
+</body>
+</html>
