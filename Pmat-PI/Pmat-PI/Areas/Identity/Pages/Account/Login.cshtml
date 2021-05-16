@@ -14,6 +14,7 @@
     <title>@ViewData["Title"] - Pmat_PI</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/font-awesome/dist/css/font-awesome.min.css" />
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <style>
         body {
             margin: 0;
@@ -34,7 +35,6 @@
             top: 50%;
             left: 50%;
             background: #191919;
-            ;
             text-align: center;
             transition: 0.25s;
             margin-top: 100px
@@ -159,75 +159,77 @@
 
 </head>
 <body>
-    <div class="row">
+    <div class="row" style="margin:auto">
         <div class="col-md-4">
             <section>
                 <!-- <form id="account" method="post">
-                    <h4>Use a local account to log in.</h4>
-                    <hr />
-                    <div asp-validation-summary="All" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="Input.Username"></label>
-                        <input asp-for="Input.Username" class="form-control" />
-                        <span asp-validation-for="Input.Username" class="text-danger"></span>
+                <h4>Use a local account to log in.</h4>
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Input.Username"></label>
+                    <input asp-for="Input.Username" class="form-control" />
+                    <span asp-validation-for="Input.Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label asp-for="Input.RememberMe">
+                            <input asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Input.Password"></label>
-                        <input asp-for="Input.Password" class="form-control" />
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label asp-for="Input.RememberMe">
-                                <input asp-for="Input.RememberMe" />
-                                @Html.DisplayNameFor(m => m.Input.RememberMe)
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Log in</button>
-                    </div>
-                    <div class="form-group">
-                        <p>
-                            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                        </p>
-                        <p>
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                        </p>
-                        <p>
-                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                        </p>
-                    </div>
-                </form>    -->
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Log in</button>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                    </p>
+                    <p>
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                    </p>
+                    <p>
+                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                    </p>
+                </div>
+            </form>    -->
                 <!-- New Version Login-->
-                <div class="container" style="margin:auto">
+                <div class="container">
                     <div asp-validation-summary="All" class="text-danger"></div>
-                    <div class="row">
+                    <div class="row" >
                         <div class="col-md-6">
-                            <div class="card">
-                                <form id="account" method="post" class="box">
-                                    <h1>Login</h1>
-                                    <p class="text-muted"> Please enter your login and password!</p>
-                                    <!--     FIELDS     -->
-                                    <div class="form-group">
-                                        <input type="text" asp-for="Input.Username" class="form-control" placeholder="Username" />
-                                        <span asp-validation-for="Input.Username" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="password" asp-for="Input.Password" class="form-control" placeholder="Password" />
-                                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">                
-                                        <p>
-                                            <a class="forgot text-muted" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                                        </p>
-                                        <p>
-                                            <a class="forgot text-muted" id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                                        </p>
-                                    </div>
-                                    <!--     FIELDS     -->
-                                    <a id="forgot-password" class="forgot text-muted" asp-page="./ForgotPassword">Forgot your password?</a>
-                                    <input type="submit" name="" value="Login">
+                            <div class="card" style="margin:auto">
+                                <div class="box"  style="margin:auto ;border-radius: 25px;">
+                                    <form id="account" method="post">
+                                        <h1>Login</h1>
+                                        <p class="text-muted"> Please enter your login and password!</p>
+                                        <!--     FIELDS     -->
+                                        <div class="form-group">
+                                            <input type="text" asp-for="Input.Username" class="form-control" placeholder="Username" />
+                                            <span asp-validation-for="Input.Username" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" asp-for="Input.Password" class="form-control" placeholder="Password" />
+                                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <p>
+                                                <a class="forgot text-muted" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                                            </p>
+                                            <p>
+                                                <a class="forgot text-muted" id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                                            </p>
+                                        </div>
+                                        <!--     FIELDS     -->
+                                        <a id="forgot-password" class="forgot text-muted" asp-page="./ForgotPassword">Forgot your password?</a>
+                                        <input type="submit" name="" value="Login">
+                                    </form>
                                     <div class="col-md-12">
                                         <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                                             <ul class="social-network social-circle">
@@ -239,7 +241,7 @@
                                             <button class="icoFacebook" type="submit" name="provider" value="Facebook" title="Log in using Facebook account"><i class="fa fa-facebook-f"></i></button>
                                         </form>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -247,7 +249,8 @@
                 <!-- END New Version Login-->
             </section>
         </div>
-        <div class="col-md-6 col-md-offset-2">
+        <!--
+    <div class="col-md-6 col-md-offset-2">
             <section>
                 <h4>Use another service to log in.</h4>
                 <hr />
@@ -268,7 +271,7 @@
                                 <p>
                                     @foreach (var provider in Model.ExternalLogins)
                                     {
-                                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                       <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
                                     }
                                 </p>
                             </div>
@@ -276,13 +279,15 @@
                     }
                 }
             </section>
-        </div>
+
+    </div>
+             -->
     </div>
 
 
-    <partial name="_ValidationScriptsPartial" />
-</body>
-</html>
+        <partial name="_ValidationScriptsPartial" />
+    </body>
+    </html>
 
 
 

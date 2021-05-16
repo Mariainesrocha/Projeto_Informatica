@@ -46,37 +46,37 @@ CREATE TABLE pmate.Freguesia(
 
 ------------------------------------ USER RELATED -----------------------------------
 
---CREATE TABLE pmate.Users(
-    --id nvarchar(450) ,
-    --Nome nvarchar(100) ,
+CREATE TABLE pmate.Users(
+    id nvarchar(450) ,
+    Nome nvarchar(100) ,
     --Username nvarchar(30) , tratado pelo ASP USERS
     --Password nvarchar(20) , tratado pelo ASP USERS
     --QuestionPass nvarchar(100) , tratado pelo ASP USERS
     --AnswerPass nvarchar(100) , tratado pelo ASP USERS
     --IdEscola int , tratado pelo UserRoleEscola
-    --DataDeRegisto datetime ,
+    DataDeRegisto datetime ,
     --IdTipoUser int NOT NULL, role?
-    --Morada nvarchar(100) ,
-    --CodPostal nvarchar(4) ,
-    --ExtensaoCodPostal nvarchar(3) ,
-    --Localidade nvarchar(30) ,
-    --idsexo int NOT NULL,
-    --idNEE int NOT NULL,
-    --iduser_pk int ,
-    --editado bit NOT NULL,
-    --obs nvarchar(max) ,
+    Morada nvarchar(100) ,
+    CodPostal nvarchar(4) ,
+    ExtensaoCodPostal nvarchar(3) ,
+    Localidade nvarchar(30) ,
+    idsexo int NOT NULL,
+    idNEE int NOT NULL,
+    iduser_pk int ,
+    editado bit NOT NULL,
+    obs nvarchar(max) ,
     -- Guid uniqueidentifier , --so usado em UMA LINHA !!!
     -- StatusEmail bit , --so usado em UMA LINHA !!!
     -- UU nvarchar(100) , --so usado em 49 linhas !!!
-    --rgpd_comunicacao bit , --5335
-    --rgpd_estatistica bit , --5335
-    --rgpd_data datetime , --4335
-    --validade_pessoal datetime , --4335
-    --validade_estatistica datetime , --4335
+    rgpd_comunicacao bit , --5335
+    rgpd_estatistica bit , --5335
+    rgpd_data datetime , --4335
+    validade_pessoal datetime , --4335
+    validade_estatistica datetime , --4335
 
-    --PRIMARY KEY(id),
-    --FOREIGN KEY(id) REFERENCES dbo.AspNetUsers(Id)
---);
+    PRIMARY KEY(id),
+    FOREIGN KEY(id) REFERENCES dbo.AspNetUsers(Id)
+);
 
 
 
@@ -260,7 +260,7 @@ CREATE TABLE pmate.Prova(
 	-- IconName nvarchar(25) NULL, ESTA NULL EM 1870/2018 ROWS
 
 	FOREIGN KEY(IdCompeticao) REFERENCES pmate.Competicao(id),
-	FOREIGN KEY(IdAuthor)     REFERENCES dbo.AspNetUsers(Id),
+	FOREIGN KEY(IdAuthor)     REFERENCES pmate.Users(id),
 
 	-- Possivelmente adicionar : IdCategoria int, FOREIGN KEY(IdCategoria) REFERENCES pmate.Categoria(id),
 
@@ -391,7 +391,7 @@ CREATE TABLE pmate.Treino(
 	-- IconName nvarchar(25) NULL, ESTA NULL EM 1870/2018 ROWS
 
 	FOREIGN KEY(IdCompeticao) REFERENCES pmate.Competicao(id),
-	FOREIGN KEY(IdAuthor)     REFERENCES dbo.AspNetUsers(Id),
+	FOREIGN KEY(IdAuthor)     REFERENCES pmate.Users(id),
 
 	-- Possivelmente adicionar : IdCategoria int, FOREIGN KEY(IdCategoria) REFERENCES pmate.Categoria(id),
 );
