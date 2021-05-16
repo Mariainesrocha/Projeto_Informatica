@@ -57,21 +57,22 @@ namespace Pmat_PI
             services.AddScoped<IPasswordHasher<Models.User>, CPH<Models.User>>();
             services.AddRazorPages();
 
-            // MAKES LOGIN PAGE THE START UP PAGE
-            services.AddMvc().AddRazorPagesOptions(options =>
+            // External Authentication Services
+            services.AddAuthentication()
+            .AddGoogle(options =>
             {
-                options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
+                IConfigurationSection googleAuthNSection =
+                    Configuration.GetSection("Authentication:Google");
+
+                options.ClientId = googleAuthNSection["ClientId"];
+                options.ClientSecret = googleAuthNSection["ClientSecret"];
             });
 
-            services.AddAuthentication()
-        .AddGoogle(options =>
-        {
-            IConfigurationSection googleAuthNSection =
-                Configuration.GetSection("Authentication:Google");
-
-            options.ClientId = googleAuthNSection["ClientId"];
-            options.ClientSecret = googleAuthNSection["ClientSecret"];
-        });
+            services.AddAuthentication().AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
