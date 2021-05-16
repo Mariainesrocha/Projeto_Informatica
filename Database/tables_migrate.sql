@@ -286,6 +286,11 @@ FROM [pmate].dbo.tblalunos JOIN AspNetUsers ON IdUser=Id
 COMMIT;
 
 
+-- After Doing External Authentication 
+INSERT INTO [pmate2-demo].dbo.AspNetUserRoles(Userid,RoleId) 
+VALUES ((Select Id from [pmate2-demo].dbo.AspNetUsers where Email='fabiospar99@gmail.com'),(Select Id from [pmate2-demo].dbo.AspNetRoles where NormalizedName='ADMIN'))
+------------------------------------------------------------------------
+
 -- UserContactoTipo
 BEGIN TRANSACTION;
 
@@ -395,7 +400,6 @@ SELECT IdUser, IdRole,RefIdEscola,AnoEscolaridade,RefAnoLectivo
 FROM (dbo.AspNetUserRoles 
     INNER JOIN dbo.tblUsers ON dbo.AspNetUserRoles.IdUser = dbo.tblUsers.IdUser)
     INNER JOIN  (select RefIdUser, max(Data),RefAnoLectivo,AnoEscolaridade from tbluserescola group by RefIdUser) ON IdUser=RefIdUser -- max->para guardar apenas a escola mais recente... as restantes podem ser guardadas na outra tabela de historico mais tarde
-
 
 COMMIT;
 
