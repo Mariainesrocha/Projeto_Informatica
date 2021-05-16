@@ -1,0 +1,109 @@
+﻿@model Pmat_PI.Models.Treino
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Treino</h4>
+<hr />
+<div class="row">
+    <div class="col-lg-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="IdAuthor" class="control-label"></label>
+                <select asp-for="IdAuthor" class="form-control" asp-items="ViewBag.IdAuthor"></select>
+                <span asp-validation-for="IdAuthor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdCompeticao" class="control-label"></label>
+                <select asp-for="IdCompeticao" class="form-control" asp-items="ViewBag.IdCompeticao"></select>
+                <span asp-validation-for="IdCompeticao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NomeProva" class="control-label"></label>
+                <input asp-for="NomeProva" class="form-control" />
+                <span asp-validation-for="NomeProva" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataCriacao" class="control-label"></label>
+                <input asp-for="DataCriacao" class="form-control" />
+                <span asp-validation-for="DataCriacao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxEscolas" class="control-label"></label>
+                <input asp-for="MaxEscolas" class="form-control" />
+                <span asp-validation-for="MaxEscolas" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxTentJogo" class="control-label"></label>
+                <input asp-for="MaxTentJogo" class="form-control" />
+                <span asp-validation-for="MaxTentJogo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TempoTotalJogo" class="control-label"></label>
+                <input asp-for="TempoTotalJogo" class="form-control" />
+                <span asp-validation-for="TempoTotalJogo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumNiveis" class="control-label"></label>
+                <input asp-for="NumNiveis" class="form-control" />
+                <span asp-validation-for="NumNiveis" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VidasPorNivel" class="control-label"></label>
+                <input asp-for="VidasPorNivel" class="form-control" />
+                <span asp-validation-for="VidasPorNivel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumElemsEquipa" class="control-label"></label>
+                <input asp-for="NumElemsEquipa" class="form-control" />
+                <span asp-validation-for="NumElemsEquipa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Calculadora" class="control-label"></label>
+                <input asp-for="Calculadora" class="form-control" />
+                <span asp-validation-for="Calculadora" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Estilo" class="control-label"></label>
+                <input asp-for="Estilo" class="form-control" />
+                <span asp-validation-for="Estilo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Url" class="control-label"></label>
+                <input asp-for="Url" class="form-control" />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="TreinoVisivel" /> @Html.DisplayNameFor(model => model.TreinoVisivel)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="RefIdCicloEnsino" class="control-label"></label>
+                <input asp-for="RefIdCicloEnsino" class="form-control" />
+                <span asp-validation-for="RefIdCicloEnsino" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Plataforma" class="control-label"></label>
+                <input asp-for="Plataforma" class="form-control" />
+                <span asp-validation-for="Plataforma" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
