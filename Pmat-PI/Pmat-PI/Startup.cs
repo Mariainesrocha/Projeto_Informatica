@@ -39,6 +39,11 @@ namespace Pmat_PI
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            services.AddDbContext<treinoContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
             // USE IDENTITY ROLES
             services.AddIdentity<Pmat_PI.Models.User, IdentityRole>(config =>
             {
@@ -107,6 +112,33 @@ namespace Pmat_PI
             });
 
             CreateRoles(serviceProvider);
+            //createUser(serviceProvider);
+        }
+
+        private void createUser(IServiceProvider serviceProvider)
+        {
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+
+            var user = new User();
+            user.Name = "PhantomUser";
+            user.Email = "phantomuser@ua.pt";
+            user.UserName = "PhantomUser";
+            user.EmailConfirmed = true;
+            user.Age = 0;
+            user.AccessFailedCount = 0;
+            string userPWD = "DannyPhantom123";
+
+            var exists = userManager.FindByEmailAsync("phantomuser@ua.pt");
+            //exists.Wait();
+            exists = null;
+            if (exists == null)
+            {
+                Console.WriteLine("IT IS NULL");
+                var created_user = userManager.CreateAsync(user, userPWD);
+                //created_user.Wait();
+            }
+
+
         }
 
         private void CreateRoles(IServiceProvider serviceProvider)
