@@ -1,8 +1,7 @@
 ﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
-  
-<h1 class="bg-info text-white"> Lista de Funções</h1>
-<a asp-action="Create" class="btn btn-success">Criar Nova Função</a>
-  
+
+
+<h1>Lista de Funções</h1>
 <table class="table table-sm table-bordered table-bordered text-center">
     <tr><th>ID</th><th>Nome</th><th> Apagar </th></tr>
     @foreach (var role in Model)
@@ -11,10 +10,37 @@
             <td>@role.Id</td>
             <td>@role.Name</td>
             <td>
-                <form asp-action="Delete" asp-route-id="@role.Id" method="post" align="center">
-                    <button type="submit" style="background:transparent; border:none"><i style="font-size:30px; color:red" class="fa fa-trash"></i> </button>
+                <form asp-action="Delete" asp-route-id="@role.Id">
+                    <button type="submit" class="btn" data-toggle="modal" data-target="#deleteModal">
+                        <i style="font-size:30px; color: red;" class="fa fa-trash"></i>
+                    </button>
+
+                    <!--
+                <div class="modal fade" id="deleteModal" tabindex="0" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Apagar Função</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Deseja realmente apagar esta função?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Não</button>
+                                <button type="submit" class="btn btn-danger">Sim</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    -->
                 </form>
             </td>
         </tr>
     }
 </table>
+<div style="text-align:center; padding-bottom: 2%">
+    <a asp-action="Create" class="btn btn-primary">Criar Nova Função</a>
+</div>

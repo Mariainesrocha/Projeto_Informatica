@@ -81,7 +81,7 @@ namespace Identity.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateUser(string id, string email, string password, string name, string age)
+        public async Task<IActionResult> UpdateUser(string id, string email,string username, string password, string name, string age)
         {
             User user = await userManager.FindByIdAsync(id);
             if (user != null)
@@ -89,15 +89,20 @@ namespace Identity.Controllers
                 if (!string.IsNullOrEmpty(email))
                 {
                     user.Email = email;
-                    user.UserName = email;
                 }
                 else
                     ModelState.AddModelError("", "Email cannot be empty");
 
+                if (!string.IsNullOrEmpty(username))
+                {
+                    user.UserName = username;
+                }
+                else
+                    ModelState.AddModelError("", "Username cannot be empty");
+
                 if (!string.IsNullOrEmpty(password))
                     user.PasswordHash = passwordHasher.HashPassword(user, password);
-                else
-                    ModelState.AddModelError("", "Password cannot be empty");
+            
 
                 if (!string.IsNullOrEmpty(name))
                     user.Name = name;
@@ -110,7 +115,7 @@ namespace Identity.Controllers
                     ModelState.AddModelError("", "Age cannot be empty");
 
 
-                if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
+                if (!string.IsNullOrEmpty(email))
                 {
                     IdentityResult result = await userManager.UpdateAsync(user);
                     if (result.Succeeded)

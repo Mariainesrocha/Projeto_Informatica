@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Editar Escola";
 }
-
 <h1>Editar Escola</h1>
 <hr />
 <div class="row">
@@ -112,7 +111,7 @@
             <div class="form-row">
                 <div class="form-group col-md-3">
                     <label asp-for="Idconcelho" class="control-label">Concelho</label>
-                    <select asp-for="Idconcelho" class="form-control" asp-items="ViewBag.Idconcelho">
+                    <select asp-for="Idconcelho" class="form-control" asp-items="ViewBag.Idconcelho" id="concelhos">
                         <option value="">-- Selecione Concelho --</option>
                     </select>
                     <span asp-validation-for="Idconcelho" class="text-danger" />
@@ -143,7 +142,3 @@
 <div>
     <a asp-action="Index" class="btn btn-outline-primary">Voltar à lista de escolas</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
