@@ -1959,3 +1959,11 @@ C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\
 C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Treinos\Details.cshtml.g.cs
 C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Treinos\Edit.cshtml.g.cs
 C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Treinos\Index.cshtml.g.cs
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.Facebook.dll
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.Google.dll
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Home\NoAccessRightsPage.cshtml.g.cs
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Treinos\Create.cshtml.g.cs
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Treinos\Delete.cshtml.g.cs
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Treinos\Details.cshtml.g.cs
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Treinos\Edit.cshtml.g.cs
+C:\Users\danie\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Treinos\Index.cshtml.g.cs

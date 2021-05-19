@@ -1,7 +1,6 @@
 ﻿@model User
 
-<h1 class="bg-info text-white">Atualizar Utilizador</h1>
-<a asp-action="Index" class="btn btn-secondary">Anterior</a>
+<h1>Atualizar Utilizador</h1>
 <div asp-validation-summary="All" class="text-danger"></div>
 
 <form asp-action="UpdateUser" method="post">
@@ -29,5 +28,8 @@
         <label for="password">Password</label>
         <input name="password" class="form-control" />
     </div>
-    <button type="submit" class="btn btn-primary"> Guardar </button>
+    <div style="text-align:center">
+        <button type="submit" class="btn btn-primary"> Guardar </button>
+        <a asp-action="Index" class="btn btn-secondary">Anterior</a>
+    </div>
 </form>

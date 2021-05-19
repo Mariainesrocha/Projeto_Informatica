@@ -389,19 +389,55 @@ SET IDENTITY_INSERT pmate.AnoEscolar OFF
 COMMIT;
 
 
-
-
-
--- UserRoleEscola
+--------------------------- Projeto
 BEGIN TRANSACTION;
 
-INSERT INTO pmate.UserRoleEscola(IdUser,IdRole,IdEscola,IdAnoEscolar,AnoLetivo)
-SELECT IdUser, IdRole,RefIdEscola,AnoEscolaridade,RefAnoLectivo
-FROM (dbo.AspNetUserRoles 
-    INNER JOIN dbo.tblUsers ON dbo.AspNetUserRoles.IdUser = dbo.tblUsers.IdUser)
-    INNER JOIN  (select RefIdUser, max(Data),RefAnoLectivo,AnoEscolaridade from tbluserescola group by RefIdUser) ON IdUser=RefIdUser -- max->para guardar apenas a escola mais recente... as restantes podem ser guardadas na outra tabela de historico mais tarde
+INSERT INTO pmate.Projeto(id, descricao, URL) 
+SELECT idprojecto,descricao,URL
+FROM [pmate-Equamat2000].dbo.tbldicprojectos
 
 COMMIT;
+
+
+---------------------------  User-Escola
+BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.UserEscola OFF
+
+INSERT INTO pmate.UserEscola(IdUser, IdEscola,AnoLetivo, idProjeto, IdAnoEscolar, data_) 
+SELECT distinct [pmate-Equamat2000].dbo.tbluserescola.RefIdUser, RefIdEscola, RefAnoLectivo,Projecto,AnoEscolaridade,MaxDate
+FROM [pmate-Equamat2000].dbo.tbluserescola 
+JOIN dbo.AspNetUsers ON CAST(RefIdUser AS nvarchar) = Id  
+JOIN pmate.Escola ON RefIdEscola= pmate.Escola.id
+JOIN pmate.Projeto ON Projecto= pmate.Projeto.id
+JOIN pmate.AnoEscolar ON AnoEscolaridade=pmate.AnoEscolar.id
+JOIN pmate.AnoLetivo ON RefAnoLectivo=pmate.AnoLetivo.AnoLetivo
+JOIN (
+    select RefIdUser, max(Data) as MaxDate
+    from  [pmate-Equamat2000].dbo.tbluserescola
+    group by RefIdUser
+) tm ON [pmate-Equamat2000].dbo.tbluserescola.RefIdUser = tm.RefIdUser and [pmate-Equamat2000].dbo.tbluserescola.Data = tm.MaxDate
+
+COMMIT;
+
+-------------- User-Escola Historico
+-------------- User-Escola Historico
+
+BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.UserEscolaHistorico OFF
+
+INSERT INTO pmate.UserEscolaHistorico(IdUser, IdEscola,AnoLetivo, idProjeto, IdAnoEscolar, data_) 
+SELECT distinct [pmate-Equamat2000].dbo.tbluserescola.RefIdUser, RefIdEscola, RefAnoLectivo,Projecto,AnoEscolaridade,data
+FROM [pmate-Equamat2000].dbo.tbluserescola 
+JOIN dbo.AspNetUsers ON CAST(RefIdUser AS nvarchar) = Id  
+JOIN pmate.Escola ON RefIdEscola= pmate.Escola.id
+JOIN pmate.Projeto ON Projecto= pmate.Projeto.id
+JOIN pmate.AnoEscolar ON AnoEscolaridade=pmate.AnoEscolar.id
+JOIN pmate.AnoLetivo ON RefAnoLectivo=pmate.AnoLetivo.AnoLetivo
+
+COMMIT;
+
+-- NOTA: NO TRIGGER DO HISTORICO FAZER VERIFICACAO DE EXISTENCIA DESSE REGISTO
+
 
 
 

@@ -168,28 +168,50 @@ CREATE TABLE pmate.AnoEscolar( -- OLD tblDicAnoEscolaridade
 	Ano char(50) NOT NULL
 );
 
-CREATE TABLE pmate.UserRoleEscola (
+
+CREATE TABLE pmate.Projeto( -- OLD dbo.tbldicprojectos 
+	id int NOT NULL,
+	descricao TEXT,
+	URL nvarchar(100),
+	PRIMARY KEY(id),
+);
+
+CREATE TABLE pmate.UserEscola (
 	id int IDENTITY(1,1) PRIMARY KEY, 
-	IdUser nvarchar(450) UNIQUE  NOT NULL,
-	IdRole nvarchar(450) NOT NULL,
+	IdUser nvarchar(450) NOT NULL,
 	IdEscola int NOT NULL,
 	IdResponsavel int,
 	IdAnoEscolar int,
 	AnoLetivo  nvarchar(10),
+	idProjeto int,
+	data_ datetime
 
-	FOREIGN KEY(IdUser,IdRole) REFERENCES dbo.AspNetUserRoles(UserId,RoleId), -- NEED TO CHECK THE REAL NAME OF THESE ATTRS
-
+	FOREIGN KEY(IdUser) REFERENCES dbo.AspNetUsers(Id),
 	FOREIGN KEY(IdEscola) REFERENCES pmate.Escola(id),
-	FOREIGN KEY(IdResponsavel) REFERENCES pmate.UserRoleEscola(id),
+	FOREIGN KEY(IdResponsavel) REFERENCES pmate.UserEscola(id),
 	FOREIGN KEY(IdAnoEscolar) REFERENCES pmate.AnoEscolar(id),
 	FOREIGN KEY(AnoLetivo) REFERENCES pmate.AnoLetivo(AnoLetivo),
+	FOREIGN KEY(idProjeto) REFERENCES pmate.Projeto(id),
+	CONSTRAINT user_escola_projeto_anolet_escolar UNIQUE (IdUser,IdProjeto,IdEscola,AnoLetivo,IdAnoEscolar)
 );
 
+
 CREATE TABLE pmate.UserEscolaHistorico (
-	DateRegistered TIMESTAMP PRIMARY KEY,
-	IdUserRoleEscola int NOT NULL, 
-	
-	FOREIGN KEY(IdUserRoleEscola) REFERENCES pmate.UserRoleEscola(id),
+	id int IDENTITY(1,1) PRIMARY KEY, 
+	IdUser nvarchar(450) NOT NULL,
+	IdEscola int NOT NULL,
+	IdResponsavel int,
+	IdAnoEscolar int,
+	AnoLetivo  nvarchar(10),
+	idProjeto int,
+	data_ datetime
+
+	FOREIGN KEY(IdUser) REFERENCES dbo.AspNetUsers(Id),
+	FOREIGN KEY(IdEscola) REFERENCES pmate.Escola(id),
+	FOREIGN KEY(IdResponsavel) REFERENCES pmate.UserEscola(id),
+	FOREIGN KEY(IdAnoEscolar) REFERENCES pmate.AnoEscolar(id),
+	FOREIGN KEY(AnoLetivo) REFERENCES pmate.AnoLetivo(AnoLetivo),
+	FOREIGN KEY(idProjeto) REFERENCES pmate.Projeto(id),
 );
 
 
@@ -478,8 +500,9 @@ DROP TABLE pmate.Modelo;
 ------------------------------------ SCHOOL RELATED -----------------------------------
 
 DROP TABLE pmate.EscolaInfoExtra;
+DROP TABLE pmate.Projeto;
 DROP TABLE pmate.UserEscolaHistorico;
-DROP TABLE pmate.UserRoleEscola;
+DROP TABLE pmate.UserEscola;
 DROP TABLE pmate.Escola;
 DROP TABLE pmate.AnoLetivo;
 DROP TABLE pmate.AnoEscolar;

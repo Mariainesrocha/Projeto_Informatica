@@ -1,7 +1,6 @@
 ﻿@model string
 
-<h1 class="bg-info text-white">Criar uma função</h1>
-<a asp-action="Index" class="btn btn-secondary"> Anterior </a>
+<h1>Criar uma função</h1>
 <div asp-validation-summary="All" class="text-danger"></div>
 
 <form asp-action="Create" method="post">
@@ -9,5 +8,10 @@
         <label for="name">Nome:</label>
         <input name="name" class="form-control" />
     </div>
-    <button type="submit" class="btn btn-primary"> Criar </button>
+    <div style="text-align:center">
+        <button type="submit" class="btn btn-primary"> Criar </button>
+        <a asp-action="Index" class="btn btn-secondary" style="padding-left:2%"> Anterior </a>
+    </div>
 </form>
+<div>
+</div>
