@@ -6,9 +6,6 @@ using Microsoft.AspNetCore.Hosting;
 using System.Linq;
 using System.Threading.Tasks;
 using Pmat_PI.Models;
-using MailKit.Net.Smtp;
-using MimeKit;
-using MailKit.Security;
 using Microsoft.AspNetCore.Identity;
 
 namespace Pmat_PI.Controllers
