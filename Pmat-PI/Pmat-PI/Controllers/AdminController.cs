@@ -7,6 +7,8 @@ using Pmat_PI;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Pmat_PI.Data;
+using System.Linq;
 
 namespace Identity.Controllers
 {
@@ -15,30 +17,37 @@ namespace Identity.Controllers
     {
         private UserManager<User> userManager;
         private IPasswordHasher<User> passwordHasher;
+        private readonly ApplicationDbContext _context;
 
-        public AdminController(UserManager<User> usrMgr, IPasswordHasher<User> passwordHash)
+        public AdminController(UserManager<User> usrMgr, IPasswordHasher<User> passwordHash, ApplicationDbContext context)
 
         {
             userManager = usrMgr;
             passwordHasher = passwordHash;
+            _context = context;
         }
 
         public async Task<IActionResult> Index(string sortOrder,string currentFilter,string searchString,int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            if (searchString != null)
+            ViewData["CurrentFilter"] = searchString;
+
+            var users = from u in _context.Users select u;
+
+            if (!String.IsNullOrEmpty(searchString))
             {
                 pageNumber = 1;
+                users = users.Where(u => u.Name.Contains(searchString));
             }
             else
             {
                 searchString = currentFilter;
             }
 
+           
+            var result = from u in _context.Users select u; 
 
-            var users = userManager.Users;
-
-            int pageSize = 10;
+            int pageSize = 50;
             return View(await PaginatedList<User>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize));
             //return View(userManager.Users);
         }

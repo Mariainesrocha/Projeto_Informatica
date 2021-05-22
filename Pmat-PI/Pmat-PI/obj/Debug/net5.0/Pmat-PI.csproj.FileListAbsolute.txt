@@ -1939,11 +1939,6 @@ C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\
 C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Shared\_Layout.cshtml.g.cs
 C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Shared\_LoginPartial.cshtml.g.cs
 C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
-C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\TipoEscolas\Create.cshtml.g.cs
-C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\TipoEscolas\Delete.cshtml.g.cs
-C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\TipoEscolas\Details.cshtml.g.cs
-C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\TipoEscolas\Edit.cshtml.g.cs
-C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\TipoEscolas\Index.cshtml.g.cs
 C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\_ViewImports.cshtml.g.cs
 C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\_ViewStart.cshtml.g.cs
 C:\Pedro Souto\repos\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Pmat-PI.RazorTargetAssemblyInfo.cache

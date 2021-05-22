@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\danie\\Desktop\\PI\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj": {}
+    "C:\\Pedro Souto\\repos\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\danie\\Desktop\\PI\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj": {
+    "C:\\Pedro Souto\\repos\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\danie\\Desktop\\PI\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj",
+        "projectUniqueName": "C:\\Pedro Souto\\repos\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj",
         "projectName": "Pmat-PI",
-        "projectPath": "C:\\Users\\danie\\Desktop\\PI\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj",
-        "packagesPath": "C:\\Users\\danie\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\danie\\Desktop\\PI\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\obj\\",
+        "projectPath": "C:\\Pedro Souto\\repos\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj",
+        "packagesPath": "C:\\Users\\blued\\.nuget\\packages\\",
+        "outputPath": "C:\\Pedro Souto\\repos\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\danie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\blued\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -101,7 +101,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }
