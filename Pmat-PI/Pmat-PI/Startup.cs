@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pmat_PI.Data;
 using Pmat_PI.Models;
+using Pmat_PI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,9 +44,12 @@ namespace Pmat_PI
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
+            // EMAIL SERVICE 
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+            services.AddTransient<IEmailSender, AuthMessageSender>();
 
             // USE IDENTITY ROLES
-            services.AddIdentity<Pmat_PI.Models.User, IdentityRole>(config =>
+            services.AddIdentity<User, IdentityRole>(config =>
             {
                 config.Password.RequireNonAlphanumeric = false; //optional
                 config.SignIn.RequireConfirmedEmail = false; //optional
