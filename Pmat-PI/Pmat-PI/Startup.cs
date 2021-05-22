@@ -45,7 +45,7 @@ namespace Pmat_PI
             services.AddTransient<IEmailSender, AuthMessageSender>();
 
             // USE IDENTITY ROLES
-            services.AddIdentity<Pmat_PI.Models.User, IdentityRole>(config =>
+            services.AddIdentity<User, IdentityRole>(config =>
             {
                 config.Password.RequireNonAlphanumeric = false; //optional
                 config.SignIn.RequireConfirmedEmail = false; //optional

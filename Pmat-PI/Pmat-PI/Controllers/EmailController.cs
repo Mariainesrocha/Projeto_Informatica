@@ -9,34 +9,51 @@ using Pmat_PI.Models;
 using MailKit.Net.Smtp;
 using MimeKit;
 using MailKit.Security;
+using Microsoft.AspNetCore.Identity;
 
 namespace Pmat_PI.Controllers
 {
     public class EmailController : Controller
     {
+        private UserManager<User> userManager;
         private readonly IEmailSender _emailSender;
-        public EmailController(IEmailSender emailSender, IHostingEnvironment env)
+
+        public EmailController(IEmailSender emailSender, IWebHostEnvironment env, UserManager<User> usrMgr)
         {
             _emailSender = emailSender;
+            userManager = usrMgr;
         }
-        public IActionResult EnviaEmail()
+
+
+        public IActionResult SendEmail()
         {
             return View();
         }
+        public ActionResult Success()
+        {
+            return View();
+        }
+        public ActionResult Failure()
+        {
+            return View();
+        }
+
+
+
+
         [HttpPost]
-        public IActionResult EnviaEmail(EmailModel2 email)
+        public IActionResult SendEmail(EmailModel2 email)
         {
             if (ModelState.IsValid)
             {
                 try
-                {
-                    //TesteEnvioEmail(email.Destino, email.Assunto, email.Mensagem).GetAwaiter();
-                    TesteEnvioEmail2(email.Destino,email.Assunto,email.Mensagem).GetAwaiter();
-                    return RedirectToAction("EmailEnviado");
+                {   
+                    ProcessEmailSending(email.Destino,email.Assunto,email.Mensagem).GetAwaiter();
+                    return RedirectToAction("Success");
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("EmailFalhou");
+                    return RedirectToAction("Failure");
                 }
             }
             return View(email);
@@ -44,69 +61,41 @@ namespace Pmat_PI.Controllers
 
       
 
-        public async Task TesteEnvioEmail2(string email, string assunto, string mensagem)
+
+        public async Task ProcessEmailSending(string grupo_destino, string assunto, string mensagem)
         {
             try
             {
-                Console.WriteLine(" Destino,assunto,mensagem=" + email + "," + assunto + "," + mensagem);
+                var users =  userManager.GetUsersInRoleAsync(grupo_destino).Result;
+              
+                foreach (User u in users)
+                {
+                    if(u.Email!=null && IsValidEmail(u.Email))
+                    {
+                        Console.WriteLine("Right before sending email! destino,assunto,mensagem=" + u.Email + "," + assunto + "," + mensagem);
+                        await _emailSender.SendEmailAsync(u.Email, assunto, mensagem);
+                    }
+                }
 
-                // GENERATE MESSAGE TO SEND
-                MimeMessage message = new MimeMessage();
-                MailboxAddress from = new MailboxAddress("Admin","pmate.backoffice.test@gmail.com");
-                MailboxAddress to = new MailboxAddress("User",email);
-
-                message.From.Add(from);
-                message.To.Add(to);
-                message.Subject = assunto;
-
-                Console.WriteLine("Before authentication!");
-                // SEND MESSAGE 
-                SmtpClient client = new SmtpClient();
-
-                //client.Connect("smtp.gmail.com", 25, true);
-                //client.Authenticate("pmate.backoffice.test@gmail.com", "backoffice123");
-
-                //client.Connect("smtp.gmail.com", 465, false);
-                //client.Authenticate("pmate.backoffice.test@gmail.com", "backoffice123");
-                
-
-                Console.WriteLine("Authentication status:" + client.IsAuthenticated);
-                Console.WriteLine("Now it is authenticated!");
-                client.Send(message);
-
-                Console.WriteLine("If it reached here, it should have been sent successfully");
-
-                // CLOSE SMTP
-                client.Disconnect(true);
-                client.Dispose();
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
+       
 
-
-        public async Task TesteEnvioEmail(string email, string assunto, string mensagem)
+        bool IsValidEmail(string email)
         {
             try
             {
-                Console.WriteLine("Right before sending email! Destino,assunto,mensagem=" +  email + "," + assunto + "," + mensagem );
-                //email destino, assunto do email, mensagem a enviar
-                await _emailSender.SendEmailAsync(email, assunto, mensagem);
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                return false;
             }
-        }
-        public ActionResult EmailEnviado()
-        {
-            return View();
-        }
-        public ActionResult EmailFalhou()
-        {
-            return View();
         }
     }
 }
