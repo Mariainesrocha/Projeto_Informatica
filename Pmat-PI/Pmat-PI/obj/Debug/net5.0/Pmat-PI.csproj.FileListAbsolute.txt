@@ -1460,3 +1460,9 @@ C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\
 C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\TipoEscolas\Index.cshtml.g.cs
 C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Home\NoAccessRightsPage.cshtml.g.cs
 C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.Facebook.dll
+C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Email\EmailEnviado.cshtml.g.cs
+C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Email\EmailFalhou.cshtml.g.cs
+C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\obj\Debug\net5.0\Razor\Views\Email\EnviaEmail.cshtml.g.cs
+C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\bin\Debug\net5.0\MailKit.dll
+C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\bin\Debug\net5.0\MimeKit.dll
+C:\Users\Lenovo\Desktop\PI\Projeto_Informatica\Pmat-PI\Pmat-PI\bin\Debug\net5.0\BouncyCastle.Crypto.dll

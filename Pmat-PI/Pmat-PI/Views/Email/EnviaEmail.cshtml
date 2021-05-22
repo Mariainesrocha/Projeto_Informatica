@@ -1,0 +1,48 @@
+﻿@model Pmat_PI.Models.EmailModel2
+@{
+    ViewData["Title"] = "EmailingTab";
+}
+
+
+<div class="text-center">
+    <h1>Enviar Emails</h1>
+</div>
+
+
+<div id="email_div">
+    <form asp-action="EnviaEmail">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="Destino">Destino:</label>
+            <select asp-for="Destino" id="target_users" class="form-control" aria-label="Default select example">
+                <option value="ALL">EVERYONE</option>
+                <option value="ADMINS">ADMINS</option>
+                <option value="PROFESSORES">PROFESSORES</option>
+                <option value="ALUNOS">ALUNOS</option>
+                <option value="pmate.backoffice.test@gmail.com">pmate.backoffice.test@gmail.com</option>
+                <option value="pedromgsouto@ua.pt">Big Gay Pedro</option>
+                <option value="fabiospar99@gmail.com">Pro Fabio</option>
+            </select>
+            <span asp-validation-for="Destino" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Assunto">Assunto:</label>
+            <input asp-for="Assunto"  class="form-control" id="assunto" placeholder="Assunto">
+            <span asp-validation-for="Assunto" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Mensagem">Mensagem:</label>
+            <textarea asp-for="Mensagem" class="form-control" id="mensagem" rows="4" placeholder="Escreva a sua mensagem aqui."></textarea>
+            <span asp-validation-for="Mensagem" class="text-danger"></span>
+        </div>
+
+        <input type="submit" value="Enviar Email" class="btn btn-outline-primary" />
+    </form>
+</div>
+
+<script>
+
+</script>
