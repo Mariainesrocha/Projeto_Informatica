@@ -10,19 +10,34 @@
 
 
 <div id="email_div">
-    <form asp-action="SendEmail" method="post" enctype="multipart/form-data">
+    <form id="email_form" asp-action="SendEmail" method="post" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+        <!--
+    <div class="form-group">
+        <label asp-for="Destino">Grupo Destino:</label>
+        <select  asp-for="Destino" id="target_users" class="form-control" aria-label="Default select example">
+            <option value="Empty"></option>
+            <option value="Admin">ADMINS</option>
+            <option value="Professor">PROFESSORES</option>
+            <option value="Aluno">ALUNOS</option>
+            <option value="fabiospar99@gmail.com">Fabio Carmelino</option>
+        </select>
+        <span asp-validation-for="Destino" class="text-danger"></span>
+    </div>
+        -->
         <div class="form-group">
-            <label asp-for="Destino">Grupo Destino:</label>
-            <select asp-for="Destino" id="target_users" class="form-control" aria-label="Default select example">
-                <option value="All">EVERYONE</option>
+            <label asp-for="Destino">Destino:</label>
+            <input asp-for="Destino" id="target_users" list="targets" class="form-control" aria-label="Default select example" >
+            <span asp-validation-for="Destino" class="text-danger"></span>
+
+            <datalist id="targets">
                 <option value="Admin">ADMINS</option>
                 <option value="Professor">PROFESSORES</option>
                 <option value="Aluno">ALUNOS</option>
-            </select>
-            <span asp-validation-for="Destino" class="text-danger"></span>
+                <option value="fabiospar99@gmail.com">Fabio Carmelino</option>
+            </datalist>
         </div>
+
 
         <div class="form-group">
             <label asp-for="Assunto">Assunto:</label>
@@ -52,6 +67,8 @@
     </form>
 </div>
 
-<script>
 
-</script>
+@section Styles{
+    
+ } 
+

@@ -63,28 +63,33 @@ namespace Pmat_PI.Controllers
       
 
 
-        public async Task ProcessEmailSending(string grupo_destino, string assunto, string mensagem,IFormFile file)
+        public async Task ProcessEmailSending(string destino, string assunto, string mensagem,IFormFile file)
         {
             try
             {
-                IEnumerable<User> users;
-                if (grupo_destino.Equals("All"))
+                // DESTINO UNICO
+                if (IsValidEmail(destino))
                 {
-                    users = userManager.Users.AsQueryable().Where(u => u.Email != null && IsValidEmail(u.Email)).Select(u => u);
-                }
-                else {
-                    users = userManager.GetUsersInRoleAsync(grupo_destino).Result; 
-                }
-                Console.WriteLine("Users length:" + users.ToList().Count);
-                foreach (User u in users)
-                {
-                    if(u.Email!=null && IsValidEmail(u.Email))
-                    {
-                        Console.WriteLine("Right before sending email! destino,assunto,mensagem=" + u.Email + "," + assunto + "," + mensagem);
-                        await _emailSender.SendEmailAsync(u.Email, assunto, mensagem,file);
-                    }
+                    Console.WriteLine("Destino unico");
+                    await _emailSender.SendEmailAsync(destino, assunto, mensagem, file);
                 }
 
+                // DESTINO GRUPO
+                else
+                {
+                    IEnumerable<User> users = userManager.GetUsersInRoleAsync(destino).Result;
+
+                    Console.WriteLine("Users length:" + users.ToList().Count);
+                    foreach (User u in users)
+                    {
+                        if (u.Email != null && IsValidEmail(u.Email))
+                        {
+                            Console.WriteLine("Right before sending email! destino,assunto,mensagem=" + u.Email + "," + assunto + "," + mensagem);
+                            await _emailSender.SendEmailAsync(u.Email, assunto, mensagem, file);
+                        }
+                    }
+                }
+                
             }
             catch (Exception ex)
             {
