@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Pmat_PI.Services
 {
@@ -19,11 +21,11 @@ namespace Pmat_PI.Services
 
         public EmailSettings _emailSettings { get; }
 
-        public Task SendEmailAsync(string email, string subject, string message)
+        public Task SendEmailAsync(string email, string subject, string message,IFormFile file)
         {
             try
             {
-                Execute(email, subject, message).Wait();
+                Execute(email, subject, message,file).Wait();
                 return Task.FromResult(0);
             }
             catch (Exception)
@@ -32,7 +34,7 @@ namespace Pmat_PI.Services
             }
         }
 
-        public async Task Execute(string email, string subject, string message)
+        public async Task Execute(string email, string subject, string message,IFormFile file)
         {
             try
             {
@@ -46,16 +48,28 @@ namespace Pmat_PI.Services
                 mail.To.Add(new MailAddress(toEmail));
                 mail.CC.Add(new MailAddress(_emailSettings.CcEmail));
 
-                mail.Subject = "Macoratti .net - " + subject;
+                mail.Subject = "PMATE - " + subject;
                 mail.Body = message;
                 mail.IsBodyHtml = true;
                 mail.Priority = MailPriority.High;
 
                 //outras opções
-                //mail.Attachments.Add(new Attachment(arquivo));
-                //
+                if (file == null){/*Do Nothing*/}
+                else if (file.Length > 0)
+                {
+                    byte[] fileBytes;
+                  
+                        using (var ms = new MemoryStream())
+                        {
+                            file.CopyTo(ms);
+                            fileBytes = ms.ToArray();
+                        }
+                        mail.Attachments.Add(new Attachment(new MemoryStream(fileBytes), file.FileName));
+                }
 
-                using (SmtpClient smtp = new SmtpClient(_emailSettings.PrimaryDomain, _emailSettings.PrimaryPort))
+
+
+                    using (SmtpClient smtp = new SmtpClient(_emailSettings.PrimaryDomain, _emailSettings.PrimaryPort))
                 {
                     smtp.Credentials = new NetworkCredential(_emailSettings.UsernameEmail, _emailSettings.UsernamePassword);
                     smtp.EnableSsl = true;
