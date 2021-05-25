@@ -311,10 +311,14 @@ CREATE TABLE pmate.EscolaProva(
 
 CREATE TABLE pmate.Equipa(
 	id int IDENTITY(1,1) PRIMARY KEY,
-	IdProva int NOT NULL,
 	nome VARCHAR(20),
+	DataCriacao Date,
+
+	IdProva int NOT NULL,
+	IdEscola int,
 
 	FOREIGN KEY(IdProva) REFERENCES pmate.Prova(id),
+	FOREIGN KEY (IdEscola) REFERENCES pmate.Escola(id),
 );
 
 CREATE TABLE pmate.AlunoEquipa( -- OLD dbo.tblalunosequipas
@@ -392,7 +396,7 @@ CREATE TABLE pmate.Treino(
 	id int IDENTITY(1,1) PRIMARY KEY, -- OLD IdCompeticao
 	IdAuthor nvarchar(450) NULL, 				  -- OLD IdUser
 	-- IdModoProva int NULL           -- OLD IdModoCompeticao & De onde vem este ID?
-	IdCompeticao int NULL,            -- OLD idCompeticaoEvento
+	--IdCompeticao int NULL,            -- OLD idCompeticaoEvento
 
 	NomeProva char(60) NULL,          -- OLD NomeCompeticao
 	DataCriacao datetime NULL,
@@ -412,7 +416,7 @@ CREATE TABLE pmate.Treino(
 	plataforma int NULL, 
 	-- IconName nvarchar(25) NULL, ESTA NULL EM 1870/2018 ROWS
 
-	FOREIGN KEY(IdCompeticao) REFERENCES pmate.Competicao(id),
+	--FOREIGN KEY(IdCompeticao) REFERENCES pmate.Competicao(id),
 	FOREIGN KEY(IdAuthor)     REFERENCES pmate.Users(id),
 
 	-- Possivelmente adicionar : IdCategoria int, FOREIGN KEY(IdCategoria) REFERENCES pmate.Categoria(id),

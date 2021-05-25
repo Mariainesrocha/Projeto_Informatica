@@ -94,13 +94,10 @@ GO
 
 
 -- Concelhos
--- 1.Bulk insert com as cenas do csv que tem DISTRITO - CONCELHO - FREGUESIA
--- 2.Fazer um Join pelos nomes dos concelhos:  temp_table com tblconcelhos.. Teremos : ID, Distrito, Concelho , FREGUESIA 
--- 3.Fazer INSERT na tabela pmate.Concelhos. id -> ID , nome -> Concelho, Distrito(FK) -> Distrito
 BEGIN TRANSACTION;
 SET IDENTITY_INSERT pmate.Concelho ON
 
--- BULK INSERT feito pelo Management Studio: Database -> rightclick -> Tasks -> Import Flat File - > Choose File -> Magic Done 
+-- INSERT feito pelo Management Studio: Database -> rightclick -> Tasks -> Import Flat File - > Choose File -> "Magic" Done 
 
 -- DELETE DUPE CONCELHO (BECAUSE THEY ARE SO SMART)
  UPDATE [pmate].dbo.tblescolas
@@ -419,9 +416,9 @@ JOIN (
 
 COMMIT;
 
--------------- User-Escola Historico
--------------- User-Escola Historico
 
+
+-------------- User-Escola Historico
 BEGIN TRANSACTION;
 SET IDENTITY_INSERT pmate.UserEscolaHistorico OFF
 
@@ -441,9 +438,7 @@ COMMIT;
 
 
 
-INSERT INTO pmate.Concelho(id,nome,distrito)
-SELECT  idConcelho,NomeConcelho,distrito
-FROM tblconcelhos INNER JOIN ConcelhosTemp ON NomeConcelho=concelho;
+
 
 ------------------------------------ MODELS  RELATED ---------------------------------
 
@@ -492,20 +487,46 @@ SET IDENTITY_INSERT pmate.Competicao OFF
 COMMIT;
 
 
-
 --Prova
 BEGIN TRANSACTION;
 SET IDENTITY_INSERT pmate.Prova ON
 
 INSERT INTO pmate.Prova(id,IdAuthor, IdCompeticao, NomeProva, DataCriacao, MaxEscolas, MaxTentJogo, TempoTotalJogo, NumNiveis, VidasPorNivel, NumElemsEquipa, Calculadora, DataInscFinal, DataProva, InicioPreInscricao, FimPreInscricao, InicioInscricaoEquipas, FimInscricaoEquipas, FimProva, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma)
-SELECT IdCompeticao, IdUser, idCompeticaoEvento, NomeCompeticao, DataCriacao, NumaMaxEqEscolas, MaxTentJogo, TempoTotalJogo, NumTotNiveis, VidasPorNivel, NumEltosEquipa, Calculadora, DataInscFinal, DiaHoraCompeticao, InicioPreInscricao, FimPreInscricao, InicioInscricaoEquipas, FimInscricaoEquipas, FimProva, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma
-FROM dbo.tblcompeticao
+SELECT IdCompeticao, IdUser, idCompeticaoEvento, NomeCompeticao, DataCriacao, NumaMaxEqEscolas, MaxTentJogo, TempoTotalJogo, NumTotNiveis, VidasPorNivel, NumEltosEquipa, Calculadora, DataInscFinal, DiaHoraCompeticao, InicioPreInscricao, FimPreInscricao, InicioInscricaoEquipas, FimInscricaoEquipas, NULL, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma
+FROM [192.168.160.31].[pmate-Equamat2000].dbo.tblcompeticao
+where NomeCompeticao not like '%treino%'
 
 SET IDENTITY_INSERT pmate.Prova OFF
 COMMIT;
 
 
+
+-- Equipa - not finished
+BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.Equipa ON
+
+INSERT INTO pmate.Equipa(id,nome,DataCriacao,????IdProva????,IdEscola)
+SELECT IdEquipa,NomeEquipa,DataCriacao,IdEscola
+FROM dbo.tblEquipas
+
+SET IDENTITY_INSERT pmate.Equipa OFF
+COMMIT;
+
+
+
+
 ------------------------------------ TRAINNING_TESTS  RELATED -----------------------------------
 
+--Treino
+BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.Treino ON
+
+INSERT INTO pmate.Treino(id,IdAuthor, NomeProva, DataCriacao, MaxEscolas, MaxTentJogo, TempoTotalJogo, NumNiveis, VidasPorNivel, NumElemsEquipa, Calculadora, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma)
+SELECT IdCompeticao, IdUser, NomeCompeticao, DataCriacao, NumaMaxEqEscolas, MaxTentJogo, TempoTotalJogo, NumTotNiveis, VidasPorNivel, NumEltosEquipa, Calculadora, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma
+FROM [192.168.160.31].[pmate-Equamat2000].dbo.tblcompeticao
+Where NomeCompeticao like '%treino%'
+
+SET IDENTITY_INSERT pmate.Treino OFF
+COMMIT;
 
 
