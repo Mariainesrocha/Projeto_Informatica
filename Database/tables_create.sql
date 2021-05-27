@@ -223,18 +223,72 @@ CREATE TABLE pmate.UserEscolaHistorico (
 ------------------------------------ MODELS  RELATED -----------------------------------
 
 CREATE TABLE pmate.Modelo(
-    id nvarchar(15) PRIMARY KEY,
-    refCicloEnsinoID char(10) NOT NULL,
-    Expr1 char(3) NOT NULL,
-    SubTema int NOT NULL,
-    Objectivo_Principal int NOT NULL,
-    Objectivo_Secundario int NOT NULL,
-    Nivel_Dificuldade int NOT NULL,
-    contador int NOT NULL
+    id int PRIMARY KEY,
+    Tipo nvarchar(10),
+);
+
+CREATE TABLE pmate.ModeloNovo(
+	IdModel int PRIMARY KEY,
+	Question nvarchar(max) NULL,
+	Id_ModeLevel int NOT NULL,
+	IdModelType int NOT NULL,
+	Id_Tree int NOT NULL,
+	AnswersNumber smallint NULL,
+	Id_Cycle int NULL,
+	Id_ModelVersion int NULL,
+	Status bit NULL,
+	XML xml NULL,
+	Id_User int NULL,
+	Obs nvarchar(100) NULL,
+
+	FOREIGN KEY (IdModel) REFERENCES pmate.Modelo(id),
+); 
+
+CREATE TABLE pmate.ModeloVelho(
+	IdModel int PRIMARY KEY, -- OLD: ModelId
+	Name nvarchar(15) NULL,
+	Objectives ntext NULL,
+	Question ntext NULL,
+	Solution nvarchar(255) NULL,
+	Restrictions nvarchar(255) NULL,
+	Obs nvarchar(50) NULL,
+	NumeroRespostas int NULL,
+	DataModificado datetime NULL,
+	ModificadoPor nvarchar(50) NULL,
+	Letras nchar(30) NULL,
+	Tipo int NULL,
+	cCicloEnsino int NULL,
+	cNivelDificuldade int NULL,
+	cContador int NULL,
+	cResponsavel int NULL,
+	cDataElaboracao datetime NULL,
+	cInformacaoAdicional ntext NULL,
+
+	FOREIGN KEY (IdModel) REFERENCES pmate.Modelo(id),
 );
 
 
+CREATE TABLE pmate.ProvaModelos(
+	IdProva int NOT NULL, --OLD: refIdComp
+	IdModelo int NOT NULL, --OLD: refModelId
+	Nivel int NOT NULL,
 
+	PRIMARY KEY (IdProva,IdModelo,Nivel),
+
+	FOREIGN KEY (IdProva) REFERENCES pmate.Prova(id),
+	FOREIGN KEY (IdModelo) REFERENCES pmate.Modelo(id),
+);
+
+CREATE TABLE pmate.TreinoModelos(
+	IdTreino int NOT NULL, --OLD: refIdComp
+	IdModelo int NOT NULL, --OLD: refModelId
+	Nivel int NOT NULL,
+
+	PRIMARY KEY (IdTreino,IdModelo,Nivel),
+
+	FOREIGN KEY (IdTreino) REFERENCES pmate.Treino(id),
+	FOREIGN KEY (IdModelo) REFERENCES pmate.Modelo(id),
+);
 
 
 
@@ -282,60 +336,73 @@ CREATE TABLE pmate.Prova(
 	-- IconName nvarchar(25) NULL, ESTA NULL EM 1870/2018 ROWS
 
 	FOREIGN KEY(IdCompeticao) REFERENCES pmate.Competicao(id),
-	FOREIGN KEY(IdAuthor)     REFERENCES pmate.Users(id),
+	FOREIGN KEY(IdAuthor)     REFERENCES dbo.AspNetUsers(id),
 
 	-- Possivelmente adicionar : IdCategoria int, FOREIGN KEY(IdCategoria) REFERENCES pmate.Categoria(id),
 
 );
 
-CREATE TABLE pmate.Categoria( -- OLD dbo.tblCompeticaoBase(
-	id int IDENTITY(1,1) PRIMARY KEY, --OLD competicaoBaseId
-	nome nvarchar(50) NOT NULL, -- OLD designacao
-	-- competicaoBasePaiId int NULL, --Apenas 15/35 rows não estão Null. -- Pq q CompeticaoBase tem id para um 'BasePai'?
+CREATE TABLE pmate.Categoria(             -- OLD dbo.tblCompeticaoBase(
+	id int IDENTITY(1,1) PRIMARY KEY,     -- OLD competicaoBaseId
+	nome nvarchar(50) NOT NULL,           -- OLD designacao
+	-- competicaoBasePaiId int NULL,      -- Apenas 15/35 rows não estão Null. -- Pq q CompeticaoBase tem id para um 'BasePai'?
 	TempoTotalJogo int NULL,
 	NumTotNiveis int NOT NULL,
-	-- Calculadora bit NULL, -- Qual a utilidade de ter isto aqui se isto já é definido em cada Prova individualmente ?
+	-- Calculadora bit NULL,              -- Qual a utilidade de ter isto aqui se isto já é definido em cada Prova individualmente ?
 	Estilo nvarchar(25) NULL,
 	RefIdCicloEnsino int NULL,
 	IconName nvarchar(25) NULL
 )
 GO
 
-CREATE TABLE pmate.EscolaProva(
-	idEscola int NOT NULL,
-	idProva int NOT NULL
-	PRIMARY KEY(idEscola,idProva),
-	FOREIGN KEY(idEscola) REFERENCES pmate.Escola(id),
-	FOREIGN KEY(idProva) REFERENCES pmate.Prova(id)
+
+
+CREATE TABLE [pmate2-demo].pmate.ProvaEscolas(  -- OLD: dbo.tblinsccompescola
+	--IdInscricao int IDENTITY(1,1) PRIMARY KEY, -- Old: idInscCompEscola
+	IdEscola int NOT NULL, 					   -- Old: idEscola
+	IdProva int NOT NULL,                      -- Old: idProva
+	IdUserEscola int NULL,                     -- Que user é este e para que serve? -- Old: idUserEscola
+
+	DataRegisto datetime2(3) NOT NULL,
+	EscolaOrganizadora int NULL,			   -- OLD: refescolaorganizadora
+	AnoLetivo nvarchar(10) NULL, 			   -- OLD: refanolectivo
+	
+
+	PRIMARY KEY (idEscola,idProva),
+
+	FOREIGN KEY(idEscola)  REFERENCES  [pmate2-demo].pmate.Escola(id),
+	FOREIGN KEY(idProva)   REFERENCES  [pmate2-demo].pmate.Prova(id),
+	FOREIGN KEY(EscolaOrganizadora) REFERENCES  [pmate2-demo].pmate.Escola(id),
+	FOREIGN KEY(AnoLetivo) REFERENCES  [pmate2-demo].pmate.AnoLetivo(AnoLetivo)
 );
 
-CREATE TABLE pmate.Equipa(
-	id int IDENTITY(1,1) PRIMARY KEY,
-	nome VARCHAR(20),
-	DataCriacao Date,
 
-	IdProva int NOT NULL,
+
+CREATE TABLE pmate.Equipa( -- OLD: tblequipas
+	id int IDENTITY(1,1) PRIMARY KEY,
+	nome VARCHAR(50),
+	DataCriacao Date,
 	IdEscola int,
 
-	FOREIGN KEY(IdProva) REFERENCES pmate.Prova(id),
 	FOREIGN KEY (IdEscola) REFERENCES pmate.Escola(id),
 );
 
-CREATE TABLE pmate.AlunoEquipa( -- OLD dbo.tblalunosequipas
-	-- IdAlunoEquipa int NOT NULL, provavelmente desnecessario.. + facil apanhar todos os alunos de 1 equipa ao pesquisar por IdEquipa
-	IdEquipa int,
-	IdAluno int, -- OLD IdUser
-	-- iduser_pk int NOT NULL, NO IDEA WHY AGAIN..
-	-- idequipa_pk int NOT NULL, NO IDEA WHY AGAIN..
 
-	PRIMARY KEY(IdEquipa,IdAluno),
+CREATE TABLE pmate.EquipaAlunos( -- OLD dbo.tblalunosequipas
+	IdAlunoEquipa int  IDENTITY(1,1) PRIMARY KEY , 
+	IdEquipa int,
+	IdUser nvarchar(450), 
+	-- iduser_pk int NOT NULL, provavelmente inutil
+	-- idequipa_pk int NOT NULL, provavelmente inutil 
+
+	CONSTRAINT equipa_user UNIQUE(IdEquipa,IdUser),
 	FOREIGN KEY(IdEquipa) REFERENCES pmate.Equipa(id),
-	FOREIGN KEY(IdAluno)  REFERENCES pmate.UserRoleEscola(id)
+	FOREIGN KEY(IdUser)  REFERENCES dbo.AspNetUsers(id)
 );
 
 
 
-CREATE TABLE pmate.ProvaModelo( -- OLD dbo.tblcompmodel 
+CREATE TABLE pmate.ProvaModelos( -- OLD dbo.tblcompmodel 
 	idModelo nvarchar(15) NOT NULL,
 	idProva int NOT NULL,
 	Nivel int NOT NULL,
@@ -346,14 +413,22 @@ CREATE TABLE pmate.ProvaModelo( -- OLD dbo.tblcompmodel
 );
 
 
-CREATE TABLE pmate.EnunciadoEquipa( -- OLD JogoGerado
-	id int IDENTITY(1,1) PRIMARY KEY,
-	IdProva int NOT NULL, -- OLD IdJogo
-	IdCOmpet int NOT NULL, -- Dafuk is this?
+CREATE TABLE pmate.EquipaProva( -- OLD:  tblequipascomp
 	IdEquipa int NOT NULL,
-	idequipa_pk int NOT NULL, -- WHY AGAIN !?
+	IdProva int NOT NULL,
+
+	PRIMARY KEY(IdProva,IdEquipa),
+	FOREIGN KEY (IdEquipa) REFERENCES pmate.Equipa(id),
+	FOREIGN KEY(IdProva) REFERENCES pmate.Prova(id),
+);
+
+CREATE TABLE pmate.ProvaEquipaEnunciado( -- OLD JogoGerado
+	id int IDENTITY(1,1) PRIMARY KEY, -- OLD : IdJogo 
+	IdEquipa int NOT NULL,
+	IdProva int NOT NULL, -- OLD IdCOmpet
+
 	_Data datetime NOT NULL,
-	Status int ,
+	_Status int ,
 	ultimoNivel int,
 	tempo char(10),
 
@@ -361,25 +436,28 @@ CREATE TABLE pmate.EnunciadoEquipa( -- OLD JogoGerado
 	FOREIGN KEY(IdEquipa) REFERENCES pmate.Equipa(id),
 )
 
-CREATE TABLE pmate.EnunciadoEquipaNivel( -- FALTAM AQUI ATTRS!!!!!!!!!!!!!
+CREATE TABLE pmate.ProvaEqEnunNivel( 
+	-- FALTAM AQUI ATTRS!!!!!!!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
 	IdEnunciadoEquipa int,
 
-	FOREIGN KEY(IdEnunciadoEquipa) REFERENCES pmate.EnunciadoEquipa(id), 
+	FOREIGN KEY(IdEnunciadoEquipa) REFERENCES pmate.ProvaEquipaEnunciado(id), 
 );
 
-CREATE TABLE pmate.EnunciadoEquipaNivelUserResposta(  -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
+CREATE TABLE pmate.ProvaEqEnunNivelUserResp( 
+	 -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
-	IdEnunciadoEquipaNivel int,
+	IdNivel int,
 
-	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.EnunciadoEquipaNivel(id),
+	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.ProvaEqEnunNivel(id),
 );
 
-CREATE TABLE pmate.EnunciadoEquipaNivelResposta(  -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
+CREATE TABLE pmate.ProvaEqEnunNivelResps(  
+	-- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
-	IdEnunciadoEquipaNivel int,
+	IdNivel int,
 
-	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.EnunciadoEquipaNivel(id),
+	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.ProvaEqEnunNivel(id),
 );
 
 
@@ -396,7 +474,6 @@ CREATE TABLE pmate.Treino(
 	id int IDENTITY(1,1) PRIMARY KEY, -- OLD IdCompeticao
 	IdAuthor nvarchar(450) NULL, 				  -- OLD IdUser
 	-- IdModoProva int NULL           -- OLD IdModoCompeticao & De onde vem este ID?
-	--IdCompeticao int NULL,            -- OLD idCompeticaoEvento
 
 	NomeProva char(60) NULL,          -- OLD NomeCompeticao
 	DataCriacao datetime NULL,
@@ -416,13 +493,12 @@ CREATE TABLE pmate.Treino(
 	plataforma int NULL, 
 	-- IconName nvarchar(25) NULL, ESTA NULL EM 1870/2018 ROWS
 
-	--FOREIGN KEY(IdCompeticao) REFERENCES pmate.Competicao(id),
-	FOREIGN KEY(IdAuthor)     REFERENCES pmate.Users(id),
+	FOREIGN KEY(IdAuthor)     REFERENCES dbo.AspNetUsers(id),
 
 	-- Possivelmente adicionar : IdCategoria int, FOREIGN KEY(IdCategoria) REFERENCES pmate.Categoria(id),
 );
 
-CREATE TABLE pmate.TreinoModelo( -- OLD dbo.tblcompmodel 
+CREATE TABLE pmate.TreinoModelos( -- OLD dbo.tblcompmodel 
 	IdModelo nvarchar(15) NOT NULL,
 	IdTreino int NOT NULL,
 	Nivel int NOT NULL,
@@ -431,38 +507,39 @@ CREATE TABLE pmate.TreinoModelo( -- OLD dbo.tblcompmodel
 	FOREIGN KEY(idTreino) REFERENCES pmate.Treino(id),
 );
 
-CREATE TABLE pmate.EnunciadoTreino( -- Antigo JogoGerado PRECISA DE MODIFICA�OES!!!
-	id int IDENTITY(1,1) PRIMARY KEY,
-	IdProva int NOT NULL, -- Antigo IdJogo
-	IdCOmpet int NOT NULL, -- Dafuk is this?
-	IdEquipa int NOT NULL,
-	idequipa_pk int NOT NULL, -- WHY AGAIN !?
-	_Data datetime NOT NULL,
-	Status int ,
+CREATE TABLE pmate.TreinoEnunciado( -- Antigo JogoGerado PRECISA DE MODIFICA�OES!!!
+	id int IDENTITY(1,1) PRIMARY KEY,  -- OLD: IdJogo
+	-- IdJogoGeradoAnterior int,       -- Provavelmente inutil. a tabela de jogos 2020_2021 n tem este attr       
+	IdUser nvarchar(450) NOT NULL,     -- OLD: IdEquipa - > É para tentar ir buscar o id do aluno que fez o treino. Treinos são indivuais portanto equipa é desnecessário
+	IdTreino int NOT NULL,           -- OLD: IdCOmpet
+	
+
+	_Data datetime NOT NULL,        -- OLD: Data
+	_Status int ,                   -- OLD: Status
 	ultimoNivel int,
 	tempo char(10),
 
-	FOREIGN KEY(IdProva) REFERENCES pmate.Prova(id),
-	FOREIGN KEY(IdEquipa) REFERENCES pmate.Equipa(id),
+	FOREIGN KEY(IdTreino) REFERENCES pmate.Treino(id),
+	FOREIGN KEY(IdUser) REFERENCES dbo.AspNetUsers(id),
 )
 
 
 
-CREATE TABLE pmate.EnunciadoTreinoNivel( -- FALTAM AQUI ATTRS!!!!!!!!!!!!!
+CREATE TABLE pmate.TreinoEnunNivel( -- FALTAM AQUI ATTRS!!!!!!!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
 	IdEnunciadoEquipa int,
 
 	FOREIGN KEY(IdEnunciadoEquipa) REFERENCES pmate.EnunciadoEquipa(id), 
 );
 
-CREATE TABLE pmate.EnunciadoTreinoNivelUserResposta(  -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
+CREATE TABLE pmate.TreinoEnunNivelUserResp(  -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
 	IdEnunciadoEquipaNivel int,
 
 	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.EnunciadoEquipaNivel(id),
 );
 
-CREATE TABLE pmate.EnunciadoTreinoNivelResposta(  -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
+CREATE TABLE pmate.TreinoEnunNivelResps(  -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
 	IdEnunciadoEquipaNivel int,
 
@@ -478,22 +555,24 @@ CREATE TABLE pmate.EnunciadoTreinoNivelResposta(  -- FALTAM AQUI ATTRS!!!!!!!!!!
 -- DROP TABLES 
 
 ------------------------------------ EXAMS  RELATED -----------------------------------
-DROP TABLE pmate.EnunciadoEquipaNivelResposta;
-DROP TABLE pmate.EnunciadoEquipaNivelUserResposta;
-DROP TABLE pmate.EnunciadoEquipaNivel;
-DROP TABLE pmate.EnunciadoEquipa;
-DROP TABLE pmate.ProvaModelo;
-DROP TABLE pmate.AlunoEquipa;
+DROP TABLE pmate.ProvaEqEnunNivelResps;
+DROP TABLE pmate.ProvaEqEnunNivelUserResp;
+DROP TABLE pmate.ProvaEqEnunNiveis;
+DROP TABLE pmate.ProvaEquipaEnunciado;
+DROP TABLE pmate.ProvaModelos;
+DROP TABLE pmate.EquipaAlunos;
+DROP TABLE pmate.EquipaProva
 DROP TABLE pmate.Equipa;
-DROP TABLE pmate.EscolaProva;
+DROP TABLE pmate.ProvaEscolas;
+DROP TABLE pmate.Prova
 DROP TABLE pmate.Categoria;
 DROP TABLE pmate.Competicao;
 
 ------------------------------------ TRAINNING_TESTS  RELATED -----------------------------------
-DROP TABLE pmate.EnunciadoTreinoNivelResposta;
-DROP TABLE pmate.EnunciadoTreinoNivelUserResposta;
-DROP TABLE pmate.EnunciadoTreinoNivel;
-DROP TABLE pmate.EnunciadoTreino;
+DROP TABLE pmate.TreinoEnunNivelResps;
+DROP TABLE pmate.TreinoEnunNivelUserResp;
+DROP TABLE pmate.TreinoEnunNiveis;
+DROP TABLE pmate.TreinoEnunciado;
 DROP TABLE pmate.TreinoModelo;
 DROP TABLE pmate.Treino;
 

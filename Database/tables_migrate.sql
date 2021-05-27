@@ -363,13 +363,11 @@ COMMIT;
 
 --AnoLetivo
 BEGIN TRANSACTION;
-SET IDENTITY_INSERT pmate.AnoLetivo ON
 
-INSERT INTO pmate.AnoLetivo(AnoLetivo,Inicio,Fim)
+INSERT INTO [pmate2-demo].pmate.AnoLetivo(AnoLetivo,Inicio,Fim)
 SELECT AnoLectivo, Inicio, Fim
-FROM dbo.dicanolectivo
+FROM [pmate-Equamat2000].dbo.dicanolectivo
 
-SET IDENTITY_INSERT pmate.AnoLetivo OFF
 COMMIT;
 
 
@@ -444,21 +442,62 @@ COMMIT;
 
 --Modelo
 BEGIN TRANSACTION;
-SET IDENTITY_INSERT pmate.Modelo ON
 
-INSERT INTO pmate.Modelo(id, refCicloEnsinoID, Expr1, SubTema, Objectivo_Principal, Objectivo_Secundario, Nivel_Dificuldade, contador)
-SELECT Name, refCicloEnsinoID, Expr1, SubTema, [Objectivo Principal], [Objectivo Secund�rio], [N�vel Dificuldade], contador
-FROM dbo.rv_CodigoModelo
+INSERT INTO pmate.Modelo(id,Tipo)
+SELECT IdModel, 'NEW'
+FROM [pmate-Equamat2000].dbo.Model
 
-SET IDENTITY_INSERT pmate.Modelo OFF
+INSERT INTO pmate.Modelo(id,Tipo)
+SELECT ModelID, 'OLD'
+FROM [pmate-Equamat2000].dbo.ModelsMD
+
+COMMIT;
+
+
+--ModeloNovo
+BEGIN TRANSACTION;
+
+INSERT INTO pmate.ModeloNovo(IdModel,Question,Id_ModeLevel,IdModelType,Id_Tree,AnswersNumber,Id_Cycle,Id_ModelVersion,Status,XML,Id_User,Obs)
+SELECT IdModel,Question,Id_ModeLevel,IdModelType,Id_Tree,AnswersNumber,Id_Cycle,Id_ModelVersion,Status,XML,Id_User,Obs
+FROM [pmate-Equamat2000].dbo.Model
+
 COMMIT;
 
 
 
+--ModeloVelho
+BEGIN TRANSACTION;
+
+INSERT INTO pmate.ModeloVelho(IdModel,Name,Objectives,Question,Solution ,Restrictions ,Obs,NumeroRespostas,DataModificado ,ModificadoPor,Letras,Tipo,
+cCicloEnsino,cNivelDificuldade,cContador,cResponsavel,cDataElaboracao,cInformacaoAdicional)
+
+SELECT ModelId,Name,Objectives,Question,Solution ,Restrictions ,Obs,NumeroRespostas,DataModificado ,ModificadoPor,Letras,Tipo,
+cCicloEnsino,cNivelDificuldade,cContador,cResponsavel,cDataElaboracao,cInformacaoAdicional
+FROM [pmate-Equamat2000].dbo.ModelsMD
+
+COMMIT;
 
 
+--ProvaModelos
+BEGIN TRANSACTION;
+
+INSERT INTO pmate.ProvaModelos(IdProva,IdModelo,Nivel)
+SELECT refIdComp,refModelId,Nivel
+FROM [pmate-Equamat2000].dbo.tblcompmodel
+join pmate.Prova on id=refIdComp
+
+COMMIT;
 
 
+--TreinoModelos
+BEGIN TRANSACTION;
+
+INSERT INTO pmate.TreinoModelos(IdTreino,IdModelo,Nivel)
+SELECT refIdComp,refModelId,Nivel
+FROM [pmate-Equamat2000].dbo.tblcompmodel
+join pmate.Treino on id=refIdComp
+
+COMMIT;
 
 ------------------------------------ EXAMS  RELATED -----------------------------------
 
@@ -481,7 +520,7 @@ SET IDENTITY_INSERT pmate.Competicao ON
 
 INSERT INTO pmate.Competicao(id, Nome, DataInicio, DataFim, Etiqueta)
 SELECT IdCompeticaoEvento, NomeEvento, DataInicio, Datafim, Etiqueta
-FROM dbo.tblcompeticaoEvento
+FROM [pmate-Equamat2000].dbo.tblcompeticaoEvento
 
 SET IDENTITY_INSERT pmate.Competicao OFF
 COMMIT;
@@ -493,25 +532,97 @@ SET IDENTITY_INSERT pmate.Prova ON
 
 INSERT INTO pmate.Prova(id,IdAuthor, IdCompeticao, NomeProva, DataCriacao, MaxEscolas, MaxTentJogo, TempoTotalJogo, NumNiveis, VidasPorNivel, NumElemsEquipa, Calculadora, DataInscFinal, DataProva, InicioPreInscricao, FimPreInscricao, InicioInscricaoEquipas, FimInscricaoEquipas, FimProva, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma)
 SELECT IdCompeticao, IdUser, idCompeticaoEvento, NomeCompeticao, DataCriacao, NumaMaxEqEscolas, MaxTentJogo, TempoTotalJogo, NumTotNiveis, VidasPorNivel, NumEltosEquipa, Calculadora, DataInscFinal, DiaHoraCompeticao, InicioPreInscricao, FimPreInscricao, InicioInscricaoEquipas, FimInscricaoEquipas, NULL, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma
-FROM [192.168.160.31].[pmate-Equamat2000].dbo.tblcompeticao
+FROM [pmate-Equamat2000].dbo.tblcompeticao
 where NomeCompeticao not like '%treino%'
 
 SET IDENTITY_INSERT pmate.Prova OFF
 COMMIT;
 
 
+--ProvaEscolas
+BEGIN TRANSACTION;
 
--- Equipa - not finished
+INSERT INTO pmate.ProvaEscolas(IdEscola,IdProva,IdUserEscola,DataRegisto,EscolaOrganizadora,AnoLetivo)			 
+SELECT distinct [pmate-Equamat2000].dbo.tblinsccompescola.idEscola,[pmate-Equamat2000].dbo.tblinsccompescola.IdCompeticao, idUserEscola,MaxDate,refescolaorganizadora, refanolectivo
+FROM [pmate-Equamat2000].dbo.tblinsccompescola
+join pmate.Prova on pmate.Prova.id=[pmate-Equamat2000].dbo.tblinsccompescola.IdCompeticao --Avoid deleted Provas
+join pmate.Escola on pmate.Escola.id=[pmate-Equamat2000].dbo.tblinsccompescola.IdEscola   --Avoid deleted Escolas
+JOIN (                                                                                    --Avoid duplicated registries with different insert dates
+    select idEscola,IdCompeticao, max(DataRegisto) as MaxDate
+    from  [pmate-Equamat2000].dbo.tblinsccompescola
+    group by idEscola,IdCompeticao
+) tm ON [pmate-Equamat2000].dbo.tblinsccompescola.idEscola = tm.idEscola
+        and [pmate-Equamat2000].dbo.tblinsccompescola.IdCompeticao = tm.IdCompeticao
+        and [pmate-Equamat2000].dbo.tblinsccompescola.DataRegisto = tm.MaxDate
+COMMIT
+
+
+-- Equipa 
 BEGIN TRANSACTION;
 SET IDENTITY_INSERT pmate.Equipa ON
 
-INSERT INTO pmate.Equipa(id,nome,DataCriacao,????IdProva????,IdEscola)
-SELECT IdEquipa,NomeEquipa,DataCriacao,IdEscola
-FROM dbo.tblEquipas
+INSERT INTO pmate.Equipa(id,Nome,DataCriacao,IdEscola)
+SELECT IdEquipa,NomeEquipa,dataI,IdEscola
+FROM [pmate-Equamat2000].dbo.tblEquipas
+join pmate.Escola on IdEscola=pmate.Escola.id -- Avoid deleted schools
 
 SET IDENTITY_INSERT pmate.Equipa OFF
 COMMIT;
 
+
+-- EquipaProva
+BEGIN TRANSACTION;
+
+INSERT INTO pmate.EquipaProva(IdEquipa,IdProva)
+SELECT distinct IdEquipa,[pmate-Equamat2000].dbo.tblequipascomp.IdCompeticao
+FROM [pmate-Equamat2000].dbo.tblequipascomp
+join pmate.Equipa on pmate.Equipa.id=IdEquipa -- Avoid deleted equipas
+join pmate.Prova on pmate.Prova.id=[pmate-Equamat2000].dbo.tblequipascomp.IdCompeticao --Avoid deleted Provas
+
+COMMIT;
+
+
+
+-- EquipaAlunos
+BEGIN TRANSACTION;
+
+INSERT INTO pmate.EquipaAlunos(IdEquipa,IdUser)
+SELECT distinct IdEquipa,IdUser
+FROM [pmate-Equamat2000].dbo.tblalunosequipas
+join pmate.Equipa on pmate.Equipa.id=IdEquipa -- Avoid deleted equipas
+join dbo.AspNetUsers on dbo.AspNetUsers.id= cast(IdUser as nvarchar) -- Avoid deleted users
+
+COMMIT;
+
+
+
+--ProvaEquipaEnunciado
+BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.ProvaEquipaEnunciado ON
+
+INSERT INTO pmate.ProvaEquipaEnunciado(id,IdProva,IdEquipa,_Data,_Status,ultimoNivel,tempo)
+SELECT distinct [pmate-Equamat2000].dbo.tblJogoGeradoAnterior.IdJogo,MaxIdComp, IdEquipa,Data,Status,MaxNivel,tempo
+FROM [pmate-Equamat2000].dbo.tblJogoGeradoAnterior 
+join pmate.Prova on pmate.Prova.id=IdCOmpet --Buscar Apenas Provas
+join  pmate.Equipa on  pmate.Equipa.id=[pmate-Equamat2000].dbo.tblJogoGeradoAnterior.IdEquipa --Buscar o id da equipa
+JOIN (                                                                                    --Avoid duplicated IdJogo
+    select distinct IdJogo, max( IdCOmpet) as MaxIdComp, max(ultimoNivel) as MaxNivel
+    from  [pmate-Equamat2000].dbo.tblJogoGeradoAnterior
+    group by IdJogo
+) tm ON  [pmate-Equamat2000].dbo.tblJogoGeradoAnterior.IdJogo = tm.IdJogo 
+		and [pmate-Equamat2000].dbo.tblJogoGeradoAnterior.IdCOmpet = tm.MaxIdComp
+		and [pmate-Equamat2000].dbo.tblJogoGeradoAnterior.ultimoNivel = tm.MaxNivel
+
+
+INSERT INTO pmate.ProvaEquipaEnunciado(id,IdProva,IdEquipa,_Data,_Status,ultimoNivel,tempo)
+SELECT  IdJogo,IdCOmpet, IdEquipa,Data,Status,ultimoNivel,tempo
+FROM [pmate-Equamat2000].dbo.tblJogoGerado_2020_2021 
+join pmate.Prova on pmate.Prova.id=IdCOmpet --Buscar Apenas Provas
+join  pmate.Equipa on  pmate.Equipa.id=[pmate-Equamat2000].dbo.tblJogoGerado_2020_2021.IdEquipa --Buscar o id da equipa
+
+
+SET IDENTITY_INSERT pmate.ProvaEquipaEnunciado OFF
+COMMIT;
 
 
 
@@ -523,10 +634,41 @@ SET IDENTITY_INSERT pmate.Treino ON
 
 INSERT INTO pmate.Treino(id,IdAuthor, NomeProva, DataCriacao, MaxEscolas, MaxTentJogo, TempoTotalJogo, NumNiveis, VidasPorNivel, NumElemsEquipa, Calculadora, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma)
 SELECT IdCompeticao, IdUser, NomeCompeticao, DataCriacao, NumaMaxEqEscolas, MaxTentJogo, TempoTotalJogo, NumTotNiveis, VidasPorNivel, NumEltosEquipa, Calculadora, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma
-FROM [192.168.160.31].[pmate-Equamat2000].dbo.tblcompeticao
+FROM [pmate-Equamat2000].dbo.tblcompeticao
 Where NomeCompeticao like '%treino%'
 
 SET IDENTITY_INSERT pmate.Treino OFF
 COMMIT;
 
+
+
+--EnunciadoTreino
+BEGIN TRANSACTION;
+SET IDENTITY_INSERT pmate.TreinoEnunciado ON
+
+INSERT INTO pmate.TreinoEnunciado(id,IdTreino,IdUser,_Data,_Status,ultimoNivel,tempo)
+SELECT distinct [pmate-Equamat2000].dbo.tblJogoGeradoAnterior.IdJogo,MaxIdComp, IdUser,Data,Status,MaxNivel,tempo
+FROM [pmate-Equamat2000].dbo.tblJogoGeradoAnterior 
+join pmate.Treino on pmate.Treino.id=IdCOmpet --Buscar Apenas Treinos
+join  [pmate-Equamat2000].dbo.tblalunosequipas on  [pmate-Equamat2000].dbo.tblalunosequipas.IdEquipa=[pmate-Equamat2000].dbo.tblJogoGeradoAnterior.IdEquipa --Buscar o id do user da equipa
+join dbo.AspNetUsers on dbo.AspNetUsers.id=cast(IdUser as nvarchar) -- Avoid deleted users
+JOIN (                                                                                    --Avoid duplicated IdJogo
+    select distinct IdJogo, max( IdCOmpet) as MaxIdComp, max(ultimoNivel) as MaxNivel
+    from  [pmate-Equamat2000].dbo.tblJogoGeradoAnterior
+    group by IdJogo
+) tm ON  [pmate-Equamat2000].dbo.tblJogoGeradoAnterior.IdJogo = tm.IdJogo 
+		and [pmate-Equamat2000].dbo.tblJogoGeradoAnterior.IdCOmpet = tm.MaxIdComp
+		and [pmate-Equamat2000].dbo.tblJogoGeradoAnterior.ultimoNivel = tm.MaxNivel
+
+
+INSERT INTO pmate.TreinoEnunciado(id,IdTreino,IdUser,_Data,_Status,ultimoNivel,tempo)
+SELECT  IdJogo,IdCOmpet, IdUser,Data,Status,ultimoNivel,tempo
+FROM [pmate-Equamat2000].dbo.tblJogoGerado_2020_2021 
+join pmate.Treino on pmate.Treino.id=IdCOmpet --Buscar Apenas Treinos
+join  [pmate-Equamat2000].dbo.tblalunosequipas on  [pmate-Equamat2000].dbo.tblalunosequipas.IdEquipa=[pmate-Equamat2000].dbo.tblJogoGerado_2020_2021.IdEquipa --Buscar o id do user da equipa
+join dbo.AspNetUsers on dbo.AspNetUsers.id=cast(IdUser as nvarchar) -- Avoid deleted users
+
+
+SET IDENTITY_INSERT pmate.TreinoEnunciado OFF
+COMMIT;
 
