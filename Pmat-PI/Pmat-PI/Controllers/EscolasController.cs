@@ -24,6 +24,8 @@ namespace Pmat_PI
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
+            ViewData["NomeSortParm"] = sortOrder == "Nome de Escola" ? "nome_desc" : "nome_asc";
+            ViewData["LocalidadeSortParm"] = sortOrder == "Localidade" ? "localidade_desc" : "localidade_asc";
 
             var escolas = from e in _context.Escolas.Include(e => e.IdTipoEscolaNavigation).Include(e => e.IdconcelhoNavigation) select e;
           
@@ -40,6 +42,25 @@ namespace Pmat_PI
             if (!String.IsNullOrEmpty(searchString))
             {
                 escolas = escolas.Where(e => e.NomeEscola.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "nome_desc":
+                    escolas = escolas.OrderByDescending(e => e.NomeEscola);
+                    break;
+                case "nome_asc":
+                    escolas = escolas.OrderBy(e => e.NomeEscola);
+                    break;
+                case "localidade_desc":
+                    escolas = escolas.OrderByDescending(e => e.Localidade);
+                    break;
+                case "localidade_asc":
+                    escolas = escolas.OrderBy(e => e.Localidade);
+                    break;
+                default:
+                    escolas = escolas.OrderBy(e => e.Id);
+                    break;
             }
 
             int pageSize = 50;
@@ -60,6 +81,10 @@ namespace Pmat_PI
                 .Include(e => e.IdTipoEscolaNavigation)
                 .Include(e => e.IdconcelhoNavigation).AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (escola.IdFreguesia.HasValue) {
+                ViewBag.freguesia = _context.Freguesia.Where(f => f.Id == escola.IdFreguesia).First();
+            }
             if (escola == null)
             {
                 return NotFound();
@@ -107,6 +132,13 @@ namespace Pmat_PI
             {
                 return NotFound();
             }
+            if (escola.IdFreguesia != null) {
+                var f = _context.Freguesia.Where(e => e.Id == escola.IdFreguesia).First();
+                ViewBag.freguesia_nome = f.Nome;
+                ViewBag.freguesia_id = f.Id;
+            }
+                
+
             PopulateDropDownList(escola.IdconcelhoNavigation, escola.IdTipoEscolaNavigation);
             return View(escola);
         }
@@ -156,6 +188,16 @@ namespace Pmat_PI
             ViewData["Idconcelho"] = new SelectList(concelhoQuery.AsNoTracking(), "Id", "Nome", selectedConcelho);
         }
 
+         [Produces("application/json")]
+        public JsonResult GetFreguesias(string concelho = null)
+        {
+            List<Freguesia> freguesias = null;
+            if (!String.IsNullOrEmpty(concelho))
+            {
+                freguesias = _context.Freguesia.Where(e => e.ConcelhoNavigation.Nome.Contains(concelho)).OrderBy(e => e.Nome).ToList();
+            }
+            return new JsonResult(freguesias);
+        }
 
         // POST: Escola/Delete/5
         [HttpPost, ActionName("Delete")]

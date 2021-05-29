@@ -10,6 +10,8 @@ namespace Pmat_PI.Models
         public AspNetUser()
         {
             Treinos = new HashSet<Treino>();
+            UserEscolaHistoricos = new HashSet<UserEscolaHistorico>();
+            UserEscolas = new HashSet<UserEscola>();
         }
 
         public string Id { get; set; }
@@ -33,5 +35,8 @@ namespace Pmat_PI.Models
         public int UserId { get; set; }
 
         public virtual ICollection<Treino> Treinos { get; set; }
+
+        public virtual ICollection<UserEscolaHistorico> UserEscolaHistoricos { get; set; }
+        public virtual ICollection<UserEscola> UserEscolas { get; set; }
     }
 }

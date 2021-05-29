@@ -7,12 +7,17 @@ namespace Pmat_PI.Models
 {
     public partial class Escola
     {
+        public Escola()
+        {
+            UserEscolaHistoricos = new HashSet<UserEscolaHistorico>();
+            UserEscolas = new HashSet<UserEscola>();
+        }
+
         public int Id { get; set; }
         public int IdTipoEscola { get; set; }
         public string NomeEscola { get; set; }
         public string Morada { get; set; }
         public string CodigoPostal { get; set; }
-        
         public string ExtensaoCodPostal { get; set; }
         public string Localidade { get; set; }
         public string Telefone { get; set; }
@@ -31,5 +36,7 @@ namespace Pmat_PI.Models
 
         public virtual TipoEscola IdTipoEscolaNavigation { get; set; }
         public virtual Concelho IdconcelhoNavigation { get; set; }
+        public virtual ICollection<UserEscolaHistorico> UserEscolaHistoricos { get; set; }
+        public virtual ICollection<UserEscola> UserEscolas { get; set; }
     }
 }

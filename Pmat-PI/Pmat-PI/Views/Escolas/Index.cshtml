@@ -39,7 +39,10 @@ else
         <thead>
             <tr>
                 <th style="display: table-cell; vertical-align: middle;"> ID</th>
-                <th style="display: table-cell; vertical-align: middle;">  Nome de Escola </th>
+                <th style="display: table-cell; vertical-align: middle;">
+                    Nome de Escola <span><a asp-action="Index" asp-route-sortOrder="@ViewData["NomeSortParm"]"><i class="fa fa-angle-down fa-xs"></i></a></span>
+                    <span><a asp-action="Index" asp-route-sortOrder="@ViewData["NomeSortParm"]"><i class="fa fa-angle-up fa-xs"></i></a></span>
+                </th>
                 <th style="display: table-cell; vertical-align: middle;">  Morada </th>
                 <th style="display: table-cell; vertical-align: middle;"> Código Postal </th>
                 <th style="display: table-cell; vertical-align: middle;"> Localidade </th>
@@ -52,68 +55,49 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td style="width: 2%">
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td style="width: 25%">
-                    @Html.DisplayFor(modelItem => item.NomeEscola)
-                </td>
-                <td style="width: 25%">
-                    @Html.DisplayFor(modelItem => item.Morada)
-                </td>
-                <td style="width: 8.33%">
-                    @Html.DisplayFor(modelItem => item.CodigoPostal)-@Html.DisplayFor(modelItem => item.ExtensaoCodPostal)
-                </td>
-                <td style="width:16.66%">
-                    @Html.DisplayFor(modelItem => item.Localidade)
-                </td>
-                <td style="width: 5%">
-                    @Html.DisplayFor(modelItem => item.Gruponatureza)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: dodgerblue ;" class="fa fa-eye"> </i></a>
-                </td>
-                <td>
-                    <form asp-action="Delete" asp-route-id="@item.Id">
-                        <button type="submit" class="btn" data-toggle="modal" data-target="#deleteModal">
+                <tr>
+                    <td style="width: 2%">
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td style="width: 25%">
+                        @Html.DisplayFor(modelItem => item.NomeEscola)
+                    </td>
+                    <td style="width: 25%">
+                        @Html.DisplayFor(modelItem => item.Morada)
+                    </td>
+                    <td style="width: 8.33%">
+                        @Html.DisplayFor(modelItem => item.CodigoPostal)-@Html.DisplayFor(modelItem => item.ExtensaoCodPostal)
+                    </td>
+                    <td style="width:16.66%">
+                        @Html.DisplayFor(modelItem => item.Localidade)
+                    </td>
+                    <td style="width: 5%">
+                        @Html.DisplayFor(modelItem => item.Gruponatureza)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: dodgerblue ;" class="fa fa-eye"> </i></a>
+                    </td>
+                    <td>
+                        <a id="deleteModal" data-toggle="modal" data-target="#modal-delete" data-id="@item.Id" class="btn">
                             <i style="font-size:30px; color: red;" class="fa fa-trash"></i>
-                        </button>
-                        <!--
-            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Apagar Escola</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            Deseja realmente apagar este registo?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Não</button>
-                            <button type="submit" class="btn btn-danger">Sim</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    -->
-                    </form>
-                </td>
-            </tr>
+                        </a>
+                    </td>
+
+                </tr>
             }
         </tbody>
     </table>
+
+
+    <!-- Success modal-->
     <div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel" style="color: forestgreen; bold">Sucesso</h5>
+                    <h5 class="modal-title" id="exampleModalLabel" style="color: forestgreen; bold;">Sucesso</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -124,31 +108,76 @@ else
             </div>
         </div>
     </div>
-}   
-    @{
-        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-    }
-    @if (TempData["successMessage"] != null)
-    {
-        <script>
-            $("#mymodal").modal('show');
-        </script>
-    }
 
-    <div style="text-align:center">
-        <a style="margin-right:2%" asp-action="Index"
-           asp-route-sortOrder="@ViewData["CurrentSort"]"
-           asp-route-pageNumber="@(Model.PageIndex - 1)"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           class="btn btn-info @prevDisabled">
-            Anterior
-        </a>
-        <a asp-action="Index"
-           asp-route-sortOrder="@ViewData["CurrentSort"]"
-           asp-route-pageNumber="@(Model.PageIndex + 1)"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           class="btn btn-info @nextDisabled">
-            Próximo
-        </a>
-    </div>
+    <!--Confirm delete modal-->
+    <form  asp-action="Delete" role="form" id="myForm">
+        <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Apagar Escola</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Deseja realmente apagar esta escola?
+                        <input hidden name="id" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Não</button>
+                        <button type="submit" class="btn btn-danger" id="modalDeleteButton">Sim</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+@if (TempData["successMessage"] != null)
+{
+    <script>
+        $("#mymodal").modal('show');
+    </script>
+}
+
+<div style="text-align:center">
+    <a style="margin-right:2%" asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-info @prevDisabled">
+        Anterior
+    </a>
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-info @nextDisabled">
+        Próximo
+    </a>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            $('#modal-delete').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data("id");
+                alert(id)
+                var modal = $(this);
+
+                modal.find('.modal-content input').val(id);
+            });
+
+            $("#modalDeleteButton").click(function () {
+                $("#myForm").submit();
+            });
+
+        });
+    </script>
+}

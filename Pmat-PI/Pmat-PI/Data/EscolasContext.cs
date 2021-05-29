@@ -17,12 +17,18 @@ namespace Pmat_PI.Models
         {
         }
 
+        public virtual DbSet<AnoEscolar> AnoEscolars { get; set; }
+        public virtual DbSet<AnoLetivo> AnoLetivos { get; set; }
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Concelho> Concelhos { get; set; }
         public virtual DbSet<Distrito> Distritos { get; set; }
         public virtual DbSet<Escola> Escolas { get; set; }
         public virtual DbSet<Freguesia> Freguesia { get; set; }
         public virtual DbSet<Pais> Pais { get; set; }
+        public virtual DbSet<Projeto> Projetos { get; set; }
         public virtual DbSet<TipoEscola> TipoEscolas { get; set; }
+        public virtual DbSet<UserEscola> UserEscolas { get; set; }
+        public virtual DbSet<UserEscolaHistorico> UserEscolaHistoricos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -34,6 +40,60 @@ namespace Pmat_PI.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasAnnotation("Relational:Collation", "Latin1_General_CI_AS");
+
+            modelBuilder.Entity<AnoEscolar>(entity =>
+            {
+                entity.ToTable("AnoEscolar", "pmate");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Ano)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+            });
+
+            modelBuilder.Entity<AnoLetivo>(entity =>
+            {
+                entity.HasKey(e => e.AnoLetivo1)
+                    .HasName("PK__AnoLetiv__A3590E90F7460D67");
+
+                entity.ToTable("AnoLetivo", "pmate");
+
+                entity.Property(e => e.AnoLetivo1)
+                    .HasMaxLength(10)
+                    .HasColumnName("AnoLetivo");
+
+                entity.Property(e => e.Fim).HasColumnType("datetime");
+
+                entity.Property(e => e.Inicio).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<AspNetUser>(entity =>
+            {
+                entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
+
+                entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
+                    .IsUnique()
+                    .HasFilter("([NormalizedUserName] IS NOT NULL)");
+
+                entity.Property(e => e.Email).HasMaxLength(256);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(80)
+                    .HasDefaultValueSql("(N'')");
+
+                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+
+                entity.Property(e => e.UserName).HasMaxLength(256);
+            });
+
+
             modelBuilder.HasAnnotation("Relational:Collation", "Latin1_General_CI_AS");
 
             modelBuilder.Entity<Concelho>(entity =>
@@ -182,6 +242,21 @@ namespace Pmat_PI.Models
                     .HasColumnName("nome");
             });
 
+            modelBuilder.Entity<Projeto>(entity =>
+            {
+                entity.ToTable("Projeto", "pmate");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();//.UseIdentityColumn(seed: 0, increment: 1);
+
+                entity.Property(e => e.Descricao)
+                    .HasColumnType("text")
+                    .HasColumnName("descricao");
+
+                entity.Property(e => e.Url)
+                    .HasMaxLength(100)
+                    .HasColumnName("URL");
+            });
+
             modelBuilder.Entity<TipoEscola>(entity =>
             {
                 entity.HasKey(e => e.IdTipoEscola)
@@ -203,6 +278,108 @@ namespace Pmat_PI.Models
                     .IsFixedLength(true);
             });
 
+            modelBuilder.Entity<UserEscola>(entity =>
+            {
+                entity.ToTable("UserEscola", "pmate");
+
+                entity.HasIndex(e => new { e.IdUser, e.IdProjeto, e.IdEscola, e.AnoLetivo, e.IdAnoEscolar }, "user_escola_projeto_anolet_escolar")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.AnoLetivo).HasMaxLength(10);
+
+                entity.Property(e => e.Data)
+                    .HasColumnType("datetime")
+                    .HasColumnName("data_");
+
+                entity.Property(e => e.IdProjeto).HasColumnName("idProjeto");
+
+                entity.Property(e => e.IdUser).IsRequired();
+
+                entity.HasOne(d => d.AnoLetivoNavigation)
+                    .WithMany(p => p.UserEscolas)
+                    .HasForeignKey(d => d.AnoLetivo)
+                    .HasConstraintName("FK__UserEscol__AnoLe__5772F790");
+
+                entity.HasOne(d => d.IdAnoEscolarNavigation)
+                    .WithMany(p => p.UserEscolas)
+                    .HasForeignKey(d => d.IdAnoEscolar)
+                    .HasConstraintName("FK__UserEscol__IdAno__567ED357");
+
+                entity.HasOne(d => d.IdEscolaNavigation)
+                    .WithMany(p => p.UserEscolas)
+                    .HasForeignKey(d => d.IdEscola)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__UserEscol__IdEsc__54968AE5");
+
+                entity.HasOne(d => d.IdProjetoNavigation)
+                    .WithMany(p => p.UserEscolas)
+                    .HasForeignKey(d => d.IdProjeto)
+                    .HasConstraintName("FK__UserEscol__idPro__58671BC9");
+
+                entity.HasOne(d => d.IdResponsavelNavigation)
+                    .WithMany(p => p.InverseIdResponsavelNavigation)
+                    .HasForeignKey(d => d.IdResponsavel)
+                    .HasConstraintName("FK__UserEscol__IdRes__558AAF1E");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.UserEscolas)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__UserEscol__data___53A266AC");
+            });
+
+            modelBuilder.Entity<UserEscolaHistorico>(entity =>
+            {
+                entity.ToTable("UserEscolaHistorico", "pmate");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.AnoLetivo).HasMaxLength(10);
+
+                entity.Property(e => e.Data)
+                    .HasColumnType("datetime")
+                    .HasColumnName("data_");
+
+                entity.Property(e => e.IdProjeto).HasColumnName("idProjeto");
+
+                entity.Property(e => e.IdUser)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.HasOne(d => d.AnoLetivoNavigation)
+                    .WithMany(p => p.UserEscolaHistoricos)
+                    .HasForeignKey(d => d.AnoLetivo)
+                    .HasConstraintName("FK__UserEscol__AnoLe__61F08603");
+
+                entity.HasOne(d => d.IdAnoEscolarNavigation)
+                    .WithMany(p => p.UserEscolaHistoricos)
+                    .HasForeignKey(d => d.IdAnoEscolar)
+                    .HasConstraintName("FK__UserEscol__IdAno__60FC61CA");
+
+                entity.HasOne(d => d.IdEscolaNavigation)
+                    .WithMany(p => p.UserEscolaHistoricos)
+                    .HasForeignKey(d => d.IdEscola)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__UserEscol__IdEsc__5F141958");
+
+                entity.HasOne(d => d.IdProjetoNavigation)
+                    .WithMany(p => p.UserEscolaHistoricos)
+                    .HasForeignKey(d => d.IdProjeto)
+                    .HasConstraintName("FK__UserEscol__idPro__62E4AA3C");
+
+                entity.HasOne(d => d.IdResponsavelNavigation)
+                    .WithMany(p => p.UserEscolaHistoricos)
+                    .HasForeignKey(d => d.IdResponsavel)
+                    .HasConstraintName("FK__UserEscol__IdRes__60083D91");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.UserEscolaHistoricos)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__UserEscol__data___5E1FF51F");
+            });
             OnModelCreatingPartial(modelBuilder);
         }
 

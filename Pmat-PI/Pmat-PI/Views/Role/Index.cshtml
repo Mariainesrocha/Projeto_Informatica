@@ -10,33 +10,9 @@
             <td>@role.Id</td>
             <td>@role.Name</td>
             <td>
-                <form asp-action="Delete" asp-route-id="@role.Id">
-                    <button type="submit" class="btn" data-toggle="modal" data-target="#deleteModal">
-                        <i style="font-size:30px; color: red;" class="fa fa-trash"></i>
-                    </button>
-
-                    <!--
-                <div class="modal fade" id="deleteModal" tabindex="0" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Apagar Função</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                Deseja realmente apagar esta função?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">Não</button>
-                                <button type="submit" class="btn btn-danger">Sim</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-    -->
-                </form>
+                <a id="deleteModal" data-toggle="modal" data-target="#modal-delete" data-id="@role.Id" class="btn">
+                    <i style="font-size:30px; color: red;" class="fa fa-trash"></i>
+                </a>
             </td>
         </tr>
     }
@@ -44,3 +20,45 @@
 <div style="text-align:center; padding-bottom: 2%">
     <a asp-action="Create" class="btn btn-primary">Criar Nova Função</a>
 </div>
+<!--Confirm delete modal-->
+<form asp-action="Delete" role="form" id="myForm">
+    <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Apagar Função</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Deseja realmente apagar esta função?
+                    <input hidden name="id" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Não</button>
+                    <button type="submit" class="btn btn-danger" id="modalDeleteButton">Sim</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <script>
+        $(function () {
+            $('#modal-delete').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data("id");
+                var modal = $(this);
+
+                modal.find('.modal-content input').val(id);
+            });
+
+            $("#modalDeleteButton").click(function () {
+                $("#myForm").submit();
+            });
+
+        });
+    </script>
+}

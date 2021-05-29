@@ -1,0 +1,35 @@
+﻿@model Pmat_PI.Models.Projeto
+@{
+    <!-- PROJECT CREATION -->
+        <div class="modal fade" id="modalProjeto" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form asp-controller="AssociarProfs" asp-action="CreateProj">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Criar Novo Projeto</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="Descricao" class="control-label"></label>
+                                <input asp-for="Descricao" class="form-control" />
+                                <span asp-validation-for="Descricao" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Url" class="control-label"></label>
+                                <input asp-for="Url" class="form-control" />
+                                <span asp-validation-for="Url" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
+                            <button type="submit" class="btn btn-success" id="modalConfirmButton">Sim</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+}

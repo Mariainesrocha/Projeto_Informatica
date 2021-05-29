@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Pmat_PI.Models;
 using System;
 using Pmat_PI;
+using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
@@ -13,34 +14,59 @@ namespace Identity.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
+        private readonly EscolasContext _context;
+        private RoleManager<IdentityRole> roleManager;
         private UserManager<User> userManager;
         private IPasswordHasher<User> passwordHasher;
 
-        public AdminController(UserManager<User> usrMgr, IPasswordHasher<User> passwordHash)
+        public AdminController(UserManager<User> usrMgr, IPasswordHasher<User> passwordHash, EscolasContext context, RoleManager<IdentityRole> role)
 
         {
             userManager = usrMgr;
             passwordHasher = passwordHash;
+            _context = context;
+            roleManager = role;
         }
 
-        public async Task<IActionResult> Index(string sortOrder,string currentFilter,string searchString,int? pageNumber)
+        public async Task<IActionResult> Index(string sortOrder,string currentFilter,string searchString, string filterType, string currentType, int? pageNumber)
         {
-            ViewData["CurrentSort"] = sortOrder;
-            if (searchString != null)
+            if (searchString != null && filterType != null)
             {
                 pageNumber = 1;
             }
             else
             {
                 searchString = currentFilter;
+                filterType = currentType;
             }
 
-
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentType"] = filterType;
             var users = userManager.Users;
+            if (!String.IsNullOrEmpty(searchString) && !String.IsNullOrEmpty(filterType))
+            {
+                switch (filterType)
+                {
+                    case "escola":
+                        users = (from u in _context.AspNetUsers join ue in _context.UserEscolas.Where(e => e.IdEscolaNavigation.NomeEscola.ToLower().Equals(searchString.ToLower())) on u.Id equals ue.IdUser select new User { Name = u.Name }); //TODO: dar join com Users
+                        break;
+                    case "nome":
+                        users = userManager.Users.Where(u => u.Name.ToLower().Contains(searchString.ToLower()));
+                        break;
+                    case "email":
+                        Console.WriteLine("Email -------------");
+                        users = userManager.Users.Where(u => u.Email.ToLower().Contains(searchString.ToLower()));
+                        break;
+                    case "role":
+                        users = userManager.Users.Where(u => u.Roles.Equals("ADMIN")); //TODO: CONFIRMAR
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             int pageSize = 10;
             return View(await PaginatedList<User>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize));
-            //return View(userManager.Users);
         }
 
         [HttpPost]
