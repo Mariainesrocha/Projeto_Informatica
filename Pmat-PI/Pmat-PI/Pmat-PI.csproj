@@ -49,7 +49,6 @@
   <ItemGroup>
     <None Include="Views\Treinos\Create.cshtml" />
     <None Include="Views\Treinos\Delete.cshtml" />
-    <None Include="Views\Treinos\Details.cshtml" />
     <None Include="Views\Treinos\Edit.cshtml" />
     <None Include="Views\Treinos\Index.cshtml" />
     <None Include="wwwroot\Images\cut_logo.png" />

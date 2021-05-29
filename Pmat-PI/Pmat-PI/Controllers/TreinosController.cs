@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pmat_PI.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Pmat_PI
 {
     //[Authorize(Roles = "Admin")]
     public class TreinosController : Controller
     {
+        private UserManager<User> userManager;
         private readonly treinoContext _context;
 
-        public TreinosController(treinoContext context)
+        public TreinosController(treinoContext context, UserManager<User> usrMgr)
         {
+            userManager = usrMgr;
             _context = context;
         }
 
@@ -38,31 +41,12 @@ namespace Pmat_PI
             return View(await PaginatedList<Treino>.CreateAsync(treinos.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
-        // GET: Treinos/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var treino = await _context.Treinos
-                .Include(t => t.IdAuthorNavigation)
-                .Include(t => t.IdCompeticaoNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (treino == null)
-            {
-                return NotFound();
-            }
-
-            return View(treino);
-        }
-
         // GET: Treinos/Create
         public IActionResult Create()
         {
             ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta");
+            ViewData["logged_id"] = userManager.GetUserId(HttpContext.User);
             return View();
         }
 
@@ -80,7 +64,6 @@ namespace Pmat_PI
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", treino.IdAuthor);
-            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta", treino.IdCompeticao);
             return View(treino);
         }
 
@@ -99,6 +82,7 @@ namespace Pmat_PI
             }
             ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", treino.IdAuthor);
             ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta", treino.IdCompeticao);
+            ViewData["logged_id"] = userManager.GetUserId(HttpContext.User);
             return View(treino);
         }
 

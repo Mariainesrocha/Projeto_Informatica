@@ -34,7 +34,6 @@
                 Elementos da equipa
             </th>
             <th> Editar </th>
-            <th> Ver Detalhes </th>
             <th> Eliminar</th>
         </tr>
     </thead>
@@ -65,9 +64,6 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: dodgerblue ;" class="fa fa-eye"> </i></a>
             </td>
             <td>
                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: red ;" class="fa fa-trash"> </i></a>
