@@ -7,9 +7,14 @@ namespace Pmat_PI.Models
 {
     public partial class Treino
     {
+        public Treino()
+        {
+            TreinoEnunciados = new HashSet<TreinoEnunciado>();
+            TreinoModelos = new HashSet<TreinoModelo>();
+        }
+
         public int Id { get; set; }
         public string IdAuthor { get; set; }
-        public int? IdCompeticao { get; set; }
         public string NomeProva { get; set; }
         public DateTime? DataCriacao { get; set; }
         public int? MaxEscolas { get; set; }
@@ -26,6 +31,7 @@ namespace Pmat_PI.Models
         public int? Plataforma { get; set; }
 
         public virtual AspNetUser IdAuthorNavigation { get; set; }
-        public virtual Competicao IdCompeticaoNavigation { get; set; }
+        public virtual ICollection<TreinoEnunciado> TreinoEnunciados { get; set; }
+        public virtual ICollection<TreinoModelo> TreinoModelos { get; set; }
     }
 }

@@ -7,12 +7,18 @@ namespace Pmat_PI.Models
 {
     public partial class Escola
     {
+        public Escola()
+        {
+            Equipas = new HashSet<Equipa>();
+            ProvaEscolaEscolaOrganizadoraNavigations = new HashSet<ProvaEscola>();
+            ProvaEscolaIdEscolaNavigations = new HashSet<ProvaEscola>();
+        }
+
         public int Id { get; set; }
         public int IdTipoEscola { get; set; }
         public string NomeEscola { get; set; }
         public string Morada { get; set; }
         public string CodigoPostal { get; set; }
-        
         public string ExtensaoCodPostal { get; set; }
         public string Localidade { get; set; }
         public string Telefone { get; set; }
@@ -31,5 +37,8 @@ namespace Pmat_PI.Models
 
         public virtual TipoEscola IdTipoEscolaNavigation { get; set; }
         public virtual Concelho IdconcelhoNavigation { get; set; }
+        public virtual ICollection<Equipa> Equipas { get; set; }
+        public virtual ICollection<ProvaEscola> ProvaEscolaEscolaOrganizadoraNavigations { get; set; }
+        public virtual ICollection<ProvaEscola> ProvaEscolaIdEscolaNavigations { get; set; }
     }
 }
