@@ -7,24 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pmat_PI.Models;
 
-namespace Pmat_PI
+namespace Pmat_PI.Views
 {
-    public class TipoEscolasController : Controller
+    public class ProjetosController : Controller
     {
         private readonly EscolasContext _context;
 
-        public TipoEscolasController(EscolasContext context)
+        public ProjetosController(EscolasContext context)
         {
             _context = context;
         }
 
-        // GET: TipoEscolas
+        // GET: Projetos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.TipoEscolas.ToListAsync());
+            return View(await _context.Projetos.ToListAsync());
         }
 
-        // GET: TipoEscolas/Details/5
+        // GET: Projetos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,39 +32,39 @@ namespace Pmat_PI
                 return NotFound();
             }
 
-            var tipoEscola = await _context.TipoEscolas
-                .FirstOrDefaultAsync(m => m.IdTipoEscola == id);
-            if (tipoEscola == null)
+            var projeto = await _context.Projetos
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (projeto == null)
             {
                 return NotFound();
             }
 
-            return View(tipoEscola);
+            return View(projeto);
         }
 
-        // GET: TipoEscolas/Create
+        // GET: Projetos/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: TipoEscolas/Create
+        // POST: Projetos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdTipoEscola,TipoEscola1,DescricaoTipoEscola")] TipoEscola tipoEscola)
+        public async Task<IActionResult> Create([Bind("Id,Descricao,Url")] Projeto projeto)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(tipoEscola);
+                _context.Add(projeto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(tipoEscola);
+            return View(projeto);
         }
 
-        // GET: TipoEscolas/Edit/5
+        // GET: Projetos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,22 +72,22 @@ namespace Pmat_PI
                 return NotFound();
             }
 
-            var tipoEscola = await _context.TipoEscolas.FindAsync(id);
-            if (tipoEscola == null)
+            var projeto = await _context.Projetos.FindAsync(id);
+            if (projeto == null)
             {
                 return NotFound();
             }
-            return View(tipoEscola);
+            return View(projeto);
         }
 
-        // POST: TipoEscolas/Edit/5
+        // POST: Projetos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdTipoEscola,TipoEscola1,DescricaoTipoEscola")] TipoEscola tipoEscola)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao,Url")] Projeto projeto)
         {
-            if (id != tipoEscola.IdTipoEscola)
+            if (id != projeto.Id)
             {
                 return NotFound();
             }
@@ -96,12 +96,12 @@ namespace Pmat_PI
             {
                 try
                 {
-                    _context.Update(tipoEscola);
+                    _context.Update(projeto);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TipoEscolaExists(tipoEscola.IdTipoEscola))
+                    if (!ProjetoExists(projeto.Id))
                     {
                         return NotFound();
                     }
@@ -112,10 +112,10 @@ namespace Pmat_PI
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(tipoEscola);
+            return View(projeto);
         }
 
-        // GET: TipoEscolas/Delete/5
+        // GET: Projetos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,30 +123,30 @@ namespace Pmat_PI
                 return NotFound();
             }
 
-            var tipoEscola = await _context.TipoEscolas
-                .FirstOrDefaultAsync(m => m.IdTipoEscola == id);
-            if (tipoEscola == null)
+            var projeto = await _context.Projetos
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (projeto == null)
             {
                 return NotFound();
             }
 
-            return View(tipoEscola);
+            return View(projeto);
         }
 
-        // POST: TipoEscolas/Delete/5
+        // POST: Projetos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tipoEscola = await _context.TipoEscolas.FindAsync(id);
-            _context.TipoEscolas.Remove(tipoEscola);
+            var projeto = await _context.Projetos.FindAsync(id);
+            _context.Projetos.Remove(projeto);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TipoEscolaExists(int id)
+        private bool ProjetoExists(int id)
         {
-            return _context.TipoEscolas.Any(e => e.IdTipoEscola == id);
+            return _context.Projetos.Any(e => e.Id == id);
         }
     }
 }

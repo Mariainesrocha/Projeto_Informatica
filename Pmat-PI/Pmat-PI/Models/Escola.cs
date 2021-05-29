@@ -12,6 +12,8 @@ namespace Pmat_PI.Models
             Equipas = new HashSet<Equipa>();
             ProvaEscolaEscolaOrganizadoraNavigations = new HashSet<ProvaEscola>();
             ProvaEscolaIdEscolaNavigations = new HashSet<ProvaEscola>();
+            UserEscolaHistoricos = new HashSet<UserEscolaHistorico>();
+            UserEscolas = new HashSet<UserEscola>();
         }
 
         public int Id { get; set; }
@@ -40,5 +42,7 @@ namespace Pmat_PI.Models
         public virtual ICollection<Equipa> Equipas { get; set; }
         public virtual ICollection<ProvaEscola> ProvaEscolaEscolaOrganizadoraNavigations { get; set; }
         public virtual ICollection<ProvaEscola> ProvaEscolaIdEscolaNavigations { get; set; }
+        public virtual ICollection<UserEscolaHistorico> UserEscolaHistoricos { get; set; }
+        public virtual ICollection<UserEscola> UserEscolas { get; set; }
     }
 }

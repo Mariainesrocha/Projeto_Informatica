@@ -74,7 +74,14 @@
            Freguesia
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdFreguesia)
+            @if (ViewBag.freguesia != null)
+            {
+            <span>@ViewBag.freguesia.Nome</span>
+            }
+            else
+            {
+                <span>---------</span>;
+            }
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Ensinos)

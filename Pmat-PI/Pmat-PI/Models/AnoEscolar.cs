@@ -5,20 +5,17 @@ using System.Collections.Generic;
 
 namespace Pmat_PI.Models
 {
-    public partial class AnoLetivo
+    public partial class AnoEscolar
     {
-        public AnoLetivo()
+        public AnoEscolar()
         {
-            ProvaEscolas = new HashSet<ProvaEscola>();
             UserEscolaHistoricos = new HashSet<UserEscolaHistorico>();
             UserEscolas = new HashSet<UserEscola>();
         }
 
-        public string AnoLetivo1 { get; set; }
-        public DateTime Inicio { get; set; }
-        public DateTime Fim { get; set; }
+        public int Id { get; set; }
+        public string Ano { get; set; }
 
-        public virtual ICollection<ProvaEscola> ProvaEscolas { get; set; }
         public virtual ICollection<UserEscolaHistorico> UserEscolaHistoricos { get; set; }
         public virtual ICollection<UserEscola> UserEscolas { get; set; }
     }

@@ -13,6 +13,8 @@ namespace Pmat_PI.Models
             Provas = new HashSet<Prova>();
             TreinoEnunciados = new HashSet<TreinoEnunciado>();
             Treinos = new HashSet<Treino>();
+            UserEscolaHistoricos = new HashSet<UserEscolaHistorico>();
+            UserEscolas = new HashSet<UserEscola>();
         }
 
         public string Id { get; set; }
@@ -39,5 +41,8 @@ namespace Pmat_PI.Models
         public virtual ICollection<Prova> Provas { get; set; }
         public virtual ICollection<TreinoEnunciado> TreinoEnunciados { get; set; }
         public virtual ICollection<Treino> Treinos { get; set; }
+
+        public virtual ICollection<UserEscolaHistorico> UserEscolaHistoricos { get; set; }
+        public virtual ICollection<UserEscola> UserEscolas { get; set; }
     }
 }
