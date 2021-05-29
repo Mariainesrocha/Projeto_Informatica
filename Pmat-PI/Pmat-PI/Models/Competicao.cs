@@ -9,7 +9,7 @@ namespace Pmat_PI.Models
     {
         public Competicao()
         {
-            Treinos = new HashSet<Treino>();
+            Provas = new HashSet<Prova>();
         }
 
         public int Id { get; set; }
@@ -18,6 +18,6 @@ namespace Pmat_PI.Models
         public DateTime? DataFim { get; set; }
         public string Etiqueta { get; set; }
 
-        public virtual ICollection<Treino> Treinos { get; set; }
+        public virtual ICollection<Prova> Provas { get; set; }
     }
 }

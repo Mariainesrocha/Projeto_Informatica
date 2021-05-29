@@ -2,6 +2,9 @@ CREATE SCHEMA pmate;
 GO
 
 
+-- Command to add tables to Net Core App's Context
+-- Scaffold-DbContext "Server=localhost;Database=pmate2-demo;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -context 'ApplicationDbContext' -Tables AspNetUsers,AnoLetivo,Competicao,Concelho,Distrito,Equipa,EquipaAlunos,EquipaProva,Escola,Freguesia,Modelo,ModeloNovo,ModeloVelho,Pais,Prova,ProvaEquipaEnunciado,ProvaEscolas,ProvaModelos,TipoEscola,Treino,TreinoEnunciado,TreinoModelos,UserContacto,UserContactoTipo  -force
+-- 
 
 
 ------------------------------------ LOCATIONS RELATED -----------------------------------
@@ -480,7 +483,7 @@ CREATE TABLE pmate.Treino(
 	MaxEscolas int NULL,              -- OLD NumaMaxEqEscolas
 	MaxTentJogo int NULL,
 	TempoTotalJogo int NULL,
-	NumNiveis int NOT NULL,           -- OLD NumTotNiveis
+	NumNiveis int NOT NULL,           -- OLD NumTotNiveis	
 	VidasPorNivel int NULL,
 	NumElemsEquipa int NULL,          -- OLD NumEltosEquipa
 	Calculadora bit NULL,

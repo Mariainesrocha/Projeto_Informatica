@@ -80,8 +80,6 @@ namespace Pmat_PI
             {
                 return NotFound();
             }
-            ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", treino.IdAuthor);
-            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta", treino.IdCompeticao);
             ViewData["logged_id"] = userManager.GetUserId(HttpContext.User);
             return View(treino);
         }
@@ -119,7 +117,7 @@ namespace Pmat_PI
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", treino.IdAuthor);
-            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta", treino.IdCompeticao);
+         
             return View(treino);
         }
 
@@ -133,7 +131,6 @@ namespace Pmat_PI
 
             var treino = await _context.Treinos
                 .Include(t => t.IdAuthorNavigation)
-                .Include(t => t.IdCompeticaoNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (treino == null)
             {

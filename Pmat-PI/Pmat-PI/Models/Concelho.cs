@@ -10,7 +10,7 @@ namespace Pmat_PI.Models
         public Concelho()
         {
             Escolas = new HashSet<Escola>();
-            Freguesia = new HashSet<Freguesia>();
+            Freguesia = new HashSet<Freguesium>();
         }
 
         public int Id { get; set; }
@@ -19,6 +19,6 @@ namespace Pmat_PI.Models
 
         public virtual Distrito DistritoNavigation { get; set; }
         public virtual ICollection<Escola> Escolas { get; set; }
-        public virtual ICollection<Freguesia> Freguesia { get; set; }
+        public virtual ICollection<Freguesium> Freguesia { get; set; }
     }
 }

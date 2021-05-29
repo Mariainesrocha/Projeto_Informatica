@@ -25,7 +25,7 @@ namespace Pmat_PI.Controllers
         {
             if (!User.Identity.IsAuthenticated)
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
-
+            
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("NoAccessRightsPage");
 

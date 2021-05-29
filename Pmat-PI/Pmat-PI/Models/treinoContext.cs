@@ -101,10 +101,7 @@ namespace Pmat_PI.Models
                     .HasForeignKey(d => d.IdAuthor)
                     .HasConstraintName("FK__Treino__IdAuthor__3118447E");
 
-                entity.HasOne(d => d.IdCompeticaoNavigation)
-                    .WithMany(p => p.Treinos)
-                    .HasForeignKey(d => d.IdCompeticao)
-                    .HasConstraintName("FK__Treino__IdCompet__30242045");
+              
             });
 
             OnModelCreatingPartial(modelBuilder);
