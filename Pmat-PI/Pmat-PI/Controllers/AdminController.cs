@@ -25,6 +25,7 @@ namespace Identity.Controllers
             userManager = usrMgr;
             passwordHasher = passwordHash;
             _context = context;
+           
         }
 
         public async Task<IActionResult> Index(string sortOrder,string currentFilter,string searchString,int? pageNumber)

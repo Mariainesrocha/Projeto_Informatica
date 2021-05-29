@@ -2,6 +2,10 @@ CREATE SCHEMA pmate;
 GO
 
 
+-- Commands to add tables to Net Core App's Context
+--XXX     Scaffold-DbContext "Server=localhost;Database=pmate2-demo;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+--XXX     -context 'treinoContext' 
+--XXX     -Tables AspNetUsers,Treino, Competicao
 
 
 ------------------------------------ LOCATIONS RELATED -----------------------------------

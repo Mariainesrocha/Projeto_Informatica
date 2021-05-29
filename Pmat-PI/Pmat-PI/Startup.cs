@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Pmat_PI
 {
@@ -47,6 +48,8 @@ namespace Pmat_PI
             // EMAIL SERVICE 
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.AddTransient<IEmailSender, AuthMessageSender>();
+
+         
 
             // USE IDENTITY ROLES
             services.AddIdentity<User, IdentityRole>(config =>
