@@ -10,7 +10,7 @@
     <div class="form-row">
         <div class="form-actions no-color form-group col-md-8">
             <form asp-action="Index" method="get">
-                <label>Pesquisar escola: </label>
+                <label>Pesquisar treino: </label>
                 <div class="form-row">
                     <div class="form-group col-md-5">
                         <input type="text" name="SearchString" class="form-control" value="@ViewData["CurrentFilter"]" />
@@ -31,7 +31,7 @@
 </div>
 @if (Model.Count == 0)
 {
-    <p> Escola(s) não encontrada(s) </p>
+    <p> Treino(s) não encontrado(s) </p>
 }
 else
 {

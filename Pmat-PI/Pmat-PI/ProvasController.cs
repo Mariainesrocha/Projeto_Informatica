@@ -12,18 +12,18 @@ using Microsoft.AspNetCore.Identity;
 namespace Pmat_PI
 {
     [Authorize(Roles = "Admin")]
-    public class TreinosController : Controller
+    public class ProvasController : Controller
     {
         private UserManager<User> userManager;
         private readonly ApplicationDbContextAlmostFinal _context;
 
-        public TreinosController(ApplicationDbContextAlmostFinal context, UserManager<User> usrMgr)
+        public ProvasController(ApplicationDbContextAlmostFinal context, UserManager<User> usrMgr)
         {
             userManager = usrMgr;
             _context = context;
         }
 
-        // GET: Treinos
+        // GET: Provas
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
@@ -35,13 +35,34 @@ namespace Pmat_PI
             {
                 searchString = currentFilter;
             }
-            var treinos = from t in _context.Treinos select t;
+
+            var provas = from p in _context.Provas select p;
 
             int pageSize = 10;
-            return View(await PaginatedList<Treino>.CreateAsync(treinos.AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<Prova>.CreateAsync(provas.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
-        // GET: Treinos/Create
+        // GET: Provas/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var prova = await _context.Provas
+                .Include(p => p.IdAuthorNavigation)
+                .Include(p => p.IdCompeticaoNavigation)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (prova == null)
+            {
+                return NotFound();
+            }
+
+            return View(prova);
+        }
+
+        // GET: Provas/Create
         public IActionResult Create()
         {
             ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id");
@@ -50,24 +71,25 @@ namespace Pmat_PI
             return View();
         }
 
-        // POST: Treinos/Create
+        // POST: Provas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IdAuthor,IdCompeticao,NomeProva,DataCriacao,MaxEscolas,MaxTentJogo,TempoTotalJogo,NumNiveis,VidasPorNivel,NumElemsEquipa,Calculadora,Estilo,Url,TreinoVisivel,RefIdCicloEnsino,Plataforma")] Treino treino)
+        public async Task<IActionResult> Create([Bind("Id,IdAuthor,IdCompeticao,NomeProva,DataCriacao,MaxEscolas,MaxTentJogo,TempoTotalJogo,NumNiveis,VidasPorNivel,NumElemsEquipa,Calculadora,DataInscFinal,DataProva,InicioPreInscricao,FimPreInscricao,InicioInscricaoEquipas,FimInscricaoEquipas,FimProva,Estilo,Url,TreinoVisivel,RefIdCicloEnsino,Plataforma")] Prova prova)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(treino);
+                _context.Add(prova);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", treino.IdAuthor);
-            return View(treino);
+            ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", prova.IdAuthor);
+            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta", prova.IdCompeticao);
+            return View(prova);
         }
 
-        // GET: Treinos/Edit/5
+        // GET: Provas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -75,23 +97,25 @@ namespace Pmat_PI
                 return NotFound();
             }
 
-            var treino = await _context.Treinos.FindAsync(id);
-            if (treino == null)
+            var prova = await _context.Provas.FindAsync(id);
+            if (prova == null)
             {
                 return NotFound();
             }
+            ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", prova.IdAuthor);
+            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta", prova.IdCompeticao);
             ViewData["logged_id"] = userManager.GetUserId(HttpContext.User);
-            return View(treino);
+            return View(prova);
         }
 
-        // POST: Treinos/Edit/5
+        // POST: Provas/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IdAuthor,IdCompeticao,NomeProva,DataCriacao,MaxEscolas,MaxTentJogo,TempoTotalJogo,NumNiveis,VidasPorNivel,NumElemsEquipa,Calculadora,Estilo,Url,TreinoVisivel,RefIdCicloEnsino,Plataforma")] Treino treino)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,IdAuthor,IdCompeticao,NomeProva,DataCriacao,MaxEscolas,MaxTentJogo,TempoTotalJogo,NumNiveis,VidasPorNivel,NumElemsEquipa,Calculadora,DataInscFinal,DataProva,InicioPreInscricao,FimPreInscricao,InicioInscricaoEquipas,FimInscricaoEquipas,FimProva,Estilo,Url,TreinoVisivel,RefIdCicloEnsino,Plataforma")] Prova prova)
         {
-            if (id != treino.Id)
+            if (id != prova.Id)
             {
                 return NotFound();
             }
@@ -100,12 +124,12 @@ namespace Pmat_PI
             {
                 try
                 {
-                    _context.Update(treino);
+                    _context.Update(prova);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TreinoExists(treino.Id))
+                    if (!ProvaExists(prova.Id))
                     {
                         return NotFound();
                     }
@@ -116,12 +140,12 @@ namespace Pmat_PI
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", treino.IdAuthor);
-         
-            return View(treino);
+            ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", prova.IdAuthor);
+            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta", prova.IdCompeticao);
+            return View(prova);
         }
 
-        // GET: Treinos/Delete/5
+        // GET: Provas/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,31 +153,32 @@ namespace Pmat_PI
                 return NotFound();
             }
 
-            var treino = await _context.Treinos
-                .Include(t => t.IdAuthorNavigation)
+            var prova = await _context.Provas
+                .Include(p => p.IdAuthorNavigation)
+                .Include(p => p.IdCompeticaoNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (treino == null)
+            if (prova == null)
             {
                 return NotFound();
             }
 
-            return View(treino);
+            return View(prova);
         }
 
-        // POST: Treinos/Delete/5
+        // POST: Provas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var treino = await _context.Treinos.FindAsync(id);
-            _context.Treinos.Remove(treino);
+            var prova = await _context.Provas.FindAsync(id);
+            _context.Provas.Remove(prova);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TreinoExists(int id)
+        private bool ProvaExists(int id)
         {
-            return _context.Treinos.Any(e => e.Id == id);
+            return _context.Provas.Any(e => e.Id == id);
         }
     }
 }
