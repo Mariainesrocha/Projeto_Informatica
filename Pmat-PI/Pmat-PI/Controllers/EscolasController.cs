@@ -13,9 +13,9 @@ namespace Pmat_PI
     [Authorize(Roles = "Admin")]
     public class EscolasController : Controller
     {
-        private readonly EscolasContext _context;
+        private readonly ApplicationDbContextAlmostFinal _context;
 
-        public EscolasController(EscolasContext context)
+        public EscolasController(ApplicationDbContextAlmostFinal context)
         {
             _context = context;
         }

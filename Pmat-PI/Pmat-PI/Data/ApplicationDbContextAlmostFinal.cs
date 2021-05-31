@@ -2,21 +2,20 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-#nullable disable
-
 namespace Pmat_PI.Models
 {
-    public partial class ApplicationDbContext2 : DbContext
+    public partial class ApplicationDbContextAlmostFinal : DbContext
     {
-        public ApplicationDbContext2()
+        public ApplicationDbContextAlmostFinal()
         {
         }
 
-        public ApplicationDbContext2(DbContextOptions<ApplicationDbContext2> options)
+        public ApplicationDbContextAlmostFinal(DbContextOptions<ApplicationDbContextAlmostFinal> options)
             : base(options)
         {
         }
 
+        public virtual DbSet<AnoEscolar> AnoEscolars { get; set; }
         public virtual DbSet<AnoLetivo> AnoLetivos { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Competicao> Competicaos { get; set; }
@@ -26,11 +25,12 @@ namespace Pmat_PI.Models
         public virtual DbSet<EquipaAluno> EquipaAlunos { get; set; }
         public virtual DbSet<EquipaProva> EquipaProvas { get; set; }
         public virtual DbSet<Escola> Escolas { get; set; }
-        public virtual DbSet<Freguesium> Freguesia { get; set; }
+        public virtual DbSet<Freguesia> Freguesia { get; set; }
         public virtual DbSet<Modelo> Modelos { get; set; }
         public virtual DbSet<ModeloNovo> ModeloNovos { get; set; }
         public virtual DbSet<ModeloVelho> ModeloVelhos { get; set; }
-        public virtual DbSet<Pai> Pais { get; set; }
+        public virtual DbSet<Pais> Pais { get; set; }
+        public virtual DbSet<Projeto> Projetos { get; set; }
         public virtual DbSet<Prova> Provas { get; set; }
         public virtual DbSet<ProvaEquipaEnunciado> ProvaEquipaEnunciados { get; set; }
         public virtual DbSet<ProvaEscola> ProvaEscolas { get; set; }
@@ -41,12 +41,13 @@ namespace Pmat_PI.Models
         public virtual DbSet<TreinoModelo> TreinoModelos { get; set; }
         public virtual DbSet<UserContacto> UserContactos { get; set; }
         public virtual DbSet<UserContactoTipo> UserContactoTipos { get; set; }
+        public virtual DbSet<UserEscola> UserEscolas { get; set; }
+        public virtual DbSet<UserEscolaHistorico> UserEscolaHistoricos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Server=localhost;Database=pmate2-demo;Trusted_Connection=True;");
             }
         }
@@ -55,10 +56,23 @@ namespace Pmat_PI.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Latin1_General_CI_AS");
 
+            modelBuilder.Entity<AnoEscolar>(entity =>
+            {
+                entity.ToTable("AnoEscolar", "pmate");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Ano)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+            });
+
             modelBuilder.Entity<AnoLetivo>(entity =>
             {
                 entity.HasKey(e => e.AnoLetivo1)
-                    .HasName("PK__AnoLetiv__A3590E904309D7BE");
+                    .HasName("PK__AnoLetiv__A3590E90F7460D67");
 
                 entity.ToTable("AnoLetivo", "pmate");
 
@@ -129,7 +143,7 @@ namespace Pmat_PI.Models
                 entity.HasOne(d => d.DistritoNavigation)
                     .WithMany(p => p.Concelhos)
                     .HasForeignKey(d => d.Distrito)
-                    .HasConstraintName("FK__Concelho__distri__44FF419A");
+                    .HasConstraintName("FK__Concelho__distri__2704CA5F");
             });
 
             modelBuilder.Entity<Distrito>(entity =>
@@ -151,7 +165,7 @@ namespace Pmat_PI.Models
                 entity.HasOne(d => d.PaisNavigation)
                     .WithMany(p => p.Distritos)
                     .HasForeignKey(d => d.Pais)
-                    .HasConstraintName("FK__Distrito__pais__412EB0B6");
+                    .HasConstraintName("FK__Distrito__pais__2334397B");
             });
 
             modelBuilder.Entity<Equipa>(entity =>
@@ -170,13 +184,13 @@ namespace Pmat_PI.Models
                 entity.HasOne(d => d.IdEscolaNavigation)
                     .WithMany(p => p.Equipas)
                     .HasForeignKey(d => d.IdEscola)
-                    .HasConstraintName("FK__Equipa__IdEscola__607251E5");
+                    .HasConstraintName("FK__Equipa__IdEscola__269AB60B");
             });
 
             modelBuilder.Entity<EquipaAluno>(entity =>
             {
                 entity.HasKey(e => e.IdAlunoEquipa)
-                    .HasName("PK__EquipaAl__B3D1C4C91FFFF038");
+                    .HasName("PK__EquipaAl__B3D1C4C9422057E6");
 
                 entity.ToTable("EquipaAlunos", "pmate");
 
@@ -186,18 +200,18 @@ namespace Pmat_PI.Models
                 entity.HasOne(d => d.IdEquipaNavigation)
                     .WithMany(p => p.EquipaAlunos)
                     .HasForeignKey(d => d.IdEquipa)
-                    .HasConstraintName("FK__EquipaAlu__IdEqu__7EF6D905");
+                    .HasConstraintName("FK__EquipaAlu__IdEqu__2A6B46EF");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.EquipaAlunos)
                     .HasForeignKey(d => d.IdUser)
-                    .HasConstraintName("FK__EquipaAlu__IdUse__7FEAFD3E");
+                    .HasConstraintName("FK__EquipaAlu__IdUse__2B5F6B28");
             });
 
             modelBuilder.Entity<EquipaProva>(entity =>
             {
                 entity.HasKey(e => new { e.IdProva, e.IdEquipa })
-                    .HasName("PK__EquipaPr__BEE352297E39CAAE");
+                    .HasName("PK__EquipaPr__BEE35229EDBE1B17");
 
                 entity.ToTable("EquipaProva", "pmate");
 
@@ -205,13 +219,13 @@ namespace Pmat_PI.Models
                     .WithMany(p => p.EquipaProvas)
                     .HasForeignKey(d => d.IdEquipa)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__EquipaPro__IdEqu__634EBE90");
+                    .HasConstraintName("FK__EquipaPro__IdEqu__442B18F2");
 
                 entity.HasOne(d => d.IdProvaNavigation)
                     .WithMany(p => p.EquipaProvas)
                     .HasForeignKey(d => d.IdProva)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__EquipaPro__IdPro__6442E2C9");
+                    .HasConstraintName("FK__EquipaPro__IdPro__451F3D2B");
             });
 
             modelBuilder.Entity<Escola>(entity =>
@@ -271,15 +285,15 @@ namespace Pmat_PI.Models
                     .WithMany(p => p.Escolas)
                     .HasForeignKey(d => d.IdTipoEscola)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Escola__IdTipoEs__2DE6D218");
+                    .HasConstraintName("FK__Escola__IdTipoEs__11D4A34F");
 
                 entity.HasOne(d => d.IdconcelhoNavigation)
                     .WithMany(p => p.Escolas)
                     .HasForeignKey(d => d.Idconcelho)
-                    .HasConstraintName("FK__Escola__Idconcel__2EDAF651");
+                    .HasConstraintName("FK__Escola__Idconcel__12C8C788");
             });
 
-            modelBuilder.Entity<Freguesium>(entity =>
+            modelBuilder.Entity<Freguesia>(entity =>
             {
                 entity.ToTable("Freguesia", "pmate");
 
@@ -298,7 +312,7 @@ namespace Pmat_PI.Models
                 entity.HasOne(d => d.ConcelhoNavigation)
                     .WithMany(p => p.Freguesia)
                     .HasForeignKey(d => d.Concelho)
-                    .HasConstraintName("FK__Freguesia__conce__367C1819");
+                    .HasConstraintName("FK__freguesia__conce__2AD55B43");
             });
 
             modelBuilder.Entity<Modelo>(entity =>
@@ -315,7 +329,7 @@ namespace Pmat_PI.Models
             modelBuilder.Entity<ModeloNovo>(entity =>
             {
                 entity.HasKey(e => e.IdModel)
-                    .HasName("PK__ModeloNo__C2F00099F86A3A2F");
+                    .HasName("PK__ModeloNo__C2F00099C89400FE");
 
                 entity.ToTable("ModeloNovo", "pmate");
 
@@ -341,13 +355,13 @@ namespace Pmat_PI.Models
                     .WithOne(p => p.ModeloNovo)
                     .HasForeignKey<ModeloNovo>(d => d.IdModel)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ModeloNov__IdMod__2610A626");
+                    .HasConstraintName("FK__ModeloNov__IdMod__35DCF99B");
             });
 
             modelBuilder.Entity<ModeloVelho>(entity =>
             {
                 entity.HasKey(e => e.IdModel)
-                    .HasName("PK__ModeloVe__C2F000993B2B7DEB");
+                    .HasName("PK__ModeloVe__C2F00099BE541047");
 
                 entity.ToTable("ModeloVelho", "pmate");
 
@@ -393,14 +407,14 @@ namespace Pmat_PI.Models
                     .WithOne(p => p.ModeloVelho)
                     .HasForeignKey<ModeloVelho>(d => d.IdModel)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ModeloVel__IdMod__28ED12D1");
+                    .HasConstraintName("FK__ModeloVel__IdMod__38B96646");
             });
 
-            modelBuilder.Entity<Pai>(entity =>
+            modelBuilder.Entity<Pais>(entity =>
             {
                 entity.ToTable("Pais", "pmate");
 
-                entity.HasIndex(e => e.Nome, "UQ__Pais__6F71C0DC0F485660")
+                entity.HasIndex(e => e.Nome, "UQ__Pais__6F71C0DCE7A7A1EB")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -409,6 +423,23 @@ namespace Pmat_PI.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("nome");
+            });
+
+            modelBuilder.Entity<Projeto>(entity =>
+            {
+                entity.ToTable("Projeto", "pmate");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Descricao)
+                    .HasColumnType("text")
+                    .HasColumnName("descricao");
+
+                entity.Property(e => e.Url)
+                    .HasMaxLength(100)
+                    .HasColumnName("URL");
             });
 
             modelBuilder.Entity<Prova>(entity =>
@@ -451,12 +482,12 @@ namespace Pmat_PI.Models
                 entity.HasOne(d => d.IdAuthorNavigation)
                     .WithMany(p => p.Provas)
                     .HasForeignKey(d => d.IdAuthor)
-                    .HasConstraintName("FK__Prova__IdAuthor__47A6A41B");
+                    .HasConstraintName("FK__Prova__IdAuthor__1C1D2798");
 
                 entity.HasOne(d => d.IdCompeticaoNavigation)
                     .WithMany(p => p.Provas)
                     .HasForeignKey(d => d.IdCompeticao)
-                    .HasConstraintName("FK__Prova__IdCompeti__46B27FE2");
+                    .HasConstraintName("FK__Prova__IdCompeti__1B29035F");
             });
 
             modelBuilder.Entity<ProvaEquipaEnunciado>(entity =>
@@ -483,19 +514,19 @@ namespace Pmat_PI.Models
                     .WithMany(p => p.ProvaEquipaEnunciados)
                     .HasForeignKey(d => d.IdEquipa)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProvaEqui__IdEqu__1A9EF37A");
+                    .HasConstraintName("FK__ProvaEqui__IdEqu__48EFCE0F");
 
                 entity.HasOne(d => d.IdProvaNavigation)
                     .WithMany(p => p.ProvaEquipaEnunciados)
                     .HasForeignKey(d => d.IdProva)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProvaEqui__IdPro__19AACF41");
+                    .HasConstraintName("FK__ProvaEqui__IdPro__47FBA9D6");
             });
 
             modelBuilder.Entity<ProvaEscola>(entity =>
             {
                 entity.HasKey(e => new { e.IdEscola, e.IdProva })
-                    .HasName("PK__ProvaEsc__EB11F89C7578856E");
+                    .HasName("PK__ProvaEsc__EB11F89C4EC72277");
 
                 entity.ToTable("ProvaEscolas", "pmate");
 
@@ -506,30 +537,30 @@ namespace Pmat_PI.Models
                 entity.HasOne(d => d.AnoLetivoNavigation)
                     .WithMany(p => p.ProvaEscolas)
                     .HasForeignKey(d => d.AnoLetivo)
-                    .HasConstraintName("FK__ProvaEsco__AnoLe__36470DEF");
+                    .HasConstraintName("FK__ProvaEsco__AnoLe__23BE4960");
 
                 entity.HasOne(d => d.EscolaOrganizadoraNavigation)
-                    .WithMany(p => p.ProvaEscolaEscolaOrganizadoraNavigations)
+                    .WithMany(p => p.ProvaEscolaId)
                     .HasForeignKey(d => d.EscolaOrganizadora)
-                    .HasConstraintName("FK__ProvaEsco__Escol__3552E9B6");
+                    .HasConstraintName("FK__ProvaEsco__Escol__22CA2527");
 
                 entity.HasOne(d => d.IdEscolaNavigation)
-                    .WithMany(p => p.ProvaEscolaIdEscolaNavigations)
+                    .WithMany(p => p.ProvaEscolaId2)
                     .HasForeignKey(d => d.IdEscola)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProvaEsco__IdEsc__336AA144");
+                    .HasConstraintName("FK__ProvaEsco__IdEsc__20E1DCB5");
 
                 entity.HasOne(d => d.IdProvaNavigation)
                     .WithMany(p => p.ProvaEscolas)
                     .HasForeignKey(d => d.IdProva)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProvaEsco__IdPro__345EC57D");
+                    .HasConstraintName("FK__ProvaEsco__IdPro__21D600EE");
             });
 
             modelBuilder.Entity<ProvaModelo>(entity =>
             {
                 entity.HasKey(e => new { e.IdProva, e.IdModelo, e.Nivel })
-                    .HasName("PK__ProvaMod__6059BF9D2EA7EEAD");
+                    .HasName("PK__ProvaMod__6059BF9DF6B3D3C7");
 
                 entity.ToTable("ProvaModelos", "pmate");
 
@@ -537,19 +568,19 @@ namespace Pmat_PI.Models
                     .WithMany(p => p.ProvaModelos)
                     .HasForeignKey(d => d.IdModelo)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProvaMode__IdMod__2CBDA3B5");
+                    .HasConstraintName("FK__ProvaMode__IdMod__3C89F72A");
 
                 entity.HasOne(d => d.IdProvaNavigation)
                     .WithMany(p => p.ProvaModelos)
                     .HasForeignKey(d => d.IdProva)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProvaMode__IdPro__2BC97F7C");
+                    .HasConstraintName("FK__ProvaMode__IdPro__3B95D2F1");
             });
 
             modelBuilder.Entity<TipoEscola>(entity =>
             {
                 entity.HasKey(e => e.IdTipoEscola)
-                    .HasName("PK__TipoEsco__1B703B8280D738E2");
+                    .HasName("PK__TipoEsco__1B703B82342D89C1");
 
                 entity.ToTable("TipoEscola", "pmate");
 
@@ -593,7 +624,7 @@ namespace Pmat_PI.Models
                 entity.HasOne(d => d.IdAuthorNavigation)
                     .WithMany(p => p.Treinos)
                     .HasForeignKey(d => d.IdAuthor)
-                    .HasConstraintName("FK__Treino__IdAuthor__3F115E1A");
+                    .HasConstraintName("FK__Treino__IdAuthor__2E3BD7D3");
             });
 
             modelBuilder.Entity<TreinoEnunciado>(entity =>
@@ -624,19 +655,19 @@ namespace Pmat_PI.Models
                     .WithMany(p => p.TreinoEnunciados)
                     .HasForeignKey(d => d.IdTreino)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TreinoEnu__IdTre__1209AD79");
+                    .HasConstraintName("FK__TreinoEnu__IdTre__536D5C82");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.TreinoEnunciados)
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TreinoEnu__IdUse__12FDD1B2");
+                    .HasConstraintName("FK__TreinoEnu__IdUse__546180BB");
             });
 
             modelBuilder.Entity<TreinoModelo>(entity =>
             {
                 entity.HasKey(e => new { e.IdTreino, e.IdModelo, e.Nivel })
-                    .HasName("PK__TreinoMo__482F0D45B3E63CF8");
+                    .HasName("PK__TreinoMo__482F0D450B00C229");
 
                 entity.ToTable("TreinoModelos", "pmate");
 
@@ -644,13 +675,13 @@ namespace Pmat_PI.Models
                     .WithMany(p => p.TreinoModelos)
                     .HasForeignKey(d => d.IdModelo)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TreinoMod__IdMod__308E3499");
+                    .HasConstraintName("FK__TreinoMod__IdMod__405A880E");
 
                 entity.HasOne(d => d.IdTreinoNavigation)
                     .WithMany(p => p.TreinoModelos)
                     .HasForeignKey(d => d.IdTreino)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TreinoMod__IdTre__2F9A1060");
+                    .HasConstraintName("FK__TreinoMod__IdTre__3F6663D5");
             });
 
             modelBuilder.Entity<UserContacto>(entity =>
@@ -672,7 +703,7 @@ namespace Pmat_PI.Models
             {
                 entity.ToTable("UserContactoTipo", "pmate");
 
-                entity.HasIndex(e => e.Tipo, "UQ__UserCont__E7F956490077C509")
+                entity.HasIndex(e => e.Tipo, "UQ__UserCont__E7F956496233548D")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -680,6 +711,109 @@ namespace Pmat_PI.Models
                 entity.Property(e => e.Tipo)
                     .HasMaxLength(50)
                     .HasColumnName("tipo");
+            });
+
+            modelBuilder.Entity<UserEscola>(entity =>
+            {
+                entity.ToTable("UserEscola", "pmate");
+
+                entity.HasIndex(e => new { e.IdUser, e.IdProjeto, e.IdEscola, e.AnoLetivo, e.IdAnoEscolar }, "user_escola_projeto_anolet_escolar")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.AnoLetivo).HasMaxLength(10);
+
+                entity.Property(e => e.Data)
+                    .HasColumnType("datetime")
+                    .HasColumnName("data_");
+
+                entity.Property(e => e.IdProjeto).HasColumnName("idProjeto");
+
+                entity.Property(e => e.IdUser).IsRequired();
+
+                entity.HasOne(d => d.AnoLetivoNavigation)
+                    .WithMany(p => p.UserEscolas)
+                    .HasForeignKey(d => d.AnoLetivo)
+                    .HasConstraintName("FK__UserEscol__AnoLe__090A5324");
+
+                entity.HasOne(d => d.IdAnoEscolarNavigation)
+                    .WithMany(p => p.UserEscolas)
+                    .HasForeignKey(d => d.IdAnoEscolar)
+                    .HasConstraintName("FK__UserEscol__IdAno__08162EEB");
+
+                entity.HasOne(d => d.IdEscolaNavigation)
+                    .WithMany(p => p.UserEscolas)
+                    .HasForeignKey(d => d.IdEscola)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__UserEscol__IdEsc__062DE679");
+
+                entity.HasOne(d => d.IdProjetoNavigation)
+                    .WithMany(p => p.UserEscolas)
+                    .HasForeignKey(d => d.IdProjeto)
+                    .HasConstraintName("FK__UserEscol__idPro__09FE775D");
+
+                entity.HasOne(d => d.IdResponsavelNavigation)
+                    .WithMany(p => p.InverseIdResponsavelNavigation)
+                    .HasForeignKey(d => d.IdResponsavel)
+                    .HasConstraintName("FK__UserEscol__IdRes__07220AB2");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.UserEscolas)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__UserEscol__data___0539C240");
+            });
+
+            modelBuilder.Entity<UserEscolaHistorico>(entity =>
+            {
+                entity.ToTable("UserEscolaHistorico", "pmate");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.AnoLetivo).HasMaxLength(10);
+
+                entity.Property(e => e.Data)
+                    .HasColumnType("datetime")
+                    .HasColumnName("data_");
+
+                entity.Property(e => e.IdProjeto).HasColumnName("idProjeto");
+
+                entity.Property(e => e.IdUser)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.HasOne(d => d.AnoLetivoNavigation)
+                    .WithMany(p => p.UserEscolaHistoricos)
+                    .HasForeignKey(d => d.AnoLetivo)
+                    .HasConstraintName("FK__UserEscol__AnoLe__10AB74EC");
+
+                entity.HasOne(d => d.IdAnoEscolarNavigation)
+                    .WithMany(p => p.UserEscolaHistoricos)
+                    .HasForeignKey(d => d.IdAnoEscolar)
+                    .HasConstraintName("FK__UserEscol__IdAno__0FB750B3");
+
+                entity.HasOne(d => d.IdEscolaNavigation)
+                    .WithMany(p => p.UserEscolaHistoricos)
+                    .HasForeignKey(d => d.IdEscola)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__UserEscol__IdEsc__0DCF0841");
+
+                entity.HasOne(d => d.IdProjetoNavigation)
+                    .WithMany(p => p.UserEscolaHistoricos)
+                    .HasForeignKey(d => d.IdProjeto)
+                    .HasConstraintName("FK__UserEscol__idPro__119F9925");
+
+                entity.HasOne(d => d.IdResponsavelNavigation)
+                    .WithMany(p => p.UserEscolaHistoricos)
+                    .HasForeignKey(d => d.IdResponsavel)
+                    .HasConstraintName("FK__UserEscol__IdRes__0EC32C7A");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.UserEscolaHistoricos)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__UserEscol__data___0CDAE408");
             });
 
             OnModelCreatingPartial(modelBuilder);

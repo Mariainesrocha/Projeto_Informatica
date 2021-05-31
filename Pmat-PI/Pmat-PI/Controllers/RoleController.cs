@@ -62,7 +62,7 @@ namespace Pmat_PI.Identity.Controllers
                     Errors(result);
             }
             else
-                ModelState.AddModelError("", "No role found");
+                ModelState.AddModelError("", "Função não encontrada");
             return View("Index", roleManager.Roles);
         }
     }

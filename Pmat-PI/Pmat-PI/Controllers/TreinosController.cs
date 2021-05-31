@@ -15,9 +15,9 @@ namespace Pmat_PI
     public class TreinosController : Controller
     {
         private UserManager<User> userManager;
-        private readonly treinoContext _context;
+        private readonly ApplicationDbContextAlmostFinal _context;
 
-        public TreinosController(treinoContext context, UserManager<User> usrMgr)
+        public TreinosController(ApplicationDbContextAlmostFinal context, UserManager<User> usrMgr)
         {
             userManager = usrMgr;
             _context = context;

@@ -16,7 +16,7 @@ namespace Pmat_PI.Models
         public string Nome { get; set; }
         public int? Pais { get; set; }
 
-        public virtual Pai PaisNavigation { get; set; }
+        public virtual Pais PaisNavigation { get; set; }
         public virtual ICollection<Concelho> Concelhos { get; set; }
     }
 }

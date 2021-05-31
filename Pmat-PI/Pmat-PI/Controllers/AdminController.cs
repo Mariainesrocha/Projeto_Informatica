@@ -16,13 +16,12 @@ namespace Identity.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly EscolasContext _context;
+        private readonly ApplicationDbContextAlmostFinal _context;
         private RoleManager<IdentityRole> roleManager;
         private UserManager<User> userManager;
         private IPasswordHasher<User> passwordHasher;
-        private readonly ApplicationDbContext _context;
 
-        public AdminController(UserManager<User> usrMgr, IPasswordHasher<User> passwordHash, EscolasContext context, RoleManager<IdentityRole> role)
+        public AdminController(UserManager<User> usrMgr, IPasswordHasher<User> passwordHash, ApplicationDbContextAlmostFinal context, RoleManager<IdentityRole> role)
 
         {
             userManager = usrMgr;
@@ -36,7 +35,6 @@ namespace Identity.Controllers
             if (searchString != null && filterType != null)
             {
                 pageNumber = 1;
-                users = users.Where(u => u.Name.Contains(searchString));
             }
             else
             {
@@ -55,7 +53,7 @@ namespace Identity.Controllers
                         users = (from u in _context.AspNetUsers join ue in _context.UserEscolas.Where(e => e.IdEscolaNavigation.NomeEscola.ToLower().Equals(searchString.ToLower())) on u.Id equals ue.IdUser select new User { Name = u.Name }); //TODO: dar join com Users
                         break;
                     case "nome":
-                        users = userManager.Users.Where(u => u.Name.ToLower().Contains(searchString.ToLower()));
+                        users = userManager.Users.Where(u => u.Name.ToLower().StartsWith(searchString.ToLower()));
                         break;
                     case "email":
                         Console.WriteLine("Email -------------");
@@ -80,7 +78,7 @@ namespace Identity.Controllers
 
             if (user == null)
             {
-                ViewBag.ErrorMessage = $"User with Id = {id} cannot be found";
+                ViewBag.ErrorMessage = $"Utilizador com Id = {id} não encontrado";
                 return View("NotFound");
             }
             else
@@ -121,14 +119,14 @@ namespace Identity.Controllers
                     user.Email = email;
                 }
                 else
-                    ModelState.AddModelError("", "Email cannot be empty");
+                    ModelState.AddModelError("", "O email não pode estar vazio.");
 
                 if (!string.IsNullOrEmpty(username))
                 {
                     user.UserName = username;
                 }
                 else
-                    ModelState.AddModelError("", "Username cannot be empty");
+                    ModelState.AddModelError("", "O username não pode estar vazio.");
 
                 if (!string.IsNullOrEmpty(password))
                     user.PasswordHash = passwordHasher.HashPassword(user, password);
@@ -137,12 +135,12 @@ namespace Identity.Controllers
                 if (!string.IsNullOrEmpty(name))
                     user.Name = name;
                 else
-                    ModelState.AddModelError("", "Name cannot be empty");
+                    ModelState.AddModelError("", "O nome não pode estar vazio.");
 
                 if (!string.IsNullOrEmpty(age))
                     user.Age = int.Parse(age);
                 else
-                    ModelState.AddModelError("", "Age cannot be empty");
+                    ModelState.AddModelError("", "A idade não pode estar vazia.");
 
 
                 if (!string.IsNullOrEmpty(email))
@@ -155,7 +153,7 @@ namespace Identity.Controllers
                 }
             }
             else
-                ModelState.AddModelError("", "User Not Found");
+                ModelState.AddModelError("", "Utilizador não encontrado");
             return View(user);
         }
 
@@ -164,6 +162,5 @@ namespace Identity.Controllers
             foreach (IdentityError error in result.Errors)
                 ModelState.AddModelError("", error.Description);
         }
-        // removed for brevity
     }
 }

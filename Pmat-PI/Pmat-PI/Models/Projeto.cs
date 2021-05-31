@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
@@ -15,9 +13,6 @@ namespace Pmat_PI.Models
             UserEscolas = new HashSet<UserEscola>();
         }
 
-        [Key]
-        [ScaffoldColumn(false)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Descricao { get; set; }
         public string Url { get; set; }

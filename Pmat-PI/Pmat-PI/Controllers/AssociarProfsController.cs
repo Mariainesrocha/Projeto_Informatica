@@ -12,9 +12,9 @@ namespace Pmat_PI.Views
     [Authorize(Roles = "Admin")]
     public class AssociarProfsController : Controller
     {
-        private readonly EscolasContext _context;
+        private readonly ApplicationDbContextAlmostFinal _context;
 
-        public AssociarProfsController(EscolasContext context)
+        public AssociarProfsController(ApplicationDbContextAlmostFinal context)
         {
             _context = context;
         }

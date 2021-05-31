@@ -463,13 +463,7 @@ CREATE TABLE pmate.ProvaEqEnunNivelResps(
 	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.ProvaEqEnunNivel(id),
 );
 
-
-
-
-
-
-
-
+-- ---TODO: TreinoEnunNivelResps, TreinoEnunNivelUserResp, TreinoEnunNivel
 
 ------------------------------------ TRAINNING_TESTS  RELATED -----------------------------------
 

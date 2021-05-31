@@ -1,12 +1,10 @@
 ﻿@model Pmat_PI.Models.Treino
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Treino";
 }
 
-<h1>Edit</h1>
-
-<h4>Treino</h4>
+<h1>Editar Treino</h1>
 <hr />
 <div class="row">
     <div class="col-lg-12">
@@ -15,23 +13,25 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-row">
                 <div class="form-group col-md-8">
-                    <label asp-for="NomeProva" class="control-label"></label>
+                    <label asp-for="NomeProva" class="control-label">Nome do treino</label>
                     <input asp-for="NomeProva" class="form-control" />
                     <span asp-validation-for="NomeProva" class="text-danger"></span>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-4" hidden>
                     <label asp-for="IdAuthor" class="control-label"></label>
                     <input disabled asp-for="IdAuthor" class="form-control" value=@ViewData["logged_id"] />
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-3">
-                    <label asp-for="Calculadora" class="control-label"></label>
-                    <input asp-for="Calculadora" class="form-control" />
-                    <span asp-validation-for="Calculadora" class="text-danger"></span>
+                    <label asp-for="Calculadora" class="control-label">Calculadora </label>
+                    <select asp-for="Calculadora" class="form-control">
+                        <option value="True"> Sim </option>
+                        <option value="False"> Não </option>
+                    </select>
                 </div>
                 <div class="form-group col-md-3">
-                    <label asp-for="TempoTotalJogo" class="control-label"></label>
+                    <label asp-for="TempoTotalJogo" class="control-label">Tempo Total de jogo (mins)</label>
                     <input asp-for="TempoTotalJogo" class="form-control" />
                     <span asp-validation-for="TempoTotalJogo" class="text-danger"></span>
                 </div>
@@ -41,71 +41,69 @@
                     <span asp-validation-for="Estilo" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-3">
-                    <label asp-for="RefIdCicloEnsino" class="control-label"></label>
+                    <label asp-for="RefIdCicloEnsino" class="control-label">Ciclo de Ensino</label>
                     <input asp-for="RefIdCicloEnsino" class="form-control" />
                     <span asp-validation-for="RefIdCicloEnsino" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-3">
-                    <label asp-for="MaxEscolas" class="control-label"></label>
+                    <label asp-for="MaxEscolas" class="control-label">Nº máximo de escolas inscritas</label>
                     <input asp-for="MaxEscolas" class="form-control" />
                     <span asp-validation-for="MaxEscolas" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-3">
-                    <label asp-for="MaxTentJogo" class="control-label"></label>
+                    <label asp-for="MaxTentJogo" class="control-label">Nº de tentativas por jogo</label>
                     <input asp-for="MaxTentJogo" class="form-control" />
                     <span asp-validation-for="MaxTentJogo" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-3">
-                    <label asp-for="NumNiveis" class="control-label"></label>
-                    <input asp-for="NumNiveis" class="form-control" />
-                    <span asp-validation-for="NumNiveis" class="text-danger"></span>
+                    <label asp-for="NumElemsEquipa" class="control-label">Nº de elementos por equipa</label>
+                    <input asp-for="NumElemsEquipa" class="form-control" />
+                    <span asp-validation-for="NumElemsEquipa" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-3">
-                    <label asp-for="VidasPorNivel" class="control-label"></label>
+                    <label asp-for="VidasPorNivel" class="control-label">Nº de vidas por nível</label>
                     <input asp-for="VidasPorNivel" class="form-control" />
                     <span asp-validation-for="VidasPorNivel" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label asp-for="NumElemsEquipa" class="control-label"></label>
-                    <input asp-for="NumElemsEquipa" class="form-control" />
-                    <span asp-validation-for="NumElemsEquipa" class="text-danger"></span>
+                <div class="form-group col-md-2">
+                    <label asp-for="NumNiveis" class="control-label">Nº de níveis</label>
+                    <input asp-for="NumNiveis" class="form-control" />
+                    <span asp-validation-for="NumNiveis" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-4">
-                    <label asp-for="Url" class="control-label"></label>
+                    <label asp-for="Url" class="control-label">URL</label>
                     <input asp-for="Url" class="form-control" />
                     <span asp-validation-for="Url" class="text-danger"></span>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label asp-for="Plataforma" class="control-label"></label>
                     <input asp-for="Plataforma" class="form-control" />
                     <span asp-validation-for="Plataforma" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-12">
-                    <label asp-for="DataCriacao" class="control-label"></label>
+                <div class="form-group col-md-3">
+                    <label asp-for="DataCriacao" class="control-label">Data de Criação</label>
                     <input asp-for="DataCriacao" class="form-control" />
                     <span asp-validation-for="DataCriacao" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="TreinoVisivel" /> @Html.DisplayNameFor(model => model.TreinoVisivel)
+                    <input class="form-check-input" asp-for="TreinoVisivel" /> Treino Visível
                 </label>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="form-group" style="text-align:center">
+                <input type="submit" value="Guardar Alterações" class="btn btn-success" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-outline-primary">Voltar à lista de treinos</a>
 </div>
 
 @section Scripts {

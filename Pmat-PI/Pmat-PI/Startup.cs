@@ -42,7 +42,7 @@ namespace Pmat_PI
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDbContext<ApplicationDbContext2>(options =>
+            services.AddDbContext<ApplicationDbContextAlmostFinal>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();

@@ -1,6 +1,6 @@
 ﻿@model Pmat_PI.Models.EmailModel2
 @{
-    ViewData["Title"] = "EmailingTab";
+    ViewData["Title"] = "Emails";
 }
 
 
@@ -27,7 +27,7 @@
         -->
         <div class="form-group">
             <label asp-for="Destino">Destino:</label>
-            <input asp-for="Destino" id="target_users" list="targets" class="form-control" aria-label="Default select example" >
+            <input asp-for="Destino" id="target_users" list="targets" class="form-control" aria-label="Default select example">
             <span asp-validation-for="Destino" class="text-danger"></span>
 
             <datalist id="targets">
@@ -63,7 +63,9 @@
             <input class="form-control" id="file" type="file" name="file">
         </div>
 
-        <input type="submit" value="Enviar Email" class="btn btn-outline-primary" />
+        <div style="text-align:center">
+            <input type="submit" value="Enviar Email" class="btn btn-outline-primary" />
+        </div>
     </form>
 </div>
 

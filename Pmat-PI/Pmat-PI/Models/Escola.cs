@@ -10,8 +10,8 @@ namespace Pmat_PI.Models
         public Escola()
         {
             Equipas = new HashSet<Equipa>();
-            ProvaEscolaEscolaOrganizadoraNavigations = new HashSet<ProvaEscola>();
-            ProvaEscolaIdEscolaNavigations = new HashSet<ProvaEscola>();
+            ProvaEscolaId = new HashSet<ProvaEscola>();
+            ProvaEscolaId2 = new HashSet<ProvaEscola>();
             UserEscolaHistoricos = new HashSet<UserEscolaHistorico>();
             UserEscolas = new HashSet<UserEscola>();
         }
@@ -40,8 +40,9 @@ namespace Pmat_PI.Models
         public virtual TipoEscola IdTipoEscolaNavigation { get; set; }
         public virtual Concelho IdconcelhoNavigation { get; set; }
         public virtual ICollection<Equipa> Equipas { get; set; }
-        public virtual ICollection<ProvaEscola> ProvaEscolaEscolaOrganizadoraNavigations { get; set; }
-        public virtual ICollection<ProvaEscola> ProvaEscolaIdEscolaNavigations { get; set; }
+        public virtual ICollection<ProvaEscola> ProvaEscolaId { get; set; }
+        public virtual ICollection<ProvaEscola> ProvaEscolaId2 { get; set; }
+
         public virtual ICollection<UserEscolaHistorico> UserEscolaHistoricos { get; set; }
         public virtual ICollection<UserEscola> UserEscolas { get; set; }
     }
