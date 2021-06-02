@@ -500,6 +500,14 @@ join pmate.Treino on id=refIdComp
 COMMIT;
 
 ------------------------------------ EXAMS  RELATED -----------------------------------
+--CicloEnsino
+BEGIN TRANSACTION;
+
+INSERT INTO pmate.CicloEnsino(id,Descritivo,Abreviatura)
+SELECT CicloEnsinoID,Descritivo,Abreviatura 
+FROM [pmate-Equamat2000].dbo.cicloensino
+
+COMMIT;
 
 --Categoria
 BEGIN TRANSACTION;

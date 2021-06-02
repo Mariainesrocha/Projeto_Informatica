@@ -16,10 +16,6 @@ namespace Pmat_PI.Models
 
         [Required]
         public int Age { get; set; }
-
-
-
-
         /**
         [Required(ErrorMessage = "Enter a valid date.")]
         [DataType(DataType.Date)]

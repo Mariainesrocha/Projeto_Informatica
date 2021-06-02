@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Pmat_PI.Data;
-using System.Linq;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Identity.Controllers
 {
@@ -70,7 +71,7 @@ namespace Identity.Controllers
             int pageSize = 50;
             return View(await PaginatedList<User>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -102,8 +103,13 @@ namespace Identity.Controllers
         public async Task<IActionResult> UpdateUser(string id)
         {
             User user = await userManager.FindByIdAsync(id);
-            if (user != null)
+            if (user != null) {
+                var allRoles = roleManager.Roles;
+                var userRoles = await userManager.GetRolesAsync(user);
+                ViewData["AllRoles"] = new SelectList(allRoles, "Id", "Name");
+                ViewBag.Roles = new SelectList(userRoles.ToList());
                 return View(user);
+            }
             else
                 return RedirectToAction("Index");
         }

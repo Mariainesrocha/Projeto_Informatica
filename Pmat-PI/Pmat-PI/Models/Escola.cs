@@ -42,7 +42,6 @@ namespace Pmat_PI.Models
         public virtual ICollection<Equipa> Equipas { get; set; }
         public virtual ICollection<ProvaEscola> ProvaEscolaId { get; set; }
         public virtual ICollection<ProvaEscola> ProvaEscolaId2 { get; set; }
-
         public virtual ICollection<UserEscolaHistorico> UserEscolaHistoricos { get; set; }
         public virtual ICollection<UserEscola> UserEscolas { get; set; }
     }

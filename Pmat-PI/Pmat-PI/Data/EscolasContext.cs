@@ -221,10 +221,6 @@ namespace Pmat_PI.Models
                     .IsUnicode(false)
                     .HasColumnName("nome");
 
-                entity.HasOne(d => d.ConcelhoNavigation)
-                    .WithMany(p => p.Freguesia)
-                    .HasForeignKey(d => d.Concelho)
-                    .HasConstraintName("FK__freguesia__conce__2AD55B43");
             });
 
             modelBuilder.Entity<Pais>(entity =>

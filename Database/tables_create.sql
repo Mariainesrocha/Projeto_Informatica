@@ -340,6 +340,7 @@ CREATE TABLE pmate.Prova(
 
 	FOREIGN KEY(IdCompeticao) REFERENCES pmate.Competicao(id),
 	FOREIGN KEY(IdAuthor)     REFERENCES dbo.AspNetUsers(id),
+	FOREIGN KEY (RefIdCicloEnsino) REFERENCES pmate.CicloEnsino(id)
 
 	-- Possivelmente adicionar : IdCategoria int, FOREIGN KEY(IdCategoria) REFERENCES pmate.Categoria(id),
 
@@ -355,6 +356,8 @@ CREATE TABLE pmate.Categoria(             -- OLD dbo.tblCompeticaoBase(
 	Estilo nvarchar(25) NULL,
 	RefIdCicloEnsino int NULL,
 	IconName nvarchar(25) NULL
+	FOREIGN KEY (RefIdCicloEnsino) REFERENCES pmate.CicloEnsino(id)
+ 
 )
 GO
 
@@ -466,6 +469,11 @@ CREATE TABLE pmate.ProvaEqEnunNivelResps(
 -- ---TODO: TreinoEnunNivelResps, TreinoEnunNivelUserResp, TreinoEnunNivel
 
 ------------------------------------ TRAINNING_TESTS  RELATED -----------------------------------
+CREATE TABLE pmate.cicloensino( -- OLD dbo.cicloensino
+	id int PRIMARY KEY NOT NULL, --CicloEnsinoID
+	Descritivo nvarchar(100) NOT NULL,
+	Abreviatura char(10) NOT NULL
+);
 
 CREATE TABLE pmate.Treino(
 	id int IDENTITY(1,1) PRIMARY KEY, -- OLD IdCompeticao
@@ -491,9 +499,11 @@ CREATE TABLE pmate.Treino(
 	-- IconName nvarchar(25) NULL, ESTA NULL EM 1870/2018 ROWS
 
 	FOREIGN KEY(IdAuthor)     REFERENCES dbo.AspNetUsers(id),
+	FOREIGN KEY (RefIdCicloEnsino) REFERENCES pmate.CicloEnsino(id)
 
 	-- Possivelmente adicionar : IdCategoria int, FOREIGN KEY(IdCategoria) REFERENCES pmate.Categoria(id),
 );
+
 
 CREATE TABLE pmate.TreinoModelos( -- OLD dbo.tblcompmodel 
 	IdModelo nvarchar(15) NOT NULL,

@@ -6,21 +6,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Pmat_PI.Models;
 
 namespace Pmat_PI.Identity.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class RoleController : Controller
     {
+        private UserManager<User> userManager;
         private RoleManager<IdentityRole> roleManager;
-        public RoleController(RoleManager<IdentityRole> roleMgr)
+        public RoleController(RoleManager<IdentityRole> roleMgr, UserManager<User> usrMgr)
         {
             roleManager = roleMgr;
+            userManager = usrMgr;
         }
 
         public ViewResult Index() => View(roleManager.Roles);
-
-        public ViewResult Index1() => View(roleManager.Roles);
 
         private void Errors(IdentityResult result)
         {
@@ -64,6 +66,37 @@ namespace Pmat_PI.Identity.Controllers
             else
                 ModelState.AddModelError("", "Função não encontrada");
             return View("Index", roleManager.Roles);
+        }
+
+        private async Task ChangeRoleAsync(string addRole, string removeRole, string id)
+        {
+            Console.WriteLine("aaaa111111111111111111111111aaaaaa");
+
+            User user = await userManager.FindByIdAsync(id);
+
+            if (user != null)
+            {
+                if (addRole != null)
+                {
+                    await userManager.AddToRoleAsync(user, addRole);
+                    Console.WriteLine("aazzz^^^^^^^^^^^^^^^^^^^^^^^^^^zz");
+                }
+
+                if (removeRole != null)
+                {
+                    Console.WriteLine("aaaaaaaaaaaaaWWWWWWWWWWWWWWWWWWWaaaaaaaaaaaaaaaaa");
+
+                    await userManager.RemoveFromRoleAsync(user, removeRole);
+                }
+                var allRoles = roleManager.Roles;
+                var userRoles = await userManager.GetRolesAsync(user);
+                ViewData["AllRoles"] = new SelectList(allRoles, "Id", "Name");
+                ViewBag.Roles = new SelectList(userRoles.ToList(), "Id", "Name");
+            }
+            else
+            {
+                Console.WriteLine("ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR");
+            }
         }
     }
 }

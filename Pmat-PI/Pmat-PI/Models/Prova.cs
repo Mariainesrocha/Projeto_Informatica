@@ -42,6 +42,7 @@ namespace Pmat_PI.Models
 
         public virtual AspNetUser IdAuthorNavigation { get; set; }
         public virtual Competicao IdCompeticaoNavigation { get; set; }
+        public virtual CicloEnsino RefIdCicloEnsinoNavigation { get; set; }
         public virtual ICollection<EquipaProva> EquipaProvas { get; set; }
         public virtual ICollection<ProvaEquipaEnunciado> ProvaEquipaEnunciados { get; set; }
         public virtual ICollection<ProvaEscola> ProvaEscolas { get; set; }

@@ -65,7 +65,6 @@ namespace Pmat_PI
 
             int pageSize = 50;
 
-            //var escolasContext = _context.Escolas.Include(e => e.IdTipoEscolaNavigation).Include(e => e.IdconcelhoNavigation);
             return View(await PaginatedList<Escola>.CreateAsync(escolas.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 

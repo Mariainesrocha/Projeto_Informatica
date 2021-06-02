@@ -10,12 +10,16 @@
   <ItemGroup>
     <Compile Remove="Views\NewFolder1\**" />
     <Compile Remove="Views\NewFolder2\**" />
+    <Compile Remove="Views\Treinoes\**" />
     <Content Remove="Views\NewFolder1\**" />
     <Content Remove="Views\NewFolder2\**" />
+    <Content Remove="Views\Treinoes\**" />
     <EmbeddedResource Remove="Views\NewFolder1\**" />
     <EmbeddedResource Remove="Views\NewFolder2\**" />
+    <EmbeddedResource Remove="Views\Treinoes\**" />
     <None Remove="Views\NewFolder1\**" />
     <None Remove="Views\NewFolder2\**" />
+    <None Remove="Views\Treinoes\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,7 +57,6 @@
 
   <ItemGroup>
     <None Include="Views\Treinos\Create.cshtml" />
-    <None Include="Views\Treinos\Delete.cshtml" />
     <None Include="Views\Treinos\Edit.cshtml" />
     <None Include="Views\Treinos\Index.cshtml" />
     <None Include="wwwroot\Images\cut_logo.png" />

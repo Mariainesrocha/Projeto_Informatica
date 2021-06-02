@@ -18,6 +18,8 @@ namespace Pmat_PI.Models
         public virtual DbSet<AnoEscolar> AnoEscolars { get; set; }
         public virtual DbSet<AnoLetivo> AnoLetivos { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        public virtual DbSet<CicloEnsino> CicloEnsinos { get; set; }
+
         public virtual DbSet<Competicao> Competicaos { get; set; }
         public virtual DbSet<Concelho> Concelhos { get; set; }
         public virtual DbSet<Distrito> Distritos { get; set; }
@@ -105,6 +107,25 @@ namespace Pmat_PI.Models
                 entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
 
                 entity.Property(e => e.UserName).HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<CicloEnsino>(entity =>
+            {
+                entity.ToTable("CicloEnsino", "pmate");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Abreviatura)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.Descritivo)
+                    .IsRequired()
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<Competicao>(entity =>
@@ -488,7 +509,13 @@ namespace Pmat_PI.Models
                     .WithMany(p => p.Provas)
                     .HasForeignKey(d => d.IdCompeticao)
                     .HasConstraintName("FK__Prova__IdCompeti__1B29035F");
+
+                entity.HasOne(d => d.RefIdCicloEnsinoNavigation)
+                    .WithMany(p => p.Provas)
+                    .HasForeignKey(d => d.RefIdCicloEnsino)
+                    .HasConstraintName("FK__Prova__RefIdCicl__60C757A0");
             });
+
 
             modelBuilder.Entity<ProvaEquipaEnunciado>(entity =>
             {
@@ -625,7 +652,13 @@ namespace Pmat_PI.Models
                     .WithMany(p => p.Treinos)
                     .HasForeignKey(d => d.IdAuthor)
                     .HasConstraintName("FK__Treino__IdAuthor__2E3BD7D3");
+
+                entity.HasOne(d => d.RefIdCicloEnsinoNavigation)
+                    .WithMany(p => p.Treinos)
+                    .HasForeignKey(d => d.RefIdCicloEnsino)
+                    .HasConstraintName("FK__Treino__RefIdCic__5FD33367");
             });
+
 
             modelBuilder.Entity<TreinoEnunciado>(entity =>
             {
