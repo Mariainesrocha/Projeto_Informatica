@@ -55,7 +55,7 @@ namespace Pmat_PI
             }
 
             var treino = await _context.Treinos
-                .Include(t => t.RefIdCicloEnsinoNavigation) //.Include(u => u.IdAuthorNavigation) TODO: RESOLVER LATER
+                .Include(t => t.RefIdCicloEnsinoNavigation).Include(u => u.IdAuthorNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (treino == null)
@@ -68,10 +68,8 @@ namespace Pmat_PI
         // GET: Treinos/Create
         public IActionResult Create()
         {
-            ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             ViewData["RefIdCicloEnsino"] = new SelectList(_context.CicloEnsinos, "Id", "Descritivo");
             ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta");
-            ViewData["logged_id"] = userManager.GetUserId(HttpContext.User);
             return View();
         }
 
@@ -80,15 +78,15 @@ namespace Pmat_PI
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IdAuthor,NomeProva,DataCriacao,MaxEscolas,MaxTentJogo,TempoTotalJogo,NumNiveis,VidasPorNivel,NumElemsEquipa,Calculadora,Estilo,Url,TreinoVisivel,RefIdCicloEnsino,Plataforma")] Treino treino)
+        public async Task<IActionResult> Create([Bind("Id,NomeProva,DataCriacao,MaxEscolas,MaxTentJogo,TempoTotalJogo,NumNiveis,VidasPorNivel,NumElemsEquipa,Calculadora,Estilo,Url,TreinoVisivel,RefIdCicloEnsino,Plataforma")] Treino treino)
         {
             if (ModelState.IsValid)
             {
+                treino.IdAuthor = userManager.GetUserId(HttpContext.User);
                 _context.Add(treino);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", treino.IdAuthor);
             return View(treino);
         }
 
@@ -106,7 +104,6 @@ namespace Pmat_PI
                 return NotFound();
             }
             ViewData["RefIdCicloEnsino"] = new SelectList(_context.CicloEnsinos, "Id", "Descritivo", treino.RefIdCicloEnsino);
-            ViewData["logged_id"] = userManager.GetUserId(HttpContext.User);
             return View(treino);
         }
 
@@ -115,7 +112,7 @@ namespace Pmat_PI
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IdAuthor,NomeProva,DataCriacao,MaxEscolas,MaxTentJogo,TempoTotalJogo,NumNiveis,VidasPorNivel,NumElemsEquipa,Calculadora,Estilo,Url,TreinoVisivel,RefIdCicloEnsino,Plataforma")] Treino treino)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NomeProva,DataCriacao,MaxEscolas,MaxTentJogo,TempoTotalJogo,NumNiveis,VidasPorNivel,NumElemsEquipa,Calculadora,Estilo,Url,TreinoVisivel,RefIdCicloEnsino,Plataforma")] Treino treino)
         {
             if (id != treino.Id)
             {
@@ -126,6 +123,7 @@ namespace Pmat_PI
             {
                 try
                 {
+                    treino.IdAuthor = userManager.GetUserId(HttpContext.User);
                     _context.Update(treino);
                     await _context.SaveChangesAsync();
                 }
@@ -142,7 +140,6 @@ namespace Pmat_PI
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", treino.IdAuthor);
             ViewData["RefIdCicloEnsino"] = new SelectList(_context.CicloEnsinos, "Id", "Descritivo", treino.RefIdCicloEnsino);
 
             return View(treino);
@@ -165,4 +162,6 @@ namespace Pmat_PI
         }
     }
 }
-//Scaffold-DbContext "Server=localhost;Database=pmate2-demo;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -context 'ApplicationDbContextTEMP' -Tables AspNetUsers,AnoEscolar,AnoLetivo,Competicao,Concelho,Distrito,Equipa,EquipaAlunos,EquipaProva,Escola,Freguesia,Modelo,ModeloNovo,ModeloVelho,Pais,Projeto,Prova,ProvaEquipaEnunciado,ProvaEscolas,ProvaModelos,TipoEscola,Treino,TreinoEnunciado,TreinoModelos,User,UserContacto,UserContactoTipo,UserEscola,UserEscolaHistorico,CicloEnsino  -force
+
+
+

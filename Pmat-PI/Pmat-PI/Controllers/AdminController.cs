@@ -51,17 +51,16 @@ namespace Identity.Controllers
                 switch (filterType)
                 {
                     case "escola":
-                        users = (from u in _context.AspNetUsers join ue in _context.UserEscolas.Where(e => e.IdEscolaNavigation.NomeEscola.ToLower().Equals(searchString.ToLower())) on u.Id equals ue.IdUser select new User { Name = u.Name }); //TODO: dar join com Users
+                        users = from u in _context.AspNetUsers join ue in _context.UserEscolas.Where(e => e.IdEscolaNavigation.NomeEscola.ToLower().Equals(searchString.ToLower())) on u.Id equals ue.IdUser select new User { UserName = u.UserName, Id = u.Id, Email = u.Email, Age = u.Age, Name = u.Name, PasswordHash = u.PasswordHash};
                         break;
                     case "nome":
                         users = userManager.Users.Where(u => u.Name.ToLower().StartsWith(searchString.ToLower()));
                         break;
                     case "email":
-                        Console.WriteLine("Email -------------");
                         users = userManager.Users.Where(u => u.Email.ToLower().Contains(searchString.ToLower()));
                         break;
                     case "role":
-                        users = userManager.Users.Where(u => u.Roles.Equals("ADMIN")); //TODO: CONFIRMAR
+                        users = (IQueryable<User>)await userManager.GetUsersInRoleAsync("ADMIN");//TODO: N FUNCIONA
                         break;
                     default:
                         break;
@@ -105,9 +104,10 @@ namespace Identity.Controllers
             User user = await userManager.FindByIdAsync(id);
             if (user != null) {
                 var allRoles = roleManager.Roles;
-                var userRoles = await userManager.GetRolesAsync(user);
-                ViewData["AllRoles"] = new SelectList(allRoles, "Id", "Name");
-                ViewBag.Roles = new SelectList(userRoles.ToList());
+                var userRoles = userManager.GetRolesAsync(user).Result;
+                ViewData["AllRoles"] = new SelectList(allRoles, "Name", "Name");
+                ViewBag.Roles = new SelectList(userRoles);
+                ViewBag.UserRoles = userRoles;
                 return View(user);
             }
             else

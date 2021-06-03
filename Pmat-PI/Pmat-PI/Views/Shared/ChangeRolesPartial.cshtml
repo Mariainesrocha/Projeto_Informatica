@@ -1,9 +1,9 @@
-﻿
+﻿@model User
 @{
     <div class="modal fade" id="modalFuncoes" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form asp-controller="Role" asp-action="ChangeRoleAsync">
+                <form asp-controller="Role" asp-action="ChangeRole" method="post">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Alterar funções do utilizador</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -24,6 +24,7 @@
                                 <option value="">-- Selecione a função --</option>
                             </select>
                         </div>
+                        <input asp-for="Id" class="form-control" type="hidden" />
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>

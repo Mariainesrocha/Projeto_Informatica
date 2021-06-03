@@ -9,6 +9,18 @@ FROM dbo.OldTable
 SET IDENTITY_INSERT pmate.NewTable OFF
 COMMIT;
 
+-- SubProvas
+BEGIN TRANSACTION;
+
+INSERT INTO pmate.SubProvas(IdProvaPai,IdProvaFilho)
+SELECT  distinct refidcompeticao_pai, refidcompeticao_filho
+FROM  [pmate-Equamat2000].dbo.tblsubcompeticoes
+JOIN pmate.Prova on pmate.Prova.id = [pmate-Equamat2000].dbo.tblsubcompeticoes.ref
+
+DELETE FROM pmate.SubProvas
+where IdProvaPai=IdProvaFilho
+
+COMMIT;
 
 ---------------------------------------  IMPORTANTE  ----------------------------------------
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  PLANEAMENTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --

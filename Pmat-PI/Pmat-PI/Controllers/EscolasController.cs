@@ -44,6 +44,7 @@ namespace Pmat_PI
                 escolas = escolas.Where(e => e.NomeEscola.Contains(searchString));
             }
 
+            //TODO: REFAZER -> NOT WORKING
             switch (sortOrder)
             {
                 case "nome_desc":

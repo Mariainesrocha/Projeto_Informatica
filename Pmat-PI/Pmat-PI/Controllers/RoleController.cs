@@ -68,34 +68,44 @@ namespace Pmat_PI.Identity.Controllers
             return View("Index", roleManager.Roles);
         }
 
-        private async Task ChangeRoleAsync(string addRole, string removeRole, string id)
+        [HttpPost]
+        public async Task<IActionResult> ChangeRole(string addRole, string removeRole, string id)
         {
-            Console.WriteLine("aaaa111111111111111111111111aaaaaa");
-
+            var msg = "";
             User user = await userManager.FindByIdAsync(id);
-
             if (user != null)
             {
+                var allRoles = roleManager.Roles;
+                var userRoles = userManager.GetRolesAsync(user).Result;
+
                 if (addRole != null)
                 {
-                    await userManager.AddToRoleAsync(user, addRole);
-                    Console.WriteLine("aazzz^^^^^^^^^^^^^^^^^^^^^^^^^^zz");
+                    if (!userRoles.Contains(addRole))
+                    {
+                        await userManager.AddToRoleAsync(user, addRole);
+                        msg += " A função " + addRole.ToUpper() + " foi atribuída a este utilizador!"; 
+                    }                   
                 }
 
                 if (removeRole != null)
                 {
-                    Console.WriteLine("aaaaaaaaaaaaaWWWWWWWWWWWWWWWWWWWaaaaaaaaaaaaaaaaa");
-
                     await userManager.RemoveFromRoleAsync(user, removeRole);
+                    msg += " A função " + removeRole.ToUpper() + " foi removida deste utilizador!";
                 }
-                var allRoles = roleManager.Roles;
-                var userRoles = await userManager.GetRolesAsync(user);
-                ViewData["AllRoles"] = new SelectList(allRoles, "Id", "Name");
-                ViewBag.Roles = new SelectList(userRoles.ToList(), "Id", "Name");
+
+                ViewData["AllRoles"] = new SelectList(allRoles, "Name", "Name");
+                ViewBag.Roles = new SelectList(userRoles);
+
+                if (msg != "")
+                    TempData["msg"] = msg;
+                else
+                    TempData["msg"] = " Erro ao tentar alterar funções, tente novamente!";
+                return RedirectToAction("updateUser", "Admin", new { id = user.Id });
             }
             else
             {
-                Console.WriteLine("ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR");
+                TempData["msg"] = " Erro ao tentar encontrar este utilizador";
+                return null;
             }
         }
     }

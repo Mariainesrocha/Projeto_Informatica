@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
+#nullable disable
+
 namespace Pmat_PI.Models
 {
     public partial class ApplicationDbContextAlmostFinal : DbContext
@@ -19,7 +21,6 @@ namespace Pmat_PI.Models
         public virtual DbSet<AnoLetivo> AnoLetivos { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<CicloEnsino> CicloEnsinos { get; set; }
-
         public virtual DbSet<Competicao> Competicaos { get; set; }
         public virtual DbSet<Concelho> Concelhos { get; set; }
         public virtual DbSet<Distrito> Distritos { get; set; }
@@ -50,6 +51,7 @@ namespace Pmat_PI.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Server=localhost;Database=pmate2-demo;Trusted_Connection=True;");
             }
         }
@@ -516,7 +518,6 @@ namespace Pmat_PI.Models
                     .HasConstraintName("FK__Prova__RefIdCicl__60C757A0");
             });
 
-
             modelBuilder.Entity<ProvaEquipaEnunciado>(entity =>
             {
                 entity.ToTable("ProvaEquipaEnunciado", "pmate");
@@ -567,12 +568,12 @@ namespace Pmat_PI.Models
                     .HasConstraintName("FK__ProvaEsco__AnoLe__23BE4960");
 
                 entity.HasOne(d => d.EscolaOrganizadoraNavigation)
-                    .WithMany(p => p.ProvaEscolaId)
+                    .WithMany(p => p.ProvaEscolaEscolaOrganizadoraNavigations)
                     .HasForeignKey(d => d.EscolaOrganizadora)
                     .HasConstraintName("FK__ProvaEsco__Escol__22CA2527");
 
                 entity.HasOne(d => d.IdEscolaNavigation)
-                    .WithMany(p => p.ProvaEscolaId2)
+                    .WithMany(p => p.ProvaEscolaIdEscolaNavigations)
                     .HasForeignKey(d => d.IdEscola)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__ProvaEsco__IdEsc__20E1DCB5");
@@ -658,7 +659,6 @@ namespace Pmat_PI.Models
                     .HasForeignKey(d => d.RefIdCicloEnsino)
                     .HasConstraintName("FK__Treino__RefIdCic__5FD33367");
             });
-
 
             modelBuilder.Entity<TreinoEnunciado>(entity =>
             {

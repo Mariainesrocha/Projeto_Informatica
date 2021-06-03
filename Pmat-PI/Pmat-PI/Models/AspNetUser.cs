@@ -37,7 +37,6 @@ namespace Pmat_PI.Models
         public int Roles { get; set; }
         public int UserId { get; set; }
 
-        public virtual User User { get; set; }
         public virtual ICollection<EquipaAluno> EquipaAlunos { get; set; }
         public virtual ICollection<Prova> Provas { get; set; }
         public virtual ICollection<TreinoEnunciado> TreinoEnunciados { get; set; }

@@ -442,6 +442,18 @@ CREATE TABLE pmate.ProvaEquipaEnunciado( -- OLD JogoGerado
 	FOREIGN KEY(IdEquipa) REFERENCES pmate.Equipa(id),
 )
 
+CREATE TABLE pmate.SubProvas(        -- dbo.tblsubcompeticoes
+                                        -- idsubcompeticao
+    IdProvaPai int NOT NULL,            -- refidcompeticao_pai
+    IdProvaFilho int NOT NULL           -- refidcompeticao_filho
+
+
+    PRIMARY KEY (IdProvaPai, IdProvaFilho)
+
+    FOREIGN KEY (IdProvaPai) REFERENCES pmate.Prova(id),
+    FOREIGN KEY (IdProvaFilho) REFERENCES pmate.Prova(id),
+);
+
 CREATE TABLE pmate.ProvaEqEnunNivel( 
 	-- FALTAM AQUI ATTRS!!!!!!!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
