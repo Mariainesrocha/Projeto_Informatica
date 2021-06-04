@@ -107,6 +107,13 @@ CREATE TABLE pmate.UserContacto(      -- OLD tblcontacto
 
 ------------------------------------ SCHOOL RELATED -----------------------------------
 
+CREATE TABLE pmate.CicloEnsino( -- OLD dbo.cicloensino
+	id int NOT NULL, --CicloEnsinoID
+	Descritivo nvarchar(100) NOT NULL,
+	Abreviatura char(10) NOT NULL
+);
+
+
 CREATE TABLE pmate.TipoEscola(
     id_tipo_escola int IDENTITY(1,1) NOT NULL,
     TipoEscola char(10) ,
@@ -334,15 +341,27 @@ CREATE TABLE pmate.Prova(
 	Estilo nvarchar(25) NULL,
 	URL nvarchar(250) NULL,
 	TreinoVisivel bit NOT NULL,
-	RefIdCicloEnsino int NULL,
+	IdCicloEnsino int NULL, -- OLD RefIdCicloEnsino
 	plataforma int NULL, 
 	-- IconName nvarchar(25) NULL, ESTA NULL EM 1870/2018 ROWS
 
 	FOREIGN KEY(IdCompeticao) REFERENCES pmate.Competicao(id),
 	FOREIGN KEY(IdAuthor)     REFERENCES dbo.AspNetUsers(id),
-
+	FOREIGN KEY(IdCicloEnsino) REFERENCES pmate.CicloEnsino
 	-- Possivelmente adicionar : IdCategoria int, FOREIGN KEY(IdCategoria) REFERENCES pmate.Categoria(id),
 
+);
+
+CREATE TABLE pmate.SubProvas(    	-- dbo.tblsubcompeticoes
+							            -- idsubcompeticao
+	IdProvaPai int NOT NULL,            -- refidcompeticao_pai
+	IdProvaFilho int NOT NULL           -- refidcompeticao_filho
+
+
+	PRIMARY KEY (IdProvaPai, IdProvaFilho)
+
+	FOREIGN KEY (IdProvaPai) REFERENCES pmate.Prova(id),
+	FOREIGN KEY (IdProvaFilho) REFERENCES pmate.Prova(id),
 );
 
 CREATE TABLE pmate.Categoria(             -- OLD dbo.tblCompeticaoBase(
@@ -437,33 +456,36 @@ CREATE TABLE pmate.ProvaEquipaEnunciado( -- OLD JogoGerado
 
 	FOREIGN KEY(IdProva) REFERENCES pmate.Prova(id),
 	FOREIGN KEY(IdEquipa) REFERENCES pmate.Equipa(id),
-)
+);
 
-CREATE TABLE pmate.ProvaEqEnunNivel( 
-	-- FALTAM AQUI ATTRS!!!!!!!!!!!!!
+
+
+
+
+
+								
+
+CREATE TABLE pmate.ProvaEqEnunNivel( -- dbo.tblEcraGerado_2020_2021 -
+								
+	-- FALTAM AQUI ATTRS!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
 	IdEnunciadoEquipa int,
 
 	FOREIGN KEY(IdEnunciadoEquipa) REFERENCES pmate.ProvaEquipaEnunciado(id), 
 );
 
-CREATE TABLE pmate.ProvaEqEnunNivelUserResp( 
-	 -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
+CREATE TABLE pmate.ProvaEqEnunNivelUserResp(  --dbo.tbl????  Em que tabela está guardada a resposta do utilizador ???
+	 -- FALTAM AQUI ATTRS!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
 	IdNivel int,
 
 	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.ProvaEqEnunNivel(id),
 );
 
-CREATE TABLE pmate.ProvaEqEnunNivelResps(  
-	-- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
-	id int IDENTITY(1,1) PRIMARY KEY,
-	IdNivel int,
 
-	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.ProvaEqEnunNivel(id),
-);
 
--- ---TODO: TreinoEnunNivelResps, TreinoEnunNivelUserResp, TreinoEnunNivel
+
+
 
 ------------------------------------ TRAINNING_TESTS  RELATED -----------------------------------
 
@@ -486,12 +508,12 @@ CREATE TABLE pmate.Treino(
 	Estilo nvarchar(25) NULL,
 	URL nvarchar(250) NULL,
 	TreinoVisivel bit NOT NULL,
-	RefIdCicloEnsino int NULL,
+	IdCicloEnsino int NULL, -- Old RefIdCicloEnsino
 	plataforma int NULL, 
 	-- IconName nvarchar(25) NULL, ESTA NULL EM 1870/2018 ROWS
 
 	FOREIGN KEY(IdAuthor)     REFERENCES dbo.AspNetUsers(id),
-
+	FOREIGN KEY(IdCicloEnsino) REFERENCES pmate.CicloEnsino
 	-- Possivelmente adicionar : IdCategoria int, FOREIGN KEY(IdCategoria) REFERENCES pmate.Categoria(id),
 );
 
@@ -536,12 +558,6 @@ CREATE TABLE pmate.TreinoEnunNivelUserResp(  -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!
 	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.EnunciadoEquipaNivel(id),
 );
 
-CREATE TABLE pmate.TreinoEnunNivelResps(  -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
-	id int IDENTITY(1,1) PRIMARY KEY,
-	IdEnunciadoEquipaNivel int,
-
-	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.EnunciadoEquipaNivel(id),
-);
 
 
 

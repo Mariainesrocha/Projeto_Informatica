@@ -10,36 +10,6 @@ SET IDENTITY_INSERT pmate.NewTable OFF
 COMMIT;
 
 
----------------------------------------  IMPORTANTE  ----------------------------------------
--- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  PLANEAMENTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --
-
---Tabelas mais importantes para tratar e usar no ASP NET CORE:
-    ---> AspNetUsers / AspNetRoles / AspNetUserRoles
-    ---> Users (tabela que tem os attrs extra) 
-    ---> TipoEscola / Escola / AnoLetivo / AnoEscolaridade / UserRoleEscola
-    ---> Prova / Competicao / Modelos / ProvaModelos
-
--- OBJETIVOS ATUAIS:
-    -- INICIAIS
-    --> Listar Escolas / Users / Provas / Listar Treinos (Inicialmente sem filtros sabendo fazer 1, os outros é replicar)
-    --> Abrir uma Prova 
-    --> Criar uma competição
-    --> Criar 1 prova dentro ou fora de 1 competição 
-    --> Inscrever Escolas nas Provas/Competiçoes (DOUBT - Ao que parece na BD atual ainda não temos a tabela de EscolaProva -> Escolas inscritas numa prova..!?)
-
-    -- MAIS AVANÇADOS
-    --> Filtrar Provas por Tema e outros 
-    --> Filtrar Users por Roles
-    --> Abrir o Perfil de um User
-
--- EM STANDBY - Podemos acrescentar isto + tarde :
-    --> tbls de localizações (pais, distrito etc) 
-    --> tbls com  + detalhes relativos á prova (Enunciados, Niveis,  respostas.. etc) 
-    --> tbls com Equipas que partipam nas provas
-
---------------------------------------- END/IMPORTANTE ----------------------------------------
-
-
 
 
 ------------------------------------ LOCATIONS RELATED ------------------------------
@@ -316,6 +286,14 @@ COMMIT;
 
 
 ------------------------------------ SCHOOL RELATED ---------------------------------
+--CicloEnsino
+BEGIN TRANSACTION;
+
+INSERT INTO pmate.CicloEnsino(id,Descritivo,Abreviatura)
+SELECT CicloEnsinoID,Descritivo,Abreviatura 
+FROM [pmate-Equamat2000].dbo.cicloensino
+
+COMMIT;
 
 --TipoEscola
 BEGIN TRANSACTION;
@@ -530,12 +508,25 @@ COMMIT;
 BEGIN TRANSACTION;
 SET IDENTITY_INSERT pmate.Prova ON
 
-INSERT INTO pmate.Prova(id,IdAuthor, IdCompeticao, NomeProva, DataCriacao, MaxEscolas, MaxTentJogo, TempoTotalJogo, NumNiveis, VidasPorNivel, NumElemsEquipa, Calculadora, DataInscFinal, DataProva, InicioPreInscricao, FimPreInscricao, InicioInscricaoEquipas, FimInscricaoEquipas, FimProva, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma)
+INSERT INTO pmate.Prova(id,IdAuthor, IdCompeticao, NomeProva, DataCriacao, MaxEscolas, MaxTentJogo, TempoTotalJogo, NumNiveis, VidasPorNivel, NumElemsEquipa, Calculadora, DataInscFinal, DataProva, InicioPreInscricao, FimPreInscricao, InicioInscricaoEquipas, FimInscricaoEquipas, FimProva, Estilo, URL, TreinoVisivel, IdCicloEnsino, plataforma)
 SELECT IdCompeticao, IdUser, idCompeticaoEvento, NomeCompeticao, DataCriacao, NumaMaxEqEscolas, MaxTentJogo, TempoTotalJogo, NumTotNiveis, VidasPorNivel, NumEltosEquipa, Calculadora, DataInscFinal, DiaHoraCompeticao, InicioPreInscricao, FimPreInscricao, InicioInscricaoEquipas, FimInscricaoEquipas, NULL, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma
 FROM [pmate-Equamat2000].dbo.tblcompeticao
 where NomeCompeticao not like '%treino%'
 
 SET IDENTITY_INSERT pmate.Prova OFF
+COMMIT;
+
+-- SubProvas
+BEGIN TRANSACTION;
+
+INSERT INTO pmate.SubProvas(IdProvaPai,IdProvaFilho)          
+SELECT  distinct refidcompeticao_pai, refidcompeticao_filho
+FROM  [pmate-Equamat2000].dbo.tblsubcompeticoes
+JOIN pmate.Prova on pmate.Prova.id = [pmate-Equamat2000].dbo.tblsubcompeticoes.ref
+
+DELETE FROM pmate.SubProvas
+where IdProvaPai=IdProvaFilho
+
 COMMIT;
 
 
@@ -632,7 +623,7 @@ COMMIT;
 BEGIN TRANSACTION;
 SET IDENTITY_INSERT pmate.Treino ON
 
-INSERT INTO pmate.Treino(id,IdAuthor, NomeProva, DataCriacao, MaxEscolas, MaxTentJogo, TempoTotalJogo, NumNiveis, VidasPorNivel, NumElemsEquipa, Calculadora, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma)
+INSERT INTO pmate.Treino(id,IdAuthor, NomeProva, DataCriacao, MaxEscolas, MaxTentJogo, TempoTotalJogo, NumNiveis, VidasPorNivel, NumElemsEquipa, Calculadora, Estilo, URL, TreinoVisivel, IdCicloEnsino, plataforma)
 SELECT IdCompeticao, IdUser, NomeCompeticao, DataCriacao, NumaMaxEqEscolas, MaxTentJogo, TempoTotalJogo, NumTotNiveis, VidasPorNivel, NumEltosEquipa, Calculadora, Estilo, URL, TreinoVisivel, RefIdCicloEnsino, plataforma
 FROM [pmate-Equamat2000].dbo.tblcompeticao
 Where NomeCompeticao like '%treino%'
