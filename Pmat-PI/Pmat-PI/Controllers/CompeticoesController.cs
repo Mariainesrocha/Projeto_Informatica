@@ -148,5 +148,66 @@ namespace Pmat_PI.Views
         {
             return _context.Competicaos.Any(e => e.Id == id);
         }
+
+        // GET: Competicoes/InscreverEscolas
+        public IActionResult InscreverEscolas(string concelho, string nomeEscola, string currentFilter)
+        {
+            IQueryable<Escola> escolas = null;
+            if (!String.IsNullOrEmpty(concelho) && (!String.IsNullOrEmpty(nomeEscola)))
+            {
+                escolas = _context.Escolas.Where(e => e.NomeEscola.Contains(nomeEscola) && e.IdconcelhoNavigation.Nome.ToLower().Contains(concelho));
+            }
+            else if (!String.IsNullOrEmpty(nomeEscola))
+            {
+                escolas = _context.Escolas.Where(e => e.NomeEscola.Contains(nomeEscola));
+            }
+            else if (!String.IsNullOrEmpty(concelho))
+            {
+                escolas = _context.Escolas.Where(e => e.IdconcelhoNavigation.Nome.ToLower().Contains(concelho));
+            }
+
+            ViewBag.concelhos = (from c in _context.Concelhos orderby c.Nome select c).AsNoTracking();
+            ViewBag.escolas = escolas;
+            AnoLetivo al = _context.AnoLetivos.OrderBy(a => a.AnoLetivo1).Last();
+            ViewBag.competicao = _context.Competicaos.Where(c => c.DataInicio >= al.Inicio  && c.DataFim <= al.Fim);
+
+            return View();
+        }
+
+        // POST: Competicoes/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> InscreverEscolas(string competicao, string[] escolas)
+        {
+            if (!String.IsNullOrEmpty(competicao) && escolas.Length > 0)
+            {
+                //select * FROM [pmate2-demo].[pmate].[Prova] where id not in (select IdProvaFilho from [pmate2-demo].[pmate].[SubProvas]) and id not in (select IdProvaPai from [pmate2-demo].[pmate].[SubProvas]) and IdCompeticao is not null
+
+                // select* FROM[pmate2 - demo].[pmate].[Prova] JOIN[pmate2 - demo].[pmate].[SubProvas] ON Id = IdProvaFilho where IdCompeticao is not null
+
+                Prova provas = null;
+                foreach (string e in escolas)
+                {
+                    foreach (Prova pp in provas)
+                    {
+                        ProvaEscola pe = new ProvaEscola();
+                        pe.AnoLetivo = _context.AnoLetivos.OrderBy(a => a.AnoLetivo1).Last().AnoLetivo1;
+                        pe.DataRegisto = DateTime.Now;
+                        pe.IdEscola = int.Parse(e);
+                        pe.IdProva = pp.Id;
+                        
+                        //
+                        _context.Add(pe);
+                        await _context.SaveChangesAsync();                        
+                    }
+                }
+            }
+            else {
+                ViewData["msg"] = "Erro: competição nao selecionada ou escolas nao escolhidas";
+            }
+            return null;   
+        }
     }
 }
