@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pmat_PI.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Pmat_PI.Views
 {
+    [Authorize(Roles = "Admin")]
     public class CompeticoesController : Controller
     {
         private readonly ApplicationDbContextAlmostFinal _context;
@@ -57,7 +60,14 @@ namespace Pmat_PI.Views
                 return NotFound();
             }
 
-            return View(competicao);
+            IQueryable<Prova> provasPai = from p in _context.Provas where !(from sp in _context.SubProvas select sp.IdProvaFilho).Contains(p.Id) && !(from sp in _context.SubProvas select sp.IdProvaPai).Contains(p.Id) && (p.IdCompeticao.Equals(id)) select p;
+
+            IQueryable<Prova> provas = from p in _context.Provas join sp in _context.SubProvas on p.Id equals sp.IdProvaFilho where p.IdCompeticao.Equals(id) select p;
+            dynamic model = new System.Dynamic.ExpandoObject();
+            model.provas = provas;
+            model.provasPai = provasPai;
+
+            return View(model);  
         }
 
         // GET: Competicoes/Create
@@ -174,40 +184,48 @@ namespace Pmat_PI.Views
             return View();
         }
 
-        // POST: Competicoes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> InscreverEscolas(string competicao, string[] escolas)
+        public async Task Inscrever(string competicao, string[] escolas)
         {
+            Console.WriteLine("Competicao: "+ competicao);
+            Console.WriteLine("Num escolas: " + escolas.Length);
+
             if (!String.IsNullOrEmpty(competicao) && escolas.Length > 0)
             {
-                //select * FROM [pmate2-demo].[pmate].[Prova] where id not in (select IdProvaFilho from [pmate2-demo].[pmate].[SubProvas]) and id not in (select IdProvaPai from [pmate2-demo].[pmate].[SubProvas]) and IdCompeticao is not null
+                AnoLetivo al = _context.AnoLetivos.OrderBy(a => a.AnoLetivo1).Last();
 
-                // select* FROM[pmate2 - demo].[pmate].[Prova] JOIN[pmate2 - demo].[pmate].[SubProvas] ON Id = IdProvaFilho where IdCompeticao is not null
+                IQueryable<Prova> provasPai = from p in _context.Provas where !(from sp in _context.SubProvas select sp.IdProvaFilho).Contains(p.Id) && !(from sp in _context.SubProvas select sp.IdProvaPai).Contains(p.Id) && (p.IdCompeticaoNavigation.Nome.ToLower().Contains(competicao)) select p;
 
-                Prova provas = null;
+                IQueryable<Prova> provas = from p in _context.Provas join sp in _context.SubProvas on p.Id equals sp.IdProvaFilho where p.IdCompeticaoNavigation.Nome.ToLower().Contains(competicao) select p;
+
+                provas.Concat(provasPai);
                 foreach (string e in escolas)
                 {
                     foreach (Prova pp in provas)
                     {
-                        ProvaEscola pe = new ProvaEscola();
-                        pe.AnoLetivo = _context.AnoLetivos.OrderBy(a => a.AnoLetivo1).Last().AnoLetivo1;
-                        pe.DataRegisto = DateTime.Now;
-                        pe.IdEscola = int.Parse(e);
-                        pe.IdProva = pp.Id;
+                        //Console.WriteLine(_context.ProvaEscolas.Any(pe => pe.AnoLetivo.Equals(al.AnoLetivo1) && pe.IdProva.Equals(pp.Id) && pe.IdEscola.Equals(int.Parse(e))));
                         
-                        //
-                        _context.Add(pe);
-                        await _context.SaveChangesAsync();                        
+                      
+                            ProvaEscola pe = new ProvaEscola();
+
+                            pe.AnoLetivo = al.AnoLetivo1;
+                            pe.DataRegisto = DateTime.Now;
+                            pe.IdEscola = int.Parse(e);
+                            pe.IdProva = pp.Id;
+
+                            _context.ProvaEscolas.Add(pe);
+                        //Console.WriteLine("Escola ja inscrita anteriomente nesta prova");
+                        
                     }
+                    var x = await _context.SaveChangesAsync();
                 }
+                TempData["msg"] = "Sucesso: escola(s) inscrita(s) nas provas da competição "+competicao +" com sucesso!";
+                return;
             }
             else {
-                ViewData["msg"] = "Erro: competição nao selecionada ou escolas nao escolhidas";
+                Console.WriteLine("Erro: competição nao selecionada ou escolas nao escolhidas");
+                return; 
             }
-            return null;   
         }
     }
 }

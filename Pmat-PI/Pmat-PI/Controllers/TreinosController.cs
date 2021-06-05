@@ -164,4 +164,4 @@ namespace Pmat_PI
 }
 
 
-
+//Scaffold-DbContext "Server=localhost;Database=pmate2-demo;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -context 'ApplicationDbContextTemp' -Tables AspNetUsers,SubProva,Competicao,Prova,CicloEnsino  -force

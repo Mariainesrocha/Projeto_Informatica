@@ -46,6 +46,7 @@ namespace Pmat_PI.Models
         public virtual DbSet<UserContactoTipo> UserContactoTipos { get; set; }
         public virtual DbSet<UserEscola> UserEscolas { get; set; }
         public virtual DbSet<UserEscolaHistorico> UserEscolaHistoricos { get; set; }
+        public virtual DbSet<SubProva> SubProvas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -516,6 +517,26 @@ namespace Pmat_PI.Models
                     .WithMany(p => p.Provas)
                     .HasForeignKey(d => d.RefIdCicloEnsino)
                     .HasConstraintName("FK__Prova__RefIdCicl__60C757A0");
+            });
+
+            modelBuilder.Entity<SubProva>(entity =>
+            {
+                entity.HasKey(e => new { e.IdProvaPai, e.IdProvaFilho })
+                    .HasName("PK__SubProva__89F3B2720053DDFF");
+
+                entity.ToTable("SubProvas", "pmate");
+
+                entity.HasOne(d => d.IdProvaFilhoNavigation)
+                    .WithMany(p => p.SubProvaIdProvaFilhoNavigations)
+                    .HasForeignKey(d => d.IdProvaFilho)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__SubProvas__IdPro__70099B30");
+
+                entity.HasOne(d => d.IdProvaPaiNavigation)
+                    .WithMany(p => p.SubProvaIdProvaPaiNavigations)
+                    .HasForeignKey(d => d.IdProvaPai)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__SubProvas__IdPro__6F1576F7");
             });
 
             modelBuilder.Entity<ProvaEquipaEnunciado>(entity =>

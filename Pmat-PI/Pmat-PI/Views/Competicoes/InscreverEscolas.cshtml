@@ -62,30 +62,50 @@ else
         <a class="btn btn-info" id="inscbtn" style="color: white">Inscrever</a>
     </div>
 }
+<!-- Success modal-->
+<div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" style="color: forestgreen; bold;">Sucesso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @TempData["msg"]
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts{
     <script>
         $("#inscbtn").click(function () {
             var selecionados = $("#listaEscolas input:checkbox:checked").map(function () {
                 return $(this).attr("value");
             }).get();
-            callAjaxPost(selecionados);
+            var comp = $("#competicao option:selected").val();
+            if (comp == "" || selecionados.length <= 0) {
+                //TODO: mudar o texto do modal dinamicamente
+                $("#mymodal").modal('show');
+            } else {
+                callAjaxPost(selecionados, comp);
+            }
         });
 
-        function callAjaxPost(selecionados) {
+        function callAjaxPost(selecionados,comp) {
             $.ajax
                 ({
                     type: "POST",
-                    url: '@Url.Action("InscreverEscolas", "Competicoes")',
-                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("Inscrever", "Competicoes")',
+                    dataType : "text",
                     data: {
-                        competicao: $("#competicao option:selected").val(), escolas: selecionados },
-                    dataType: 'json',
-                    success: function (data) {
-                        $('#notfound').hide();
-                        if (data.length > 0) {
-                    }
-                        else {
-                            $('#notfound').show().delay(10000).hide("slow");
+                        "competicao": comp, "escolas": selecionados },
+                    success: function () {
+                        if('@(TempData["msg"])' != null)
+                        {
+                            $("#mymodal").modal('show');
                         }
                     },
                     error: function (err) {
@@ -95,3 +115,4 @@ else
         }
     </script>
 }
+
