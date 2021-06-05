@@ -31,7 +31,7 @@
 </div>
 @if (Model.Count == 0)
 {
-    <p> Treino(s) não encontrado(s) </p>
+    <p> Treinos(s) não encontrado(s) </p>
 }
 else
 {
@@ -57,60 +57,109 @@ else
                     Elementos da equipa
                 </th>
                 <th> Editar </th>
+                <th>Detalhes</th>
                 <th> Eliminar</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NomeProva)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MaxTentJogo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TempoTotalJogo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NumNiveis)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.VidasPorNivel)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NumElemsEquipa)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
-                    </td>
-                    <td>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: red ;" class="fa fa-trash"> </i></a>
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomeProva)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaxTentJogo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TempoTotalJogo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumNiveis)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VidasPorNivel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumElemsEquipa)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: dodgerblue ;" class="fa fa-eye"> </i></a>
+                </td>
+                <td>
+                    <a id="deleteModal" data-toggle="modal" data-target="#modal-delete" data-id="@item.Id" class="btn">
+                        <i style="font-size:30px; color: red;" class="fa fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
-}
-    @{
-        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-    }
 
-    <div style="text-align:center">
-        <a style="margin-right:2%" asp-action="Index"
-           asp-route-sortOrder="@ViewData["CurrentSort"]"
-           asp-route-pageNumber="@(Model.PageIndex - 1)"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           class="btn btn-info @prevDisabled">
-            Anterior
-        </a>
-        <a asp-action="Index"
-           asp-route-sortOrder="@ViewData["CurrentSort"]"
-           asp-route-pageNumber="@(Model.PageIndex + 1)"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           class="btn btn-info @nextDisabled">
-            Próximo
-        </a>
-    </div>
+    <!--Confirm delete modal-->
+    <form asp-action="Delete" role="form" id="myForm">
+        <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Apagar Treino</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Deseja realmente apagar este treino?
+                        <input hidden name="id" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Não</button>
+                        <button type="submit" class="btn btn-danger" id="modalDeleteButton">Sim</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<div style="text-align:center">
+    <a style="margin-right:2%" asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-info @prevDisabled">
+        Anterior
+    </a>
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-info @nextDisabled">
+        Próximo
+    </a>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            $('#modal-delete').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data("id");
+                var modal = $(this);
+
+                modal.find('.modal-content input').val(id);
+            });
+
+            $("#modalDeleteButton").click(function () {
+                $("#myForm").submit();
+            });
+
+        });
+    </script>
+}

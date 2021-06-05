@@ -1,0 +1,128 @@
+﻿@model Pmat_PI.Models.Treino
+
+@{
+    ViewData["Title"] = "Detalhes";
+}
+
+
+<h1>Detalhes do treino</h1>
+<hr />
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            Nome do treino:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NomeProva)
+        </dd>
+        <dt class="col-sm-2">
+            Data de Criação:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DataCriacao)
+        </dd>
+        <dt class="col-sm-2">
+            Nº de escolas:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaxEscolas)
+        </dd>
+        <dt class="col-sm-2">
+            Tentativas por jogo:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaxTentJogo)
+        </dd>
+        <dt class="col-sm-2">
+            Duração do treino:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TempoTotalJogo)
+        </dd>
+        <dt class="col-sm-2">
+            Nº de níveis:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumNiveis)
+        </dd>
+        <dt class="col-sm-2">
+            Vidas por nível:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VidasPorNivel)
+        </dd>
+        <dt class="col-sm-2">
+            Tamanho da equipa:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumElemsEquipa)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Calculadora):
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Calculadora.Equals(false))
+            {
+                <span> Não</span>
+            }
+            else
+            {
+                <span>Sim</span>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estilo):
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Estilo)
+        </dd>
+        <dt class="col-sm-2">
+            URL:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Url)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Plataforma)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Plataforma)
+        </dd>
+        <dt class="col-sm-2">
+            Autor:
+        </dt>
+        <dd class="col-sm-10">
+            id: @Html.DisplayFor(model => model.IdAuthorNavigation.Id) - @Html.DisplayFor(model => model.IdAuthorNavigation.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Ciclo de Ensino:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RefIdCicloEnsinoNavigation.Descritivo)
+        </dd>
+        <dt class="col-sm-2">
+            Treino Visível:
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.TreinoVisivel.Equals(false))
+            {
+                <span> Não</span>
+            }
+            else
+            {
+                <span>Sim</span>
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    <dl class="row">
+        <dt>
+            <a asp-action="Index" class="btn btn-outline-primary"> Voltar à lista de treinos </a>
+        </dt>
+        <dd class="col-sm-3">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning"> Editar </a>
+        </dd>
+    </dl>
+</div>
+

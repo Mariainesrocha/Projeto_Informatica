@@ -5,10 +5,8 @@
 }
 
 <h1>Detalhes da Escola</h1>
-
+<hr />
 <div>
-    <h4>Escola</h4>
-    <hr />
     <dl class="row">
         <dt class="col-sm-2">
             Tipo de Escola
@@ -65,18 +63,18 @@
             @Html.DisplayFor(model => model.Website)
         </dd>
         <dt class="col-sm-2">
-           Concelho
+            Concelho
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.IdconcelhoNavigation.Nome)
         </dd>
         <dt class="col-sm-2">
-           Freguesia
+            Freguesia
         </dt>
         <dd class="col-sm-10">
             @if (ViewBag.freguesia != null)
             {
-            <span>@ViewBag.freguesia.Nome</span>
+                <span>@ViewBag.freguesia.Nome</span>
             }
             else
             {
@@ -122,6 +120,12 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit"  asp-route-id="@Model.Id" class="btn btn-outline-warning"> Editar </a> |
-    <a asp-action="Index" class="btn btn-outline-primary"> Voltar à lista de escolas </a>
+    <dl class="row">
+        <dt>
+            <a asp-action="Index" class="btn btn-outline-primary"> Voltar à lista de escolas </a>
+        </dt>
+        <dd class="col-sm-3">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning"> Editar </a>
+        </dd>
+    </dl>
 </div>

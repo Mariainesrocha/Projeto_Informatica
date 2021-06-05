@@ -1,0 +1,118 @@
+﻿
+@{
+    ViewData["Title"] = "Inscrever Escolas";
+}
+<h3> Inscrever escolas em competições </h3>
+
+<hr />
+
+<div class="form-row">
+    <div class="form-actions no-color form-group col-lg-12">
+        <form asp-action="InscreverEscolas" method="get">
+            <label>Pesquisar escolas: </label>
+            <div class="form-group" style=" display: block;">
+                <select name="concelho" class="form-control col-md-3" style="display: inline-block;">
+                    <option value="" selected>-- Pesquisa por concelho --</option>
+                    @foreach (Concelho x in ViewBag.concelhos)
+                    {
+                        <option value="@x.Nome">@x.Nome</option>
+                    }
+                </select>
+                <input type="text" name="nomeEscola" placeholder="pesquisa" class="form-control col-md-4" value="@ViewData["CurrentFilter"]" style=" display: inline-block;" />
+                <button type="submit" value="Pesquisa" class="btn btn-primary row-cols-sm-1" style=" display: inline-block;">
+                    <i class="fa fa-search"></i>
+                </button>
+                <a asp-action="InscreverEscolas" asp-controller="Competicoes" class="btn btn-outline-info row-cols-sm-1" style=" display: inline-block;"><i class="fa fa-close"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@if (ViewBag.escolas == null)
+{
+    <p> Não foram encontradas escolas, certifique-se que a pesquisa foi escrita corretamente </p>
+}
+else
+{
+    <div style="text-align: center; padding-bottom:1%">
+        <select name="competicao" class="form-control col-md-3" id="competicao">
+            <option value="" selected>-- Selecione uma competição --</option>
+            @foreach (Competicao x in ViewBag.competicao)
+            {
+                <option value="@x.Nome">@x.Nome</option>
+            }
+        </select>
+    </div>
+
+    <table class="table table-sm text-center table-hover" id="listaEscolas">
+        <tr><th>ID</th><th>Nome</th><th>Selecionar</th></tr>
+        @foreach (Escola e in ViewBag.escolas)
+        {
+            <tr>
+                <td>@e.Id</td>
+                <td>@e.NomeEscola</td>
+                <td>
+                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="@e.Id">
+                </td>
+            </tr>
+        }
+    </table>
+    <div style="text-align: center">
+        <a class="btn btn-info" id="inscbtn" style="color: white">Inscrever</a>
+    </div>
+}
+<!-- Success modal-->
+<div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" style="color: forestgreen; bold;">Sucesso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @TempData["msg"]
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $("#inscbtn").click(function () {
+            var selecionados = $("#listaEscolas input:checkbox:checked").map(function () {
+                return $(this).attr("value");
+            }).get();
+            var comp = $("#competicao option:selected").val();
+            if (comp == "" || selecionados.length <= 0) {
+                //TODO: mudar o texto do modal dinamicamente
+                $("#mymodal").modal('show');
+            } else {
+                callAjaxPost(selecionados, comp);
+            }
+        });
+
+        function callAjaxPost(selecionados,comp) {
+            $.ajax
+                ({
+                    type: "POST",
+                    url: '@Url.Action("Inscrever", "Competicoes")',
+                    dataType : "text",
+                    data: {
+                        "competicao": comp, "escolas": selecionados },
+                    success: function () {
+                        if('@(TempData["msg"])' != null)
+                        {
+                            $("#mymodal").modal('show');
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err)
+                        }
+                });
+        }
+    </script>
+}
+

@@ -9,25 +9,29 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Pmat_PI.Data;
-using System.Linq;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Identity.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class AdminController : Controller
+    public class UsersController : Controller
     {
         private readonly ApplicationDbContextAlmostFinal _context;
         private RoleManager<IdentityRole> roleManager;
         private UserManager<User> userManager;
         private IPasswordHasher<User> passwordHasher;
+        private readonly ApplicationDbContext _identitycontext;
 
-        public AdminController(UserManager<User> usrMgr, IPasswordHasher<User> passwordHash, ApplicationDbContextAlmostFinal context, RoleManager<IdentityRole> role)
+
+        public UsersController(UserManager<User> usrMgr, IPasswordHasher<User> passwordHash, ApplicationDbContextAlmostFinal context, RoleManager<IdentityRole> role, ApplicationDbContext identitycontext)
 
         {
             userManager = usrMgr;
             passwordHasher = passwordHash;
             _context = context;
             roleManager = role;
+            _identitycontext = identitycontext;
         }
 
         public async Task<IActionResult> Index(string sortOrder,string currentFilter,string searchString, string filterType, string currentType, int? pageNumber)
@@ -50,17 +54,16 @@ namespace Identity.Controllers
                 switch (filterType)
                 {
                     case "escola":
-                        users = (from u in _context.AspNetUsers join ue in _context.UserEscolas.Where(e => e.IdEscolaNavigation.NomeEscola.ToLower().Equals(searchString.ToLower())) on u.Id equals ue.IdUser select new User { Name = u.Name }); //TODO: dar join com Users
+                        users = from u in _context.AspNetUsers join ue in _context.UserEscolas.Where(e => e.IdEscolaNavigation.NomeEscola.ToLower().Equals(searchString.ToLower())) on u.Id equals ue.IdUser select new User { UserName = u.UserName, Id = u.Id, Email = u.Email, Age = u.Age, Name = u.Name, PasswordHash = u.PasswordHash};
                         break;
                     case "nome":
                         users = userManager.Users.Where(u => u.Name.ToLower().StartsWith(searchString.ToLower()));
                         break;
                     case "email":
-                        Console.WriteLine("Email -------------");
                         users = userManager.Users.Where(u => u.Email.ToLower().Contains(searchString.ToLower()));
                         break;
                     case "role":
-                        users = userManager.Users.Where(u => u.Roles.Equals("ADMIN")); //TODO: CONFIRMAR
+                        users = (IQueryable<User>)await userManager.GetUsersInRoleAsync("ADMIN");//TODO: N FUNCIONA
                         break;
                     default:
                         break;
@@ -70,7 +73,7 @@ namespace Identity.Controllers
             int pageSize = 50;
             return View(await PaginatedList<User>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -102,8 +105,14 @@ namespace Identity.Controllers
         public async Task<IActionResult> UpdateUser(string id)
         {
             User user = await userManager.FindByIdAsync(id);
-            if (user != null)
+            if (user != null) {
+                var allRoles = roleManager.Roles;
+                var userRoles = userManager.GetRolesAsync(user).Result;
+                ViewData["AllRoles"] = new SelectList(allRoles, "Name", "Name");
+                ViewBag.Roles = new SelectList(userRoles);
+                ViewBag.UserRoles = userRoles;
                 return View(user);
+            }
             else
                 return RedirectToAction("Index");
         }

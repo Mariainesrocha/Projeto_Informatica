@@ -9,17 +9,11 @@ namespace Pmat_PI.Models
 {
     public class User : IdentityUser
     {
-        public int UserId { get; set; }
-
         [Required, MaxLength(80, ErrorMessage = "Name can't exceed 80 chars")]
         public string Name { get; set; }
 
         [Required]
         public int Age { get; set; }
-
-
-
-
         /**
         [Required(ErrorMessage = "Enter a valid date.")]
         [DataType(DataType.Date)]

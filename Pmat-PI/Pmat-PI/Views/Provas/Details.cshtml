@@ -11,12 +11,20 @@
         <h3>Resultados:</h3>
         <div class="row">
             <div class="col">
-                <button type="button" class="btn btn-primary">Gerar Html</button>
-                <button type="button" class="btn btn-primary">Editar Html</button>
-                <button type="button" class="btn btn-danger">Apagar Html</button>
+                @if ((bool)ViewData["FileExists"] == true)
+                {
+                    <button type="button" class="btn btn-primary">Ver HTML</button>
+                    <a asp-action="DeleteHTML" asp-route-id="@Model.Id" class="btn btn-danger">Apagar HTML</a>
+                }
+                else
+                {
+                    <a asp-action="GenerateHTML" asp-route-id="@Model.Id" class="btn btn-primary"> Gerar Html </a>
+                }
+
             </div>
         </div>
     </div>
+
     <div style="padding-bottom:6%"></div>
     <h3>Detalhes:</h3>
     <dl class="row">

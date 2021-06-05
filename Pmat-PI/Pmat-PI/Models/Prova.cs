@@ -9,6 +9,8 @@ namespace Pmat_PI.Models
     {
         public Prova()
         {
+            SubProvaIdProvaFilhoNavigations = new HashSet<SubProva>();
+            SubProvaIdProvaPaiNavigations = new HashSet<SubProva>();
             EquipaProvas = new HashSet<EquipaProva>();
             ProvaEquipaEnunciados = new HashSet<ProvaEquipaEnunciado>();
             ProvaEscolas = new HashSet<ProvaEscola>();
@@ -42,9 +44,13 @@ namespace Pmat_PI.Models
 
         public virtual AspNetUser IdAuthorNavigation { get; set; }
         public virtual Competicao IdCompeticaoNavigation { get; set; }
+        public virtual CicloEnsino RefIdCicloEnsinoNavigation { get; set; }
         public virtual ICollection<EquipaProva> EquipaProvas { get; set; }
         public virtual ICollection<ProvaEquipaEnunciado> ProvaEquipaEnunciados { get; set; }
         public virtual ICollection<ProvaEscola> ProvaEscolas { get; set; }
         public virtual ICollection<ProvaModelo> ProvaModelos { get; set; }
+
+        public virtual ICollection<SubProva> SubProvaIdProvaFilhoNavigations { get; set; }
+        public virtual ICollection<SubProva> SubProvaIdProvaPaiNavigations { get; set; }
     }
 }

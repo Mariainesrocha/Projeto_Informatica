@@ -31,6 +31,7 @@ namespace Pmat_PI.Models
         public int? Plataforma { get; set; }
 
         public virtual AspNetUser IdAuthorNavigation { get; set; }
+        public virtual CicloEnsino RefIdCicloEnsinoNavigation { get; set; }
         public virtual ICollection<TreinoEnunciado> TreinoEnunciados { get; set; }
         public virtual ICollection<TreinoModelo> TreinoModelos { get; set; }
     }

@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
+#nullable disable
+
 namespace Pmat_PI.Models
 {
     public partial class ApplicationDbContextAlmostFinal : DbContext
@@ -18,6 +20,7 @@ namespace Pmat_PI.Models
         public virtual DbSet<AnoEscolar> AnoEscolars { get; set; }
         public virtual DbSet<AnoLetivo> AnoLetivos { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        public virtual DbSet<CicloEnsino> CicloEnsinos { get; set; }
         public virtual DbSet<Competicao> Competicaos { get; set; }
         public virtual DbSet<Concelho> Concelhos { get; set; }
         public virtual DbSet<Distrito> Distritos { get; set; }
@@ -43,11 +46,13 @@ namespace Pmat_PI.Models
         public virtual DbSet<UserContactoTipo> UserContactoTipos { get; set; }
         public virtual DbSet<UserEscola> UserEscolas { get; set; }
         public virtual DbSet<UserEscolaHistorico> UserEscolaHistoricos { get; set; }
+        public virtual DbSet<SubProva> SubProvas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Server=localhost;Database=pmate2-demo;Trusted_Connection=True;");
             }
         }
@@ -105,6 +110,25 @@ namespace Pmat_PI.Models
                 entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
 
                 entity.Property(e => e.UserName).HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<CicloEnsino>(entity =>
+            {
+                entity.ToTable("CicloEnsino", "pmate");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Abreviatura)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.Descritivo)
+                    .IsRequired()
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<Competicao>(entity =>
@@ -488,6 +512,31 @@ namespace Pmat_PI.Models
                     .WithMany(p => p.Provas)
                     .HasForeignKey(d => d.IdCompeticao)
                     .HasConstraintName("FK__Prova__IdCompeti__1B29035F");
+
+                entity.HasOne(d => d.RefIdCicloEnsinoNavigation)
+                    .WithMany(p => p.Provas)
+                    .HasForeignKey(d => d.RefIdCicloEnsino)
+                    .HasConstraintName("FK__Prova__RefIdCicl__60C757A0");
+            });
+
+            modelBuilder.Entity<SubProva>(entity =>
+            {
+                entity.HasKey(e => new { e.IdProvaPai, e.IdProvaFilho })
+                    .HasName("PK__SubProva__89F3B2720053DDFF");
+
+                entity.ToTable("SubProvas", "pmate");
+
+                entity.HasOne(d => d.IdProvaFilhoNavigation)
+                    .WithMany(p => p.SubProvaIdProvaFilhoNavigations)
+                    .HasForeignKey(d => d.IdProvaFilho)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__SubProvas__IdPro__70099B30");
+
+                entity.HasOne(d => d.IdProvaPaiNavigation)
+                    .WithMany(p => p.SubProvaIdProvaPaiNavigations)
+                    .HasForeignKey(d => d.IdProvaPai)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__SubProvas__IdPro__6F1576F7");
             });
 
             modelBuilder.Entity<ProvaEquipaEnunciado>(entity =>
@@ -540,12 +589,12 @@ namespace Pmat_PI.Models
                     .HasConstraintName("FK__ProvaEsco__AnoLe__23BE4960");
 
                 entity.HasOne(d => d.EscolaOrganizadoraNavigation)
-                    .WithMany(p => p.ProvaEscolaId)
+                    .WithMany(p => p.ProvaEscolaEscolaOrganizadoraNavigations)
                     .HasForeignKey(d => d.EscolaOrganizadora)
                     .HasConstraintName("FK__ProvaEsco__Escol__22CA2527");
 
                 entity.HasOne(d => d.IdEscolaNavigation)
-                    .WithMany(p => p.ProvaEscolaId2)
+                    .WithMany(p => p.ProvaEscolaIdEscolaNavigations)
                     .HasForeignKey(d => d.IdEscola)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__ProvaEsco__IdEsc__20E1DCB5");
@@ -625,6 +674,11 @@ namespace Pmat_PI.Models
                     .WithMany(p => p.Treinos)
                     .HasForeignKey(d => d.IdAuthor)
                     .HasConstraintName("FK__Treino__IdAuthor__2E3BD7D3");
+
+                entity.HasOne(d => d.RefIdCicloEnsinoNavigation)
+                    .WithMany(p => p.Treinos)
+                    .HasForeignKey(d => d.RefIdCicloEnsino)
+                    .HasConstraintName("FK__Treino__RefIdCic__5FD33367");
             });
 
             modelBuilder.Entity<TreinoEnunciado>(entity =>

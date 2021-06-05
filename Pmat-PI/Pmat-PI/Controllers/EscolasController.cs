@@ -44,6 +44,7 @@ namespace Pmat_PI
                 escolas = escolas.Where(e => e.NomeEscola.Contains(searchString));
             }
 
+            //TODO: REFAZER PARA OS TREINOS PQ AQUI N FAZ SENTIDO E NOT WORKING
             switch (sortOrder)
             {
                 case "nome_desc":
@@ -65,7 +66,6 @@ namespace Pmat_PI
 
             int pageSize = 50;
 
-            //var escolasContext = _context.Escolas.Include(e => e.IdTipoEscolaNavigation).Include(e => e.IdconcelhoNavigation);
             return View(await PaginatedList<Escola>.CreateAsync(escolas.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 

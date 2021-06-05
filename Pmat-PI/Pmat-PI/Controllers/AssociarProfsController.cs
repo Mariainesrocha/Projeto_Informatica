@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 using Pmat_PI.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Pmat_PI.Views
 {
@@ -13,10 +14,12 @@ namespace Pmat_PI.Views
     public class AssociarProfsController : Controller
     {
         private readonly ApplicationDbContextAlmostFinal _context;
+        private UserManager<User> userManager;
 
-        public AssociarProfsController(ApplicationDbContextAlmostFinal context)
+        public AssociarProfsController(ApplicationDbContextAlmostFinal context, UserManager<User> usrMgr)
         {
             _context = context;
+            userManager = usrMgr;
         }
 
         [Produces("application/json")]
@@ -36,7 +39,7 @@ namespace Pmat_PI.Views
             List<AspNetUser> profs = null;
             if (!String.IsNullOrEmpty(professor))
             {
-                profs = _context.AspNetUsers.Where(u => u.Name.Contains(professor)).OrderBy(u => u.Name).Take(10).ToList();
+                profs = _context.AspNetUsers.Where(u => u.Name.Replace(" ", "").Contains(professor.Replace(" ", ""))).OrderBy(u => u.Name).Take(10).ToList();
             }
             return new JsonResult(profs);
         }

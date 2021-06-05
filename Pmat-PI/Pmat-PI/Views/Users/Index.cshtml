@@ -1,0 +1,129 @@
+﻿@model PaginatedList<User>
+
+<head>
+    <link rel="stylesheet" href="./lib/font-awesome/dist/css/font-awesome.min.css">
+</head>
+
+<h1>Lista de Utilizadores</h1>
+<div class="form-row">
+    <div class="form-actions no-color form-group col-lg-12">
+        <form asp-action="Index" method="get">
+            <label>Pesquisar utilizadores por: </label>
+            <div class="form-group" style=" display: block;">
+                <select name="filterType" class="form-control col-md-3" id="pesquisaSelect" style="display: inline-block;">
+                    <option value="" selected>-- Escolha um filtro --</option>
+                    <option value="escola">Escola</option>
+                    <option value="nome">Nome</option>
+                    <option value="role">Função</option>
+                    <option value="email">Email</option>
+                </select>
+                <input type="text" name="searchString" placeholder="pesquisa" class="form-control col-md-4" value="@ViewData["CurrentFilter"]" style=" display: inline-block;" />
+                <button type="submit" value="Pesquisa" class="btn btn-primary row-cols-sm-1" style=" display: inline-block;">
+                    <i class="fa fa-search"></i>
+                </button>
+                <a asp-action="Index" class="btn btn-outline-info row-cols-sm-1" style=" display: inline-block;"><i class="fa fa-close"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model.Count == 0)
+{
+    <p> Utilizadores não encontrados para essa pesquisa, certifique-se que a pesquisa foi escrita corretamente </p>
+}
+else
+{
+
+    <table class="table table-sm table-bordered text-center">
+        <tr><th>ID</th><th>Nome</th><th>Username</th><th>Email</th><th>Editar</th><th>Apagar</th></tr>
+        @foreach (User user in Model)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Name</td>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>
+                    <a asp-action="UpdateUser" asp-route-id="@user.Id"><i style="font-size:30px; color:orange" class="fa fa-pencil-square-o"></i></a>
+                </td>
+                <td>
+                    <a id="deleteModal" data-toggle="modal" data-target="#modal-delete" data-id="@user.Id" class="btn">
+                        <i style="font-size:30px; color: red;" class="fa fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+
+    <!--Confirm delete modal-->
+    <form asp-action="DeleteUser" role="form" id="myForm">
+        <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">ATENÇÃO: APAGAR CONTA DE UTILIZADOR</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Deseja realmente <span class="text-danger">APAGAR ESTA CONTA</span>?
+                        <input hidden name="id" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Não</button>
+                        <button type="submit" class="btn btn-danger" id="modalDeleteButton">Sim</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+
+    <script>
+            $(document).ready(function () {
+                $("#pesquisaSelect option:selected").removeAttr("selected");
+                $("#pesquisaSelect option[value='@ViewData["CurrentType"]']").attr('selected', 'selected');
+            });
+    </script>
+}
+
+<div style="text-align:center">
+    <a style="margin-right:2%" asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       asp-route-currentType="@ViewData["CurrentType"]"
+       class="btn btn-info @prevDisabled">
+        Anterior
+    </a>
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       asp-route-currentType="@ViewData["CurrentType"]"
+       class="btn btn-info @nextDisabled">
+        Próximo
+    </a>
+</div>
+@section scripts{
+    <script>
+        $(function () {
+            $('#modal-delete').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data("id");
+                var modal = $(this);
+
+                modal.find('.modal-content input').val(id);
+            });
+
+            $("#modalDeleteButton").click(function () {
+                $("#myForm").submit();
+            });
+
+        });
+    </script>
+}

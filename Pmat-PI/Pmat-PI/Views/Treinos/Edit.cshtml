@@ -17,9 +17,11 @@
                     <input asp-for="NomeProva" class="form-control" />
                     <span asp-validation-for="NomeProva" class="text-danger"></span>
                 </div>
-                <div class="form-group col-md-4" hidden>
-                    <label asp-for="IdAuthor" class="control-label"></label>
-                    <input disabled asp-for="IdAuthor" class="form-control" value=@ViewData["logged_id"] />
+                <input disabled asp-for="IdAuthor" class="form-control" type="hidden" value=@ViewData["logged_id"] />
+                <div class="form-group col-md-4">
+                    <label asp-for="DataCriacao" class="control-label">Data de Criação</label>
+                    <input asp-for="DataCriacao" class="form-control" />
+                    <span asp-validation-for="DataCriacao" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-row">
@@ -42,7 +44,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label asp-for="RefIdCicloEnsino" class="control-label">Ciclo de Ensino</label>
-                    <input asp-for="RefIdCicloEnsino" class="form-control" />
+                    <select asp-for="RefIdCicloEnsino" class="form-control" asp-items="ViewBag.RefIdCicloEnsino"></select>
                     <span asp-validation-for="RefIdCicloEnsino" class="text-danger"></span>
                 </div>
             </div>
@@ -79,21 +81,20 @@
                     <input asp-for="Url" class="form-control" />
                     <span asp-validation-for="Url" class="text-danger"></span>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-6">
                     <label asp-for="Plataforma" class="control-label"></label>
-                    <input asp-for="Plataforma" class="form-control" />
-                    <span asp-validation-for="Plataforma" class="text-danger"></span>
+                    <div class="form-row">
+                        <div class="form-group  col-lg-9">
+                            <input asp-for="Plataforma" class="form-control" />
+                            <span asp-validation-for="Plataforma" class="text-danger"></span>
+                        </div>
+                        <div class="form-group form-check col-lg-3" style="text-align: center">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="TreinoVisivel" /> Treino Visível
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group col-md-3">
-                    <label asp-for="DataCriacao" class="control-label">Data de Criação</label>
-                    <input asp-for="DataCriacao" class="form-control" />
-                    <span asp-validation-for="DataCriacao" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="TreinoVisivel" /> Treino Visível
-                </label>
             </div>
             <div class="form-group" style="text-align:center">
                 <input type="submit" value="Guardar Alterações" class="btn btn-success" />

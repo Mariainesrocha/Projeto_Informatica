@@ -1,0 +1,44 @@
+﻿@model dynamic
+
+@{
+    ViewData["Title"] = "Lista de provas da competição";
+}
+
+<h1>Lista de provas da competição</h1>
+<hr />
+<div>
+    <h4>Provas únicas</h4>
+    <ul>
+        @foreach (Prova p in Model.provas)
+        {
+        <li>
+            @p.Id - @p.NomeProva
+            <a asp-action="Edit" asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
+            <a asp-action="Details"  asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: dodgerblue ;" class="fa fa-eye"> </i></a>
+        </li>
+        }
+    </ul>
+</div>
+
+<hr />
+<div>
+    <h4>Provas com subprovas</h4>
+    <ul>
+        @foreach (Prova p in Model.provasPai)
+        {
+            <li>
+                @p.Id - @p.NomeProva
+                <a asp-action="Edit" asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
+                <a asp-action="Details" asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: dodgerblue ;" class="fa fa-eye"> </i></a>
+            </li>
+        }
+    </ul>
+</div>
+<div>
+    <dl class="row">
+        <dt>
+            <a asp-action="Index" class="btn btn-outline-primary"> Voltar à lista de competições </a>
+        </dt>
+    </dl>
+</div>
+
