@@ -39,7 +39,7 @@ namespace Pmat_PI.Views
             List<AspNetUser> profs = null;
             if (!String.IsNullOrEmpty(professor))
             {
-                profs = _context.AspNetUsers.Where(u => u.Name.Contains(professor)).OrderBy(u => u.Name).Take(10).ToList();
+                profs = _context.AspNetUsers.Where(u => u.Name.Replace(" ", "").Contains(professor.Replace(" ", ""))).OrderBy(u => u.Name).Take(10).ToList();
             }
             return new JsonResult(profs);
         }

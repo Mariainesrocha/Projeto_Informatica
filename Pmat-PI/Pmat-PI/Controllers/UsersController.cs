@@ -15,20 +15,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace Identity.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class AdminController : Controller
+    public class UsersController : Controller
     {
         private readonly ApplicationDbContextAlmostFinal _context;
         private RoleManager<IdentityRole> roleManager;
         private UserManager<User> userManager;
         private IPasswordHasher<User> passwordHasher;
+        private readonly ApplicationDbContext _identitycontext;
 
-        public AdminController(UserManager<User> usrMgr, IPasswordHasher<User> passwordHash, ApplicationDbContextAlmostFinal context, RoleManager<IdentityRole> role)
+
+        public UsersController(UserManager<User> usrMgr, IPasswordHasher<User> passwordHash, ApplicationDbContextAlmostFinal context, RoleManager<IdentityRole> role, ApplicationDbContext identitycontext)
 
         {
             userManager = usrMgr;
             passwordHasher = passwordHash;
             _context = context;
             roleManager = role;
+            _identitycontext = identitycontext;
         }
 
         public async Task<IActionResult> Index(string sortOrder,string currentFilter,string searchString, string filterType, string currentType, int? pageNumber)

@@ -100,7 +100,7 @@ namespace Pmat_PI.Identity.Controllers
                     TempData["msg"] = msg;
                 else
                     TempData["msg"] = " Erro ao tentar alterar funções, tente novamente!";
-                return RedirectToAction("updateUser", "Admin", new { id = user.Id });
+                return RedirectToAction("updateUser", "Users", new { id = user.Id });
             }
             else
             {

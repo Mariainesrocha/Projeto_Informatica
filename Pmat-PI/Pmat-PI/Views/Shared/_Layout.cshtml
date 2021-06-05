@@ -27,10 +27,16 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Utilizadores</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Role" asp-action="Index">Funções</a>
+                            <div class="btn-group">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index"> Utilizadores </a>
+                                <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">Listar Utilizadores</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Role" asp-action="Index">Criar Funções</a>
+                                </div>
+                            </div>
                         </li>
                         <li class="nav-item">
                             <div class="btn-group">
@@ -45,15 +51,15 @@
                                 </div>
                             </div>
                         </li>
-                       <li class="nav-item">
+                        <li class="nav-item">
                             <div class="btn-group">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Provas" asp-action=""> Provas </a>
                                 <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item disabled" asp-area="" asp-controller="Provas" asp-action="Create"> Criar Prova</a>
-                                    <a class="dropdown-item disabled" asp-area="" asp-controller="Provas" asp-action="Index"> Listar Provas</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Provas" asp-action="Create"> Criar Prova</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Provas" asp-action="Index"> Listar Provas</a>
                                 </div>
                             </div>
                         </li>
@@ -84,7 +90,7 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Email" asp-action="SendEmail">Mailing</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Email" asp-action="SendEmail">Envio Emails</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="http://pmate.ua.pt/ModelMaker" target="_blank">Modelos</a>

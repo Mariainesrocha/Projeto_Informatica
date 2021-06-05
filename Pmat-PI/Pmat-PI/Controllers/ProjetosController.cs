@@ -11,9 +11,9 @@ namespace Pmat_PI.Views
 {
     public class ProjetosController : Controller
     {
-        private readonly EscolasContext _context;
+        private readonly ApplicationDbContextAlmostFinal _context;
 
-        public ProjetosController(EscolasContext context)
+        public ProjetosController(ApplicationDbContextAlmostFinal context)
         {
             _context = context;
         }
