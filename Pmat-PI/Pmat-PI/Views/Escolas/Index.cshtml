@@ -10,17 +10,20 @@
     <div class="form-row">
         <div class="form-actions no-color form-group col-md-8">
             <form asp-action="Index" method="get">
-                <label>Pesquisar escola: </label>
-                <div class="form-row">
-                    <div class="form-group col-md-5">
-                        <input type="text" name="SearchString" class="form-control" value="@ViewData["CurrentFilter"]" />
-                    </div>
-                    <div class="form-group col-md-2">
-                        <button type="submit" value="Pesquisa" class="btn btn-primary">
-                            <i class="fa fa-search"></i>
-                        </button>
-                        <a asp-action="Index" class="btn btn-outline-info"><i class="fa fa-close"></i></a>
-                    </div>
+                <label>Pesquisar escolas por nome, localidade ou codigo postal:</label>
+                <div class="form-group" style=" display: block;">
+                    <select name="filterType" class="form-control col-md-3" id="pesquisaSelect" style="display: inline-block;">
+                        <option value="" selected> Escolha um filtro </option>
+                        <option value="nome">Nome</option>
+                        <option value="localidade">Localidade</option>
+                        <option value="codigoPostal">Codigo Postal</option>
+                    </select>
+                    <input type="hidden"  name="pageNumber" value="1">
+                    <input type="text" name="searchString" placeholder="pesquisa" class="form-control col-md-4" value="@ViewData["CurrentFilter"]" style=" display: inline-block;" />
+                    <button type="submit" value="Pesquisa" class="btn btn-primary row-cols-sm-1" style=" display: inline-block;">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-info row-cols-sm-1" style=" display: inline-block;"><i class="fa fa-close"></i></a>
                 </div>
             </form>
         </div>
@@ -150,14 +153,16 @@ else
     <a style="margin-right:2%" asp-action="Index"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@(Model.PageIndex - 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       asp-route-searchString="@ViewData["CurrentFilter"]"
+       asp-route-filterType="@ViewData["CurrentType"]"
        class="btn btn-info @prevDisabled">
         Anterior
     </a>
     <a asp-action="Index"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@(Model.PageIndex + 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       asp-route-searchString="@ViewData["CurrentFilter"]"
+       asp-route-filterType="@ViewData["CurrentType"]"
        class="btn btn-info @nextDisabled">
         Próximo
     </a>
@@ -165,6 +170,11 @@ else
 
 @section scripts{
     <script>
+            $(document).ready(function () {
+                $("#pesquisaSelect option:selected").removeAttr("selected");
+                $("#pesquisaSelect option[value='@ViewData["CurrentType"]']").attr('selected', 'selected');
+            });
+
         $(function () {
             $('#modal-delete').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal

@@ -364,13 +364,13 @@ COMMIT;
 
 --AnoEscolar
 BEGIN TRANSACTION;
-SET IDENTITY_INSERT pmate.AnoEscolar ON
+-- SET IDENTITY_INSERT pmate.AnoEscolar ON
 
 INSERT INTO pmate.AnoEscolar(id,Ano)
-SELECT idanoescolariedade, descricao
-FROM dbo.tblDicAnoEscolaridade
+SELECT idanoescolariedade, descrição
+FROM [pmate-Equamat2000].dbo.tblDicAnoEscolaridade
 
-SET IDENTITY_INSERT pmate.AnoEscolar OFF
+-- SET IDENTITY_INSERT pmate.AnoEscolar OFF	
 COMMIT;
 
 

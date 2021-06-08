@@ -1,4 +1,4 @@
-﻿@model Pmat_PI.Models.Prova
+﻿@model Pmat_PI.Models.ViewModel_ProvaDetails
 
 @{
     ViewData["Title"] = "Detalhes";
@@ -13,12 +13,12 @@
             <div class="col">
                 @if ((bool)ViewData["FileExists"] == true)
                 {
-                    <button type="button" class="btn btn-primary">Ver HTML</button>
-                    <a asp-action="DeleteHTML" asp-route-id="@Model.Id" class="btn btn-danger">Apagar HTML</a>
+                    <a asp-action="OpenHTML" asp-route-id="@Model.prova.Id" class="btn btn-primary">Ver HTML</a>
+                    <a asp-action="DeleteHTML" asp-route-id="@Model.prova.Id" class="btn btn-danger">Apagar HTML</a>
                 }
                 else
                 {
-                    <a asp-action="GenerateHTML" asp-route-id="@Model.Id" class="btn btn-primary"> Gerar Html </a>
+                    <a asp-action="GenerateHTML" asp-route-id="@Model.prova.Id" class="btn btn-primary"> Gerar Html </a>
                 }
 
             </div>
@@ -29,146 +29,191 @@
     <h3>Detalhes:</h3>
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.NomeProva) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.NomeProva) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.NomeProva) <!-- -->
+            @Html.DisplayFor(model => model.prova.NomeProva) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DataCriacao) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.DataCriacao) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DataCriacao) <!-- -->
+            @Html.DisplayFor(model => model.prova.DataCriacao) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MaxEscolas) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.MaxEscolas) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MaxEscolas) <!-- -->
+            @Html.DisplayFor(model => model.prova.MaxEscolas) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MaxTentJogo) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.MaxTentJogo) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MaxTentJogo) <!-- -->
+            @Html.DisplayFor(model => model.prova.MaxTentJogo) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TempoTotalJogo) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.TempoTotalJogo) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TempoTotalJogo) <!-- -->
+            @Html.DisplayFor(model => model.prova.TempoTotalJogo) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.NumNiveis) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.NumNiveis) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.NumNiveis) <!-- -->
+            @Html.DisplayFor(model => model.prova.NumNiveis) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.VidasPorNivel) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.VidasPorNivel) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.VidasPorNivel) <!-- -->
+            @Html.DisplayFor(model => model.prova.VidasPorNivel) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.NumElemsEquipa) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.NumElemsEquipa) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.NumElemsEquipa) <!-- -->
+            @Html.DisplayFor(model => model.prova.NumElemsEquipa) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Calculadora) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.Calculadora) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Calculadora) <!-- -->
+            @Html.DisplayFor(model => model.prova.Calculadora) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DataInscFinal)
+            @Html.DisplayNameFor(model => model.prova.DataInscFinal)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DataInscFinal)
+            @Html.DisplayFor(model => model.prova.DataInscFinal)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DataProva)
+            @Html.DisplayNameFor(model => model.prova.DataProva)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DataProva)
+            @Html.DisplayFor(model => model.prova.DataProva)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.InicioPreInscricao)
+            @Html.DisplayNameFor(model => model.prova.InicioPreInscricao)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.InicioPreInscricao)
+            @Html.DisplayFor(model => model.prova.InicioPreInscricao)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FimPreInscricao)
+            @Html.DisplayNameFor(model => model.prova.FimPreInscricao)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FimPreInscricao)
+            @Html.DisplayFor(model => model.prova.FimPreInscricao)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.InicioInscricaoEquipas)
+            @Html.DisplayNameFor(model => model.prova.InicioInscricaoEquipas)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.InicioInscricaoEquipas)
+            @Html.DisplayFor(model => model.prova.InicioInscricaoEquipas)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FimInscricaoEquipas)
+            @Html.DisplayNameFor(model => model.prova.FimInscricaoEquipas)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FimInscricaoEquipas)
+            @Html.DisplayFor(model => model.prova.FimInscricaoEquipas)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FimProva)
+            @Html.DisplayNameFor(model => model.prova.FimProva)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FimProva)
+            @Html.DisplayFor(model => model.prova.FimProva)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estilo) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.Estilo) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estilo) <!-- -->
+            @Html.DisplayFor(model => model.prova.Estilo) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Url) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.Url) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Url) <!-- -->
+            @Html.DisplayFor(model => model.prova.Url) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TreinoVisivel) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.TreinoVisivel) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TreinoVisivel) <!-- -->
+            @Html.DisplayFor(model => model.prova.TreinoVisivel) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RefIdCicloEnsino)
+            @Html.DisplayNameFor(model => model.prova.RefIdCicloEnsino)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RefIdCicloEnsino)
+            @Html.DisplayFor(model => model.prova.RefIdCicloEnsino)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Plataforma) <!-- -->
+            @Html.DisplayNameFor(model => model.prova.Plataforma) <!-- -->
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Plataforma) <!-- -->
+            @Html.DisplayFor(model => model.prova.Plataforma) <!-- -->
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdAuthorNavigation)
+            @Html.DisplayNameFor(model => model.prova.IdAuthorNavigation)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdAuthorNavigation.Id)
+            @Html.DisplayFor(model => model.prova.IdAuthorNavigation.Id)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdCompeticaoNavigation)
+            @Html.DisplayNameFor(model => model.prova.IdCompeticaoNavigation)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdCompeticaoNavigation.Etiqueta)
+            @Html.DisplayFor(model => model.prova.IdCompeticaoNavigation.Etiqueta)
         </dd>
     </dl>
 </div>
+<br />
+<h2> Particpantes da prova</h2>
+@if (Model.enunciados.Count==0)
+{
+    <p> Nenhum participante fez esta prova ainda. </p>
+}
+else
+{
+    <table class="table table-sm table-bordered  table-hover text-md-center">
+        <thead>
+            <tr>
+                <th style="display: table-cell; vertical-align: middle;"> ID enunciado</th>
+                <th style="display: table-cell; vertical-align: middle;"> ID Equipa</th>
+                <th style="display: table-cell; vertical-align: middle;"> Alunos </th>
+                <th style="display: table-cell; vertical-align: middle;"> Ultimo Nivel </th>
+                <th style="display: table-cell; vertical-align: middle;"> Tempo </th>            
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.enunciados)
+            {
+            <tr>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td style="width: 25%">
+                    @Html.DisplayFor(modelItem => item.idEquipa)
+                </td>
+                <td style="width: 25%">
+                    <a asp-area="" asp-controller="Users" asp-action="UpdateUser" asp-route-id="@item.userId"> @Html.DisplayFor(modelItem => item.name)</a>
+                    
+                </td>
+                <td style="width: 25%">
+                    @Html.DisplayFor(modelItem => item.ultimoNivel)
+                </td>
+                <td style="width: 25%">
+                    @Html.DisplayFor(modelItem => item.tempo)
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.prova.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

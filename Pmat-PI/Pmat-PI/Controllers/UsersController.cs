@@ -62,6 +62,9 @@ namespace Identity.Controllers
                     case "email":
                         users = userManager.Users.Where(u => u.Email.ToLower().Contains(searchString.ToLower()));
                         break;
+                    case "id":
+                        users = userManager.Users.Where(u => u.Id.ToLower().Contains(searchString.ToLower()));
+                        break;
                     case "role":
                         users = (IQueryable<User>)await userManager.GetUsersInRoleAsync("ADMIN");//TODO: N FUNCIONA
                         break;
@@ -70,7 +73,7 @@ namespace Identity.Controllers
                 }
             }
 
-            int pageSize = 50;
+            int pageSize = 30;
             return View(await PaginatedList<User>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
         
@@ -86,7 +89,20 @@ namespace Identity.Controllers
             }
             else
             {
-                var result = await userManager.DeleteAsync(user);
+                // Make this user anonymous so that data regarding the exams he participated in is not lost.
+                string deleted_tag = "DELETED_" + user.Id;
+                if (deleted_tag.Length>256)
+                {
+                    deleted_tag = deleted_tag.Substring(0, 255);
+                }
+                user.Name = "[Deleted]";
+                user.UserName = deleted_tag;
+                user.NormalizedUserName = deleted_tag;
+                user.Email = deleted_tag;
+                user.PasswordHash = deleted_tag;
+                user.Age = 0;
+                
+                var result = await userManager.UpdateAsync(user);
 
                 if (result.Succeeded)
                 {
