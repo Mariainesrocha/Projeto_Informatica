@@ -1,0 +1,48 @@
+﻿<link rel="stylesheet" href="~/lib/leaflet/dist/leaflet.css" />
+<script src="~/lib/leaflet/dist/leaflet.js"></script>
+<link rel="stylesheet" href="~/lib/leaflet/markercluster/MarkerCluster.Default.css" />
+<script src="~/lib/leaflet/markercluster/leaflet.markercluster.js"></script>
+
+    <div style="height:450px" id="mymap">
+
+    </div>
+
+    <script>
+    var mymap = L.map('mymap', {
+        center: [39.684436, -8.1576957, 17],
+        zoom: 6
+    })
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        //maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoicG1hdGVuc2UiLCJhIjoiY2l4cnFlOWI0MDc5czMybm44YmFudDJ6NyJ9.9_hT0JMKk5yF4-oNHUTpGg'
+    }).addTo(mymap);
+
+    var model = @Html.Raw(Json.Serialize(ViewBag.econcelhos));
+
+    var markers = L.markerClusterGroup({
+        singleMarkerMode: false,
+        spiderfyOnMaxZoom: false,
+        chunkedLoading: true
+    });
+
+    var myIcon = L.icon({
+        iconUrl: "@Url.Content("~/Images/school-48.png")",
+        iconSize: [48, 48],
+        popupAnchor: [0, -18]
+    });
+
+    $.each(model, function () {
+        $.each($(this), function () {
+            var co = [$(this)[0]["Lat"], $(this)[0]["Lon"]];
+            var marker = L.marker(co, { icon: myIcon });
+            marker.bindPopup("<div style='text-align: center; font-weight:bold'><span>" + $(this)[0]["Nome"] + "</span></div><div style='text-align: center;'><span> Dgeec Code: " + $(this)[0]["Dgeec"] + " | Dgpgf Code: " + $(this)[0]["Dgpgf"]+ "</span></div>");
+            markers.addLayer(marker);
+        });
+    });
+    mymap.addLayer(markers);
+
+    </script>

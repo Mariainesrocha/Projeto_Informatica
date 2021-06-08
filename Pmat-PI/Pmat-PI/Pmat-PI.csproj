@@ -57,7 +57,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,6 +65,7 @@
     <None Include="Views\Treinos\Index.cshtml" />
     <None Include="wwwroot\Images\cut_logo.png" />
     <None Include="wwwroot\Images\logo.png" />
+    <None Include="wwwroot\Images\school-48.png" />
   </ItemGroup>
 
 </Project>

@@ -135,13 +135,13 @@ namespace Pmat_PI
             string userPWD = "DannyPhantom123";
 
             var exists = userManager.FindByEmailAsync("phantomuser@ua.pt");
-            //exists.Wait();
+            exists.Wait();
             exists = null;
             if (exists == null)
             {
                 Console.WriteLine("IT IS NULL");
                 var created_user = userManager.CreateAsync(user, userPWD);
-                //created_user.Wait();
+                created_user.Wait();
             }
 
 
