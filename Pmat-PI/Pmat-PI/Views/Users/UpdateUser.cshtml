@@ -42,6 +42,9 @@
 </div>
 
 <hr />
+<h4> Escola do utilizador:</h4>
+<li> <b>Escola ID:</b> <a asp-controller="Escolas" asp-action="Details" asp-route-id="@ViewData["EscolaID"]"> @ViewData["EscolaID"] </a> </li>
+<li> <b>Escola Nome:</b> <a asp-controller="Escolas" asp-action="Details" asp-route-id="@ViewData["EscolaID"]">  @ViewData["EscolaNome"]</a> </li>
 <h4> Lista de funções deste utilizador:</h4>
 @if (ViewBag.UserRoles != null)
 {

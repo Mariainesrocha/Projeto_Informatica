@@ -12,12 +12,13 @@
             <div class="form-group" style=" display: block;">
                 <select name="filterType" class="form-control col-md-3" id="pesquisaSelect" style="display: inline-block;">
                     <option value="" selected>-- Escolha um filtro --</option>
-                    <option value="escola">Escola</option>
                     <option value="nome">Nome</option>
-                    <option value="role">Função</option>
                     <option value="email">Email</option>
+                    <option value="id">ID</option>
                 </select>
-                <input type="text" name="searchString" placeholder="pesquisa" class="form-control col-md-4" value="@ViewData["CurrentFilter"]" style=" display: inline-block;" />
+                <input type="hidden" name="pageNumber" value="1">
+                <input type="text" name="searchString" placeholder="Utilizadores" class="form-control col-md-4" value="@ViewData["CurrentFilter"]" style=" display: inline-block;" />
+                <input type="text" name="escola" placeholder="Escola ID ou Nome" class="form-control col-md-4" value="@ViewData["EscolaFilter"]" style=" display: inline-block;" />
                 <button type="submit" value="Pesquisa" class="btn btn-primary row-cols-sm-1" style=" display: inline-block;">
                     <i class="fa fa-search"></i>
                 </button>
@@ -95,20 +96,23 @@ else
     <a style="margin-right:2%" asp-action="Index"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@(Model.PageIndex - 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       asp-route-currentType="@ViewData["CurrentType"]"
+       asp-route-searchString="@ViewData["CurrentFilter"]"
+       asp-route-filterType="@ViewData["CurrentType"]"
+       asp-route-escola="@ViewData["escolaFilter"]"
        class="btn btn-info @prevDisabled">
         Anterior
     </a>
     <a asp-action="Index"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@(Model.PageIndex + 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       asp-route-currentType="@ViewData["CurrentType"]"
+       asp-route-searchString="@ViewData["CurrentFilter"]"
+       asp-route-filterType="@ViewData["CurrentType"]"
+       asp-route-escola="@ViewData["EscolaFilter"]"
        class="btn btn-info @nextDisabled">
         Próximo
     </a>
 </div>
+
 @section scripts{
     <script>
         $(function () {

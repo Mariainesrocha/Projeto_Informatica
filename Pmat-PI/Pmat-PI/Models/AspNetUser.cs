@@ -34,8 +34,6 @@ namespace Pmat_PI.Models
         public int AccessFailedCount { get; set; }
         public int Age { get; set; }
         public string Name { get; set; }
-        public int Roles { get; set; }
-        public int UserId { get; set; }
 
         public virtual ICollection<EquipaAluno> EquipaAlunos { get; set; }
         public virtual ICollection<Prova> Provas { get; set; }

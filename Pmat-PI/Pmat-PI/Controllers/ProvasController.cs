@@ -12,6 +12,7 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Globalization;
+using MimeKit;
 
 namespace Pmat_PI
 {
@@ -51,7 +52,7 @@ namespace Pmat_PI
         }
 
         // GET: Provas/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, int? pageNumber)
         {
             if (id == null)
             {
@@ -79,8 +80,23 @@ namespace Pmat_PI
                 ViewData["FileExists"] = true;
             }
 
+            // Get Enunciados
+            int pageSize = 20;
+            var enunciados_alunos = (from e in _context.ProvaEquipaEnunciados.Where(e => e.IdProva.Equals(id)).OrderByDescending(e => e.UltimoNivel)
+                                     join aluno in _context.EquipaAlunos.Include(aluno => aluno.IdUserNavigation) on e.IdEquipa equals aluno.IdEquipa
+                                     select new Join_EnunciadoAlunos(e.Id, e.IdEquipa, e.UltimoNivel, e.Tempo, aluno.IdUserNavigation.Id, aluno.IdUserNavigation.Name))
+                             .Skip(pageSize * (pageNumber ?? 1 - 1))
+                             .Take(pageSize)
+                             .ToList();
+
+            ViewModel_ProvaDetails prova_details = new ViewModel_ProvaDetails();
+            prova_details.prova = prova;
+            prova_details.enunciados = enunciados_alunos;
+
+            prova_details.pageNumber = pageNumber ?? 1;
+
             ViewBag.modelos = _context.ProvaModelos.Where(pm => pm.IdProva == id).OrderBy(pm => pm.Nivel);
-            return View(prova);
+            return View(prova_details);
         }
 
         [HttpPost, ActionName("AdicionarModelo")]
@@ -393,6 +409,34 @@ namespace Pmat_PI
             }
         }
 
+        // Open HTML
+        public async Task<IActionResult> OpenHTML(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var prova = await _context.Provas
+                .Include(p => p.IdCompeticaoNavigation)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (prova == null)
+            {
+                return NotFound();
+            }
+
+            // Delete HTML File
+            string path = Directory.GetCurrentDirectory() + "\\CompetitionsResults" + "\\" + prova.Id + ".html";
+            if (System.IO.File.Exists(path))
+            {
+                return PhysicalFile(path, MimeTypes.GetMimeType(path), Path.GetFileName(path));
+            }
+
+            // Return to details page
+            return RedirectToAction("Details", new { id = prova.Id });
+        }
+
         public string getProvaResults(Prova prova)
         {
             string tableContent = "";
@@ -405,19 +449,17 @@ namespace Pmat_PI
             foreach (ProvaEquipaEnunciado enunciado in provaEnunciados)
             {
                 counter += 1;
-                var alunos = _context.EquipaAlunos.Where(e => e.IdEquipa.Equals(enunciado.IdEquipa)).Include(z => z.IdUserNavigation);
-
+                var alunos = _context.EquipaAlunos.Where(e => e.IdEquipa.Equals(enunciado.IdEquipa)).Include(z => z.IdUserNavigation).ToList();
                 string alunosNomes = "";
-                foreach(EquipaAluno ea in alunos)
+
+                foreach (EquipaAluno equipa_aluno in alunos)
                 {
-                    alunosNomes += ea.IdUserNavigation.Name + "\n ";
+                    alunosNomes += equipa_aluno.IdUserNavigation.Name + "\n ";
                 }
-          
-                string row = "<tr>" +
+                    string row = "<tr>" +
                     "<td>" + counter + "</td>" +
                     "<td>" + enunciado.IdEquipa + "</td>" +
                     "<td>" + alunosNomes  + "</td>" +
-                    "<td>" + "de onde vem isto?" + "</td>" +
                     "<td>" + enunciado.UltimoNivel + "</td>" +
                     "<td>" + enunciado.Tempo  + "</td>" +
                     "<td>" + enunciado.Data + "</td>" +

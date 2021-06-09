@@ -34,47 +34,44 @@ namespace Identity.Controllers
             _identitycontext = identitycontext;
         }
 
-        public async Task<IActionResult> Index(string sortOrder,string currentFilter,string searchString, string filterType, string currentType, int? pageNumber)
+        public async Task<IActionResult> Index(string searchString, string filterType, string escola, int? pageNumber)
         {
-            if (searchString != null && filterType != null)
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-                filterType = currentType;
-            }
-
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentType"] = filterType;
-            IQueryable<User> users = userManager.Users;
+            ViewData["EscolaFilter"] = escola;
+            var users = userManager.Users;
+
+            if (!String.IsNullOrEmpty(escola))
+            {
+                users = from u in _context.AspNetUsers
+                        join ue in _context.UserEscolas
+                        .Where(e => e.IdEscola.ToString().Equals(escola) || e.IdEscolaNavigation.NomeEscola.ToLower().Equals(escola.ToLower()))
+                        on u.Id equals ue.IdUser
+                        select new User { UserName = u.UserName, Id = u.Id, Email = u.Email, Age = u.Age, Name = u.Name, PasswordHash = u.PasswordHash };
+            }
+
             if (!String.IsNullOrEmpty(searchString) && !String.IsNullOrEmpty(filterType))
             {
                 switch (filterType)
                 {
-                    case "escola":
-                        users = from u in _context.AspNetUsers join ue in _context.UserEscolas.Where(e => e.IdEscolaNavigation.NomeEscola.ToLower().Equals(searchString.ToLower())) on u.Id equals ue.IdUser select new User { UserName = u.UserName, Id = u.Id, Email = u.Email, Age = u.Age, Name = u.Name, PasswordHash = u.PasswordHash};
-                        break;
                     case "nome":
-                        users = userManager.Users.Where(u => u.Name.ToLower().StartsWith(searchString.ToLower()));
+                        users = users.Where(u => u.Name.ToLower().StartsWith(searchString.ToLower()));
                         break;
                     case "email":
-                        users = userManager.Users.Where(u => u.Email.ToLower().Contains(searchString.ToLower()));
+                        users = users.Where(u => u.Email.ToLower().Contains(searchString.ToLower()));
                         break;
-                    /*case "role":
-                        var temp = await userManager.GetUsersInRoleAsync(searchString.ToUpper());
-                        users = from e in temp.AsQueryable() select e;
-                        break;*/
+                    case "id":
+                        users = users.Where(u => u.Id.ToLower().Contains(searchString.ToLower()));
+                        break;
                     default:
                         break;
                 }
             }
 
-            int pageSize = 50;
+            int pageSize = 30;
             return View(await PaginatedList<User>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -88,7 +85,19 @@ namespace Identity.Controllers
             }
             else
             {
-                var result = await userManager.DeleteAsync(user);
+                string deleted_tag = "DELETED_" + user.Id;
+                if (deleted_tag.Length > 256)
+                {
+                    deleted_tag = deleted_tag.Substring(0, 255);
+                }
+                user.Name = "[Deleted]";
+                user.UserName = deleted_tag;
+                user.NormalizedUserName = deleted_tag;
+                user.Email = deleted_tag;
+                user.PasswordHash = deleted_tag;
+                user.Age = 0;
+
+                var result = await userManager.UpdateAsync(user);
 
                 if (result.Succeeded)
                 {
@@ -113,6 +122,11 @@ namespace Identity.Controllers
                 ViewData["AllRoles"] = new SelectList(allRoles, "Name", "Name");
                 ViewBag.Roles = new SelectList(userRoles);
                 ViewBag.UserRoles = userRoles;
+
+                var userEscola = await _context.UserEscolas.Include(u => u.IdEscolaNavigation).FirstOrDefaultAsync(u => u.IdUser == id);
+                ViewData["EscolaID"] = userEscola.IdEscola;
+                ViewData["EscolaNome"] = userEscola.IdEscolaNavigation.NomeEscola;
+                
                 return View(user);
             }
             else
