@@ -48,7 +48,7 @@ namespace Identity.Controllers
 
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentType"] = filterType;
-            var users = userManager.Users;
+            IQueryable<User> users = userManager.Users;
             if (!String.IsNullOrEmpty(searchString) && !String.IsNullOrEmpty(filterType))
             {
                 switch (filterType)
@@ -62,9 +62,10 @@ namespace Identity.Controllers
                     case "email":
                         users = userManager.Users.Where(u => u.Email.ToLower().Contains(searchString.ToLower()));
                         break;
-                    case "role":
-                        users = (IQueryable<User>)await userManager.GetUsersInRoleAsync("ADMIN");//TODO: N FUNCIONA
-                        break;
+                    /*case "role":
+                        var temp = await userManager.GetUsersInRoleAsync(searchString.ToUpper());
+                        users = from e in temp.AsQueryable() select e;
+                        break;*/
                     default:
                         break;
                 }
@@ -82,7 +83,8 @@ namespace Identity.Controllers
             if (user == null)
             {
                 ViewBag.ErrorMessage = $"Utilizador com Id = {id} não encontrado";
-                return View("NotFound");
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
             else
             {

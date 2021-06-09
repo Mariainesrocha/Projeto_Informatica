@@ -30,7 +30,7 @@ namespace Pmat_PI
         // GET: Provas
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            ViewData["CurrentSort"] = sortOrder;
+            var provas = from p in _context.Provas.Include(t => t.RefIdCicloEnsinoNavigation) select p;
             if (searchString != null)
             {
                 pageNumber = 1;
@@ -40,9 +40,13 @@ namespace Pmat_PI
                 searchString = currentFilter;
             }
 
-            var provas = from p in _context.Provas select p;
+            ViewData["CurrentFilter"] = searchString;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                provas = provas.Where(t => t.NomeProva.ToLower().Contains(searchString.ToLower()));
+            }
 
-            int pageSize = 10;
+            int pageSize = 25;
             return View(await PaginatedList<Prova>.CreateAsync(provas.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
@@ -51,7 +55,8 @@ namespace Pmat_PI
         {
             if (id == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             var prova = await _context.Provas
@@ -61,7 +66,8 @@ namespace Pmat_PI
 
             if (prova == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
 
@@ -73,15 +79,70 @@ namespace Pmat_PI
                 ViewData["FileExists"] = true;
             }
 
-
+            ViewBag.modelos = _context.ProvaModelos.Where(pm => pm.IdProva == id).OrderBy(pm => pm.Nivel);
             return View(prova);
         }
+
+        [HttpPost, ActionName("AdicionarModelo")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AdicionarModelo([Bind("IdProva,IdModelo,Nivel")] ProvaModelo pm)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(pm);
+                await _context.SaveChangesAsync();
+                TempData["msg"] = "Novo modelo adicionado com sucesso!";
+                return RedirectToAction("Details", new { id = pm.IdProva });
+            }
+            TempData["msg"] = "Erro ao adicionar modelo";
+            return RedirectToAction("Details", new { id = pm.IdProva });
+        }
+
+        [HttpPost, ActionName("CopiarModelo")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CopiarModelo(int? provaId, int atualId)
+        {
+            if (provaId != null) {
+                if (_context.Provas.Find(atualId) != null && _context.Provas.Find(provaId) != null)
+                {
+                    IQueryable<ProvaModelo> pms = _context.ProvaModelos.Where(pm => pm.IdProva.Equals(provaId));
+                    if (pms.Count() > 0)
+                    {
+                        foreach (ProvaModelo pm in pms) {
+                            ProvaModelo novopm = new ProvaModelo();
+                            novopm.IdProva = atualId;
+                            novopm.IdModelo = pm.IdModelo;
+                            novopm.Nivel = pm.Nivel;
+                            _context.Add(novopm);
+                        }
+                    }
+                    await _context.SaveChangesAsync();
+                    TempData["msg"] = "Sucesso: modelos copiados com sucesso!";
+                }
+                else
+                    TempData["msg"] = "Erro ao copiar modelos, um dos ids fornecido não está correto";
+            }else
+                TempData["msg"] = "Erro ao copiar modelos, um dos ids necessários não foi fornecido";
+            return RedirectToAction("Details", new { id = atualId });
+        }
+
+        [HttpPost, ActionName("RemoverModelo")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoverModelo(int? modeloId, int? provaId, int? nivel)
+        {
+            var prova = await _context.ProvaModelos.FindAsync(provaId, modeloId,nivel);
+            _context.ProvaModelos.Remove(prova);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = provaId });
+        }
+
         // Generate HTML
         public async Task<IActionResult> GenerateHTML(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             var prova = await _context.Provas
@@ -90,7 +151,8 @@ namespace Pmat_PI
 
             if (prova == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             // Generate HTML file and Save it 
@@ -105,7 +167,8 @@ namespace Pmat_PI
         {
             if (id == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             var prova = await _context.Provas
@@ -114,7 +177,8 @@ namespace Pmat_PI
 
             if (prova == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             // Delete HTML File
@@ -128,13 +192,13 @@ namespace Pmat_PI
             return RedirectToAction("Details", new { id = prova.Id });
         }
 
-
-
         // GET: Provas/Create
         public IActionResult Create()
         {
+            ViewData["RefIdCicloEnsino"] = new SelectList(_context.CicloEnsinos, "Id", "Descritivo");
             ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id");
-            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta");
+            AnoLetivo al = _context.AnoLetivos.OrderBy(a => a.AnoLetivo1).Last();
+            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos.Where(c => c.DataInicio >= al.Inicio && c.DataFim <= al.Fim), "Id", "Etiqueta");
             ViewData["logged_id"] = userManager.GetUserId(HttpContext.User);
             return View();
         }
@@ -144,16 +208,28 @@ namespace Pmat_PI
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IdAuthor,IdCompeticao,NomeProva,DataCriacao,MaxEscolas,MaxTentJogo,TempoTotalJogo,NumNiveis,VidasPorNivel,NumElemsEquipa,Calculadora,DataInscFinal,DataProva,InicioPreInscricao,FimPreInscricao,InicioInscricaoEquipas,FimInscricaoEquipas,FimProva,Estilo,Url,TreinoVisivel,RefIdCicloEnsino,Plataforma")] Prova prova)
+        public async Task<IActionResult> Create([Bind("Id,IdCompeticao,NomeProva,DataCriacao,MaxEscolas,MaxTentJogo,TempoTotalJogo,NumNiveis,VidasPorNivel,NumElemsEquipa,Calculadora,DataInscFinal,DataProva,InicioPreInscricao,FimPreInscricao,InicioInscricaoEquipas,FimInscricaoEquipas,FimProva,Estilo,Url,TreinoVisivel,RefIdCicloEnsino,Plataforma")] Prova prova)
         {
             if (ModelState.IsValid)
             {
+                prova.IdAuthor = userManager.GetUserId(HttpContext.User);
                 _context.Add(prova);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            //debug
+            var errors = ModelState.Where(x => x.Value.Errors.Count > 0).Select(x => new { x.Key, x.Value }).ToList();
+            foreach (var e in errors)
+            {
+                Console.WriteLine(e.Key);
+                Console.WriteLine(e.Value);
+            }
+
+            ViewData["RefIdCicloEnsino"] = new SelectList(_context.CicloEnsinos, "Id", "Descritivo", prova.RefIdCicloEnsino);
             ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", prova.IdAuthor);
-            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta", prova.IdCompeticao);
+            AnoLetivo al = _context.AnoLetivos.OrderBy(a => a.AnoLetivo1).Last();
+            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos.Where(c => c.DataInicio >= al.Inicio && c.DataFim <= al.Fim), "Id", "Etiqueta");
             return View(prova);
         }
 
@@ -162,16 +238,21 @@ namespace Pmat_PI
         {
             if (id == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             var prova = await _context.Provas.FindAsync(id);
             if (prova == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
+
+            ViewData["RefIdCicloEnsino"] = new SelectList(_context.CicloEnsinos, "Id", "Descritivo", prova.RefIdCicloEnsino);
             ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", prova.IdAuthor);
-            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta", prova.IdCompeticao);
+            AnoLetivo al = _context.AnoLetivos.OrderBy(a => a.AnoLetivo1).Last();
+            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos.Where(c => c.DataInicio >= al.Inicio && c.DataFim <= al.Fim), "Id", "Etiqueta", prova.IdCompeticao);
             ViewData["logged_id"] = userManager.GetUserId(HttpContext.User);
             return View(prova);
         }
@@ -199,7 +280,8 @@ namespace Pmat_PI
                 {
                     if (!ProvaExists(prova.Id))
                     {
-                        return NotFound();
+                        Response.StatusCode = 404;
+                        return View(nameof(NotFound));
                     }
                     else
                     {
@@ -208,8 +290,10 @@ namespace Pmat_PI
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RefIdCicloEnsino"] = new SelectList(_context.CicloEnsinos, "Id", "Descritivo", prova.RefIdCicloEnsino);
             ViewData["IdAuthor"] = new SelectList(_context.AspNetUsers, "Id", "Id", prova.IdAuthor);
-            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos, "Id", "Etiqueta", prova.IdCompeticao);
+            AnoLetivo al = _context.AnoLetivos.OrderBy(a => a.AnoLetivo1).Last();
+            ViewData["IdCompeticao"] = new SelectList(_context.Competicaos.Where(c => c.DataInicio >= al.Inicio && c.DataFim <= al.Fim), "Id", "Etiqueta", prova.IdCompeticao);
             return View(prova);
         }
 
@@ -218,7 +302,8 @@ namespace Pmat_PI
         {
             if (id == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             var prova = await _context.Provas
@@ -227,7 +312,8 @@ namespace Pmat_PI
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (prova == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             return View(prova);
@@ -248,9 +334,6 @@ namespace Pmat_PI
         {
             return _context.Provas.Any(e => e.Id == id);
         }
-
-
-
 
         public void create_saveFile(Prova prova)
         {
@@ -313,8 +396,6 @@ namespace Pmat_PI
         public string getProvaResults(Prova prova)
         {
             string tableContent = "";
-            Console.WriteLine(prova.Id);
-            Console.WriteLine("----");
             List<ProvaEquipaEnunciado> provaEnunciados = 
                 _context.ProvaEquipaEnunciados.Include(e=> e.IdEquipaNavigation.IdEscolaNavigation.IdconcelhoNavigation.DistritoNavigation)
                 .Where(e => e.IdProva.Equals(prova.Id))
@@ -346,13 +427,9 @@ namespace Pmat_PI
                     "<td>"+  (enunciado.Status != null ? enunciado.Status.ToString() : "Unknown") + "</td></tr>";
                 
                 tableContent += row;
-       
-
 
                //TimeSpan enunciadoTime =  TimeSpan.Parse(enunciado.Tempo);
                //double tempo = enunciadoTime.TotalSeconds;
-
-
             }
             return tableContent;
         }

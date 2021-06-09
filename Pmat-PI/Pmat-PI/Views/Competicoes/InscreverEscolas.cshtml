@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Inscrever Escolas";
 }
 <h3> Inscrever escolas em competições </h3>
@@ -29,11 +28,11 @@
 </div>
 
 
-@if (ViewBag.escolas == null)
+@if (ViewBag.flag)
 {
     <p> Não foram encontradas escolas, certifique-se que a pesquisa foi escrita corretamente </p>
 }
-else
+@if (ViewBag.escolas != null)
 {
     <div style="text-align: center; padding-bottom:1%">
         <select name="competicao" class="form-control col-md-3" id="competicao">
@@ -67,17 +66,18 @@ else
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: forestgreen; bold;">Sucesso</h5>
+                <h5 class="modal-title text-warning" id="exampleModalLabel" style="bold;">Informação</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                @TempData["msg"]
+                
             </div>
         </div>
     </div>
 </div>
+
 
 @section scripts{
     <script>
@@ -87,7 +87,7 @@ else
             }).get();
             var comp = $("#competicao option:selected").val();
             if (comp == "" || selecionados.length <= 0) {
-                //TODO: mudar o texto do modal dinamicamente
+                $('.modal-body').html('Deve selecionar uma competição para inscrever as escolas');
                 $("#mymodal").modal('show');
             } else {
                 callAjaxPost(selecionados, comp);
@@ -102,11 +102,12 @@ else
                     dataType : "text",
                     data: {
                         "competicao": comp, "escolas": selecionados },
-                    success: function () {
-                        if('@(TempData["msg"])' != null)
-                        {
-                            $("#mymodal").modal('show');
-                        }
+                    success: function (response) {
+                        $('.modal-body').html(response);
+                        $("#mymodal").modal('show');
+                        setTimeout(function () {// wait for 5 secs
+                            location.reload(); // then reload the page
+                        }, 5000); 
                     },
                     error: function (err) {
                         console.log(err)

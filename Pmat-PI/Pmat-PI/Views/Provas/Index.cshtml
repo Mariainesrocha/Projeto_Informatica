@@ -64,38 +64,64 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NomeProva)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaxTentJogo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TempoTotalJogo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumNiveis)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VidasPorNivel)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumElemsEquipa)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: dodgerblue ;" class="fa fa-eye"> </i></a>
-                </td>
-                <td>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: red ;" class="fa fa-trash"> </i></a>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NomeProva)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MaxTentJogo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TempoTotalJogo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumNiveis)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VidasPorNivel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumElemsEquipa)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn"><i style="font-size:30px; color: dodgerblue ;" class="fa fa-eye"> </i></a>
+                    </td>
+                    <td>
+                        <a id="deleteModal" data-toggle="modal" data-target="#modal-delete" data-id="@item.Id" class="btn">
+                            <i style="font-size:30px; color: red;" class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
+
+    <!--Confirm delete modal-->
+    <form asp-action="Delete" role="form" id="myForm">
+        <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Apagar Prova</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Deseja realmente apagar esta prova?
+                        <input hidden name="id" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Não</button>
+                        <button type="submit" class="btn btn-danger" id="modalDeleteButton">Sim</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 }
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
@@ -118,3 +144,22 @@ else
         Próximo
     </a>
 </div>
+
+@section scripts{
+    <script>
+        $(function () {
+            $('#modal-delete').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data("id");
+                var modal = $(this);
+
+                modal.find('.modal-content input').val(id);
+            });
+
+            $("#modalDeleteButton").click(function () {
+                $("#myForm").submit();
+            });
+
+        });
+    </script>
+}

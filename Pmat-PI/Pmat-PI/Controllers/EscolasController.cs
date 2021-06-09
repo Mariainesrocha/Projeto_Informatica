@@ -23,10 +23,7 @@ namespace Pmat_PI
         // GET: Escola
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NomeSortParm"] = sortOrder == "Nome de Escola" ? "nome_desc" : "nome_asc";
-            ViewData["LocalidadeSortParm"] = sortOrder == "Localidade" ? "localidade_desc" : "localidade_asc";
-
+            
             var escolas = from e in _context.Escolas.Include(e => e.IdTipoEscolaNavigation).Include(e => e.IdconcelhoNavigation) select e;
           
             if (searchString != null)
@@ -44,26 +41,6 @@ namespace Pmat_PI
                 escolas = escolas.Where(e => e.NomeEscola.Contains(searchString));
             }
 
-            //TODO: REFAZER PARA OS TREINOS PQ AQUI N FAZ SENTIDO E NOT WORKING
-            switch (sortOrder)
-            {
-                case "nome_desc":
-                    escolas = escolas.OrderByDescending(e => e.NomeEscola);
-                    break;
-                case "nome_asc":
-                    escolas = escolas.OrderBy(e => e.NomeEscola);
-                    break;
-                case "localidade_desc":
-                    escolas = escolas.OrderByDescending(e => e.Localidade);
-                    break;
-                case "localidade_asc":
-                    escolas = escolas.OrderBy(e => e.Localidade);
-                    break;
-                default:
-                    escolas = escolas.OrderBy(e => e.Id);
-                    break;
-            }
-
             int pageSize = 50;
 
             return View(await PaginatedList<Escola>.CreateAsync(escolas.AsNoTracking(), pageNumber ?? 1, pageSize));
@@ -74,7 +51,8 @@ namespace Pmat_PI
         {
             if (id == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             var escola = await _context.Escolas
@@ -87,7 +65,8 @@ namespace Pmat_PI
             }
             if (escola == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             return View(escola);
@@ -124,13 +103,15 @@ namespace Pmat_PI
         {
             if (id == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             var escola = await _context.Escolas.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
             if (escola == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
             if (escola.IdFreguesia != null) {
                 var f = _context.Freguesia.Where(e => e.Id == escola.IdFreguesia).First();
@@ -152,7 +133,8 @@ namespace Pmat_PI
         {
             if (id != escola.Id)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             if (ModelState.IsValid)
@@ -166,7 +148,8 @@ namespace Pmat_PI
                 {
                     if (!EscolaExists(escola.Id))
                     {
-                        return NotFound();
+                        Response.StatusCode = 404;
+                        return View(nameof(NotFound));
                     }
                     else
                     {

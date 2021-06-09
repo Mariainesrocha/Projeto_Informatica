@@ -51,7 +51,8 @@ namespace Pmat_PI
         {
             if (id == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             var treino = await _context.Treinos
@@ -60,7 +61,8 @@ namespace Pmat_PI
 
             if (treino == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
             return View(treino);
         }
@@ -95,13 +97,15 @@ namespace Pmat_PI
         {
             if (id == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             var treino = await _context.Treinos.FindAsync(id);
             if (treino == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
             ViewData["RefIdCicloEnsino"] = new SelectList(_context.CicloEnsinos, "Id", "Descritivo", treino.RefIdCicloEnsino);
             return View(treino);
@@ -116,7 +120,8 @@ namespace Pmat_PI
         {
             if (id != treino.Id)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             if (ModelState.IsValid)
@@ -131,7 +136,8 @@ namespace Pmat_PI
                 {
                     if (!TreinoExists(treino.Id))
                     {
-                        return NotFound();
+                        Response.StatusCode = 404;
+                        return View(nameof(NotFound));
                     }
                     else
                     {
@@ -162,6 +168,3 @@ namespace Pmat_PI
         }
     }
 }
-
-
-//Scaffold-DbContext "Server=localhost;Database=pmate2-demo;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -context 'ApplicationDbContextTemp' -Tables AspNetUsers,SubProva,Competicao,Prova,CicloEnsino  -force

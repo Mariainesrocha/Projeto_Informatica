@@ -170,7 +170,7 @@
                                 <div class="box" style="border-radius: 25px;">
                                     <form id="account" method="post">
                                         <h1>Login</h1>
-                                        <p class="text-muted"> Please enter your login and password!</p>
+                                        <p class="text-muted"> Por favor introduza seu username e password!</p>
                                         <!--     FIELDS     -->
                                         <div class="form-group">
                                             <input type="text" asp-for="Input.Username" class="form-control" placeholder="Username" />
@@ -182,14 +182,14 @@
                                         </div>
                                         <div class="form-group">
                                             <p>
-                                                <a class="forgot text-muted" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                                                <a class="forgot text-muted" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registar como novo utilizador.</a>
                                             </p>
                                             <p>
-                                                <a class="forgot text-muted" id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                                                <a class="forgot text-muted" id="resend-confirmation" asp-page="./ResendEmailConfirmation">Reenviar email de confirmação</a>
                                             </p>
                                         </div>
                                         <!--     FIELDS     -->
-                                        <a id="forgot-password" class="forgot text-muted" asp-page="./ForgotPassword">Forgot your password?</a>
+                                        <a id="forgot-password" class="forgot text-muted" asp-page="./ForgotPassword">Esqueceu-se da sua password?</a>
                                         <input type="submit" name="" value="Login">
                                     </form>
                                     <div class="col-md-12">

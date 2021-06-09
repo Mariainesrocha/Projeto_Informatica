@@ -50,24 +50,88 @@ namespace Pmat_PI.Views
         {
             if (id == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             var competicao = await _context.Competicaos
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (competicao == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
-            IQueryable<Prova> provasPai = from p in _context.Provas where !(from sp in _context.SubProvas select sp.IdProvaFilho).Contains(p.Id) && !(from sp in _context.SubProvas select sp.IdProvaPai).Contains(p.Id) && (p.IdCompeticao.Equals(id)) select p;
+            IQueryable<Prova> provas = from p in _context.Provas where !(from sp in _context.SubProvas select sp.IdProvaFilho).Contains(p.Id) && !(from sp in _context.SubProvas select sp.IdProvaPai).Contains(p.Id) && (p.IdCompeticao.Equals(id)) select p;
 
-            IQueryable<Prova> provas = from p in _context.Provas join sp in _context.SubProvas on p.Id equals sp.IdProvaFilho where p.IdCompeticao.Equals(id) select p;
+            IQueryable<Prova> provasPai = from p in _context.Provas join sp in _context.SubProvas on p.Id equals sp.IdProvaPai where p.IdCompeticao.Equals(id) select p;
             dynamic model = new System.Dynamic.ExpandoObject();
             model.provas = provas;
             model.provasPai = provasPai;
-
+            ViewData["compId"] = competicao.Id;
             return View(model);  
+        }
+
+        public async Task<IActionResult> VerFilhos(int? compId, int? paiId)
+        {
+            if (compId == null || paiId == null)
+            {
+                Response.StatusCode = 404; 
+                return View(nameof(NotFound));
+            }
+
+            var competicao = await _context.Competicaos.FirstOrDefaultAsync(m => m.Id == compId);
+            if (competicao == null)
+            {
+                Response.StatusCode = 404; 
+                return View(nameof(NotFound));
+            }
+            IQueryable<Prova> provas = from p in _context.Provas where (from sp in _context.SubProvas where sp.IdProvaPai==paiId select sp.IdProvaFilho).Contains(p.Id) && (p.IdCompeticao.Equals(compId)) select p;
+           
+            return View("ProvasFilho",provas.ToList());
+        }
+
+        public async Task<IActionResult> VerEscolas(int? id)
+        {
+            if (id == null)
+            {
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
+            }
+
+            var competicao = await _context.Competicaos.FirstOrDefaultAsync(m => m.Id == id);
+            if (competicao == null)
+            {
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
+            }
+            ViewBag.CompeticaoID = competicao.Id;
+
+            IQueryable<ProvaEscola> provas_esc = from pe in _context.ProvaEscolas join p in _context.Provas.Where(p => p.IdCompeticao.Equals(competicao.Id)) on pe.IdProva equals p.Id select pe;
+            IQueryable<Escola> escolas = (from e in _context.Escolas join pe in provas_esc on e.Id equals pe.IdEscola select e).Distinct();
+
+            return View(escolas);
+        }
+
+        [HttpPost, ActionName("RemoverEscola")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoverEscola(int? id,int? compID)
+        {
+            if (id == null || compID == null)
+            {
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
+            }
+
+            //remover
+            IQueryable<ProvaEscola> provas_esc = from pe in _context.ProvaEscolas.Where(pe => pe.IdEscola.Equals(id)) join p in _context.Provas.Where(p => p.IdCompeticao.Equals(compID)) on pe.IdProva equals p.Id select pe;
+            foreach(ProvaEscola pe in provas_esc)
+            {
+                _context.ProvaEscolas.Remove(pe);
+            }
+            await _context.SaveChangesAsync();           
+
+            return RedirectToAction(nameof(VerEscolas), new { id = compID });
         }
 
         // GET: Competicoes/Create
@@ -97,13 +161,15 @@ namespace Pmat_PI.Views
         {
             if (id == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             var competicao = await _context.Competicaos.FindAsync(id);
             if (competicao == null)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
             return View(competicao);
         }
@@ -117,7 +183,8 @@ namespace Pmat_PI.Views
         {
             if (id != competicao.Id)
             {
-                return NotFound();
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
             }
 
             if (ModelState.IsValid)
@@ -131,7 +198,8 @@ namespace Pmat_PI.Views
                 {
                     if (!CompeticaoExists(competicao.Id))
                     {
-                        return NotFound();
+                        Response.StatusCode = 404;
+                        return View(nameof(NotFound));
                     }
                     else
                     {
@@ -160,36 +228,53 @@ namespace Pmat_PI.Views
         }
 
         // GET: Competicoes/InscreverEscolas
-        public IActionResult InscreverEscolas(string concelho, string nomeEscola, string currentFilter)
+        public IActionResult InscreverEscolas(string concelho, string nomeEscola)
         {
             IQueryable<Escola> escolas = null;
+            var flag = false;
             if (!String.IsNullOrEmpty(concelho) && (!String.IsNullOrEmpty(nomeEscola)))
             {
                 escolas = _context.Escolas.Where(e => e.NomeEscola.Contains(nomeEscola) && e.IdconcelhoNavigation.Nome.ToLower().Contains(concelho));
+                flag = (escolas == null) ? true : false;
             }
             else if (!String.IsNullOrEmpty(nomeEscola))
             {
                 escolas = _context.Escolas.Where(e => e.NomeEscola.Contains(nomeEscola));
+                flag = (escolas == null) ? true : false;
             }
             else if (!String.IsNullOrEmpty(concelho))
             {
                 escolas = _context.Escolas.Where(e => e.IdconcelhoNavigation.Nome.ToLower().Contains(concelho));
+                flag = (escolas == null) ? true : false;
             }
 
             ViewBag.concelhos = (from c in _context.Concelhos orderby c.Nome select c).AsNoTracking();
             ViewBag.escolas = escolas;
+            ViewBag.flag = flag;
             AnoLetivo al = _context.AnoLetivos.OrderBy(a => a.AnoLetivo1).Last();
             ViewBag.competicao = _context.Competicaos.Where(c => c.DataInicio >= al.Inicio  && c.DataFim <= al.Fim);
 
             return View();
         }
 
-        [HttpPost]
-        public async Task Inscrever(string competicao, string[] escolas)
+        [Produces("application/json")]
+        public JsonResult SearchProvas(string nomeProva = null)
         {
-            Console.WriteLine("Competicao: "+ competicao);
-            Console.WriteLine("Num escolas: " + escolas.Length);
+            List<Prova> provas = null;
+            if (!String.IsNullOrEmpty(nomeProva))
+            {
+                provas = (from p in _context.Provas where !(from sp in _context.SubProvas select sp.IdProvaFilho).Contains(p.Id) && !(from sp in _context.SubProvas select sp.IdProvaPai).Contains(p.Id) && p.NomeProva.Replace(" ", "").Contains(nomeProva.Replace(" ", "")) select p).Take(20).ToList();
+            }
+            foreach (Prova p in provas) {
+                Console.WriteLine(p.NomeProva);
+                  }
+            return new JsonResult(provas);
+        }
 
+        [HttpPost]
+        public async Task<ActionResult> Inscrever(string competicao, string[] escolas)
+        {
+            ViewBag.msg = null;
             if (!String.IsNullOrEmpty(competicao) && escolas.Length > 0)
             {
                 AnoLetivo al = _context.AnoLetivos.OrderBy(a => a.AnoLetivo1).Last();
@@ -202,30 +287,25 @@ namespace Pmat_PI.Views
                 foreach (string e in escolas)
                 {
                     foreach (Prova pp in provas)
-                    {
-                        //Console.WriteLine(_context.ProvaEscolas.Any(pe => pe.AnoLetivo.Equals(al.AnoLetivo1) && pe.IdProva.Equals(pp.Id) && pe.IdEscola.Equals(int.Parse(e))));
-                        
-                      
-                            ProvaEscola pe = new ProvaEscola();
+                    {                      
+                        ProvaEscola pe = new ProvaEscola();
 
-                            pe.AnoLetivo = al.AnoLetivo1;
-                            pe.DataRegisto = DateTime.Now;
-                            pe.IdEscola = int.Parse(e);
-                            pe.IdProva = pp.Id;
+                        pe.AnoLetivo = al.AnoLetivo1;
+                        pe.DataRegisto = DateTime.Now;
+                        pe.IdEscola = int.Parse(e);
+                        pe.IdProva = pp.Id;
 
-                            _context.ProvaEscolas.Add(pe);
-                        //Console.WriteLine("Escola ja inscrita anteriomente nesta prova");
-                        
+                        _context.ProvaEscolas.Add(pe);                        
                     }
-                    var x = await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
-                TempData["msg"] = "Sucesso: escola(s) inscrita(s) nas provas da competição "+competicao +" com sucesso!";
-                return;
+                return Content("Sucesso: escola(s) inscrita(s) nas provas da competição " + competicao + " com sucesso!");
             }
             else {
-                Console.WriteLine("Erro: competição nao selecionada ou escolas nao escolhidas");
-                return; 
+                return Content("Erro: competição nao selecionada ou escolas nao escolhidas");
             }
         }
     }
 }
+
+////Scaffold-DbContext "Server=localhost;Database=pmate2-demo;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -context 'ApplicationDbContextTemp' -Tables AspNetUsers,SubProva,Competicao,Prova,CicloEnsino  -force

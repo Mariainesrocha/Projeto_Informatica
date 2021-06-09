@@ -1,0 +1,66 @@
+﻿<style>
+    .scrollbar-morpheus-den::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+        background-color: #F5F5F5;
+        border-radius: 10px;
+    }
+
+    .scrollbar-morpheus-den::-webkit-scrollbar {
+        width: 12px;
+        background-color: #F5F5F5;
+    }
+
+    .scrollbar-morpheus-den::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+        background-image: -webkit-gradient(linear, left bottom, left top, from(#30cfd0), to(#330867));
+        background-image: -webkit-linear-gradient(bottom, #30cfd0 0%, #330867 100%);
+        background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+    }
+
+    .scrollbar-morpheus-den {
+        scrollbar-color: #330867 #F5F5F5;
+    }
+</style>
+@{
+    <div class="modal fade" id="modalCopiar" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-controller="Provas" asp-action="CopiarModelo">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Copiar Modelos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input name="atualId" hidden value="@ViewData["ProvaId"]" />
+                        <div class="form-group">
+                            <label class="control-label">Pesquisa de uma prova por nome:</label>
+                            <div class="form-group">
+                                <input id="pesquisa" type="text" name="nomeEscola" class="form-control col-md-9" style="float: left;" />
+                                <button id="pesquisabtn" class="btn btn-primary" onclick="pesquisar()" type="button" style="float: left;">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="provasList" class="form-group col-md-11 scrollbar-morpheus-den" style="display: none;padding-top: 5%; padding-bottom: 5%; overflow-y: scroll; height: 200px; background: #fff;">
+                        </div>
+                        <div class="form-group col-md-11" id="notfound" style="display: none; padding-top: 5%; padding-bottom: 5%;">
+                            <p class="text-info">Não foram encontradas provas para essa pesquisa</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Copiar os modelos da prova com id: </label>
+                            <input class="form-control" name="provaId" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
+                        <button type="submit" class="btn btn-success" id="modalConfirmButton">Sim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+

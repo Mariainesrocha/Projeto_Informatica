@@ -4,41 +4,54 @@
     ViewData["Title"] = "Lista de provas da competição";
 }
 
-<h1>Lista de provas da competição</h1>
+<h2>Lista de provas da competição</h2>
 <hr />
 <div>
     <h4>Provas únicas</h4>
-    <ul>
-        @foreach (Prova p in Model.provas)
-        {
-        <li>
-            @p.Id - @p.NomeProva
-            <a asp-action="Edit" asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
-            <a asp-action="Details"  asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: dodgerblue ;" class="fa fa-eye"> </i></a>
-        </li>
-        }
-    </ul>
+    <div>
+        <table>
+            @foreach (Prova p in Model.provas)
+            {
+                <tr>
+                    <td>
+                        @p.Id - @p.NomeProva
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: royalblue ;" class="fa fa-eye"> </i></a>
+                    </td>
+                    <td>
+                        <a asp-action="GenerateHTML" asp-route-id="@p.Id" class="btn btn-info"> Gerar Html </a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
 </div>
 
 <hr />
 <div>
     <h4>Provas com subprovas</h4>
-    <ul>
-        @foreach (Prova p in Model.provasPai)
-        {
-            <li>
-                @p.Id - @p.NomeProva
-                <a asp-action="Edit" asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
-                <a asp-action="Details" asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: dodgerblue ;" class="fa fa-eye"> </i></a>
-            </li>
-        }
-    </ul>
+    <div>
+        <table>
+            @foreach (Prova p in Model.provasPai)
+            {
+                <tr>
+                    <td>
+                        @p.Id - @p.NomeProva
+                    </td>
+                    <td>
+                        <a asp-action="VerFilhos" asp-controller="Competicoes" asp-route-paiId="@p.Id" asp-route-compId="@ViewBag.compId" class="btn"><i style="font-size:30px; color: lightseagreen ;" class="fa fa-plus"></i></a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
 </div>
-<div>
-    <dl class="row">
-        <dt>
-            <a asp-action="Index" class="btn btn-outline-primary"> Voltar à lista de competições </a>
-        </dt>
-    </dl>
+
+<div style="padding-top: 2%; text-align:center">
+    <a asp-action="Index" class="btn btn-outline-primary"> Voltar à lista de competições </a>
 </div>
 

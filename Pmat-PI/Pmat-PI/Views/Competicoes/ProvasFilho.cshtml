@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Pmat_PI.Models.Prova>
+@{
+    @if (Model.Count() == 0)
+    {
+        <p> Provas não encontradas!</p>
+    }
+    else
+    {
+
+        <div>
+            <h4>Provas</h4>
+            <div>
+                <table>
+                    @foreach (Prova p in Model)
+                    {
+                        <tr>
+                            <td>
+                                @p.Id - @p.NomeProva
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: orange ;" class="fa fa-pencil"> </i></a>
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: royalblue ;" class="fa fa-eye"> </i></a>
+                            </td>
+                            <td>
+                                <a asp-action="GenerateHTML" asp-route-id="@p.Id" class="btn btn-info"> Gerar Html </a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    }
+    <div style="padding-top: 2%">
+        <button class="btn btn-info" onclick="history.go(-1); return false;">Voltar</button>
+    </div>
+}

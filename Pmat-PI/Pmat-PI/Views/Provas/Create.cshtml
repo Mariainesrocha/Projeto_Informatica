@@ -10,21 +10,23 @@
     <div class="col-lg-12">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input disabled asp-for="IdAuthor" class="form-control" type="hidden" value=@ViewData["logged_id"] />
             <div class="form-row">
-                <div class="form-group col-md-7">
-                    <label asp-for="NomeProva" class="control-label">Nome do treino </label>
+                <div class="form-group col-md-6">
+                    <label asp-for="NomeProva" class="control-label">Nome do treino</label>
                     <input asp-for="NomeProva" class="form-control" />
                     <span asp-validation-for="NomeProva" class="text-danger"></span>
                 </div>
-                <div class="form-group col-md-3" hidden>
-                    <label asp-for="IdAuthor" class="control-label"></label>
-                    <input disabled asp-for="IdAuthor" class="form-control" value=@ViewData["logged_id"] />
+                <div class="form-group col-md-3">
+                    <label asp-for="DataCriacao" class="control-label">Data de Criação</label>
+                    <input asp-for="DataCriacao" class="form-control" />
+                    <span asp-validation-for="DataCriacao" class="text-danger"></span>
                 </div>
-                <div class="form-group col-md-2">
-                    <label asp-for="IdCompeticao" class="control-label"></label>
+                <div class="form-group col-md-3">
+                    <label asp-for="IdCompeticao" class="control-label">Competição</label>
                     <select asp-for="IdCompeticao" class="form-control" asp-items="ViewBag.IdCompeticao"></select>
+                    <span asp-validation-for="IdCompeticao" class="text-danger"></span>
                 </div>
-
             </div>
             <div class="form-row">
                 <div class="form-group col-md-3">
@@ -46,7 +48,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label asp-for="RefIdCicloEnsino" class="control-label">Ciclo de Ensino</label>
-                    <input asp-for="RefIdCicloEnsino" class="form-control" />
+                    <select asp-for="RefIdCicloEnsino" class="form-control" asp-items="ViewBag.RefIdCicloEnsino"></select>
                     <span asp-validation-for="RefIdCicloEnsino" class="text-danger"></span>
                 </div>
             </div>
@@ -83,60 +85,47 @@
                     <input asp-for="Url" class="form-control" />
                     <span asp-validation-for="Url" class="text-danger"></span>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-6">
                     <label asp-for="Plataforma" class="control-label"></label>
-                    <input asp-for="Plataforma" class="form-control" />
-                    <span asp-validation-for="Plataforma" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-3">
-                    <label asp-for="DataCriacao" class="control-label">Data de Criação</label>
-                    <input asp-for="DataCriacao" class="form-control" />
-                    <span asp-validation-for="DataCriacao" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label asp-for="DataInscFinal" class="control-label"></label>
-                    <input asp-for="DataInscFinal" class="form-control" />
-                    <span asp-validation-for="DataInscFinal" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-4">
-                    <label asp-for="DataProva" class="control-label"></label>
-                    <input asp-for="DataProva" class="form-control" />
-                    <span asp-validation-for="DataProva" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-4">
-                    <label asp-for="FimProva" class="control-label"></label>
-                    <input asp-for="FimProva" class="form-control" />
-                    <span asp-validation-for="FimProva" class="text-danger"></span>
+                    <div class="form-row">
+                        <div class="form-group  col-lg-9">
+                            <input asp-for="Plataforma" class="form-control" />
+                            <span asp-validation-for="Plataforma" class="text-danger"></span>
+                        </div>
+                        <div class="form-group form-check col-lg-3" style="text-align: center">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="TreinoVisivel" /> Prova Visível
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-row">
-                 <div class="form-group col-md-3">
-                    <label asp-for="InicioPreInscricao" class="control-label"></label>
-                    <input asp-for="InicioPreInscricao" class="form-control" />
-                    <span asp-validation-for="InicioPreInscricao" class="text-danger"></span>
-                </div>
                 <div class="form-group col-md-3">
-                    <label asp-for="FimPreInscricao" class="control-label"></label>
-                    <input asp-for="FimPreInscricao" class="form-control" />
-                    <span asp-validation-for="FimPreInscricao" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-3">
-                    <label asp-for="InicioInscricaoEquipas" class="control-label"></label>
+                    <label asp-for="InicioInscricaoEquipas" class="control-label">Data de Início das Inscrições</label>
                     <input asp-for="InicioInscricaoEquipas" class="form-control" />
                     <span asp-validation-for="InicioInscricaoEquipas" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-3">
-                    <label asp-for="FimInscricaoEquipas" class="control-label"></label>
+                    <label asp-for="FimInscricaoEquipas" class="control-label">Data de Fim das Inscrições</label>
                     <input asp-for="FimInscricaoEquipas" class="form-control" />
                     <span asp-validation-for="FimInscricaoEquipas" class="text-danger"></span>
                 </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="DataProva" class="control-label">Data Início da Prova</label>
+                    <input asp-for="DataProva" class="form-control" />
+                    <span asp-validation-for="DataProva" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="FimProva" class="control-label">Data Fim da Prova</label>
+                    <input asp-for="FimProva" class="form-control" />
+                    <span asp-validation-for="FimProva" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="TreinoVisivel" /> Prova Visível
-                </label>
+            <div class="form-group">
+                <label asp-for="DataInscFinal" class="control-label">Data Inscrição Final(????)</label>
+                <input asp-for="DataInscFinal" class="form-control" />
+                <span asp-validation-for="DataInscFinal" class="text-danger"></span>
             </div>
             <div class="form-group" style="text-align:center">
                 <input type="submit" value="Criar Prova" class="btn btn-success" />
@@ -144,9 +133,8 @@
         </form>
     </div>
 </div>
-
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-outline-primary">Voltar à lista de provas</a>
 </div>
 
 @section Scripts {

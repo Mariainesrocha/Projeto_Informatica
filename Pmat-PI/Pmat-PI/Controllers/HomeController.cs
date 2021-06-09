@@ -31,17 +31,8 @@ namespace Pmat_PI.Controllers
 
             return View();
         }
-        public IActionResult NoAccessRightsPage()
-        {
-            return View();
-        }
 
         public IActionResult EmailingTab()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }
