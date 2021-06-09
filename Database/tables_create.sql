@@ -102,13 +102,10 @@ CREATE TABLE pmate.UserContacto(      -- OLD tblcontacto
 
 
 
-
-
-
 ------------------------------------ SCHOOL RELATED -----------------------------------
 
 CREATE TABLE pmate.CicloEnsino( -- OLD dbo.cicloensino
-	id int NOT NULL, --CicloEnsinoID
+	id int PRIMARY KEY, --CicloEnsinoID
 	Descritivo nvarchar(100) NOT NULL,
 	Abreviatura char(10) NOT NULL
 );
@@ -278,27 +275,6 @@ CREATE TABLE pmate.ModeloVelho(
 );
 
 
-CREATE TABLE pmate.ProvaModelos(
-	IdProva int NOT NULL, --OLD: refIdComp
-	IdModelo int NOT NULL, --OLD: refModelId
-	Nivel int NOT NULL,
-
-	PRIMARY KEY (IdProva,IdModelo,Nivel),
-
-	FOREIGN KEY (IdProva) REFERENCES pmate.Prova(id),
-	FOREIGN KEY (IdModelo) REFERENCES pmate.Modelo(id),
-);
-
-CREATE TABLE pmate.TreinoModelos(
-	IdTreino int NOT NULL, --OLD: refIdComp
-	IdModelo int NOT NULL, --OLD: refModelId
-	Nivel int NOT NULL,
-
-	PRIMARY KEY (IdTreino,IdModelo,Nivel),
-
-	FOREIGN KEY (IdTreino) REFERENCES pmate.Treino(id),
-	FOREIGN KEY (IdModelo) REFERENCES pmate.Modelo(id),
-);
 
 
 
@@ -341,17 +317,30 @@ CREATE TABLE pmate.Prova(
 	Estilo nvarchar(25) NULL,
 	URL nvarchar(250) NULL,
 	TreinoVisivel bit NOT NULL,
-	IdCicloEnsino int NULL, -- OLD RefIdCicloEnsino
+	RefIdCicloEnsino int NULL, -- OLD RefIdCicloEnsino
 	plataforma int NULL, 
 	-- IconName nvarchar(25) NULL, ESTA NULL EM 1870/2018 ROWS
 
 	FOREIGN KEY(IdCompeticao) REFERENCES pmate.Competicao(id),
 	FOREIGN KEY(IdAuthor)     REFERENCES dbo.AspNetUsers(id),
-	FOREIGN KEY (IdCicloEnsino) REFERENCES pmate.CicloEnsino(id)
+	FOREIGN KEY (RefIdCicloEnsino) REFERENCES pmate.CicloEnsino(id)
 
 	-- Possivelmente adicionar : IdCategoria int, FOREIGN KEY(IdCategoria) REFERENCES pmate.Categoria(id),
 
 );
+
+
+CREATE TABLE pmate.ProvaModelos(
+	IdProva int NOT NULL, --OLD: refIdComp
+	IdModelo int NOT NULL, --OLD: refModelId
+	Nivel int NOT NULL,
+
+	PRIMARY KEY (IdProva,IdModelo,Nivel),
+
+	FOREIGN KEY (IdProva) REFERENCES pmate.Prova(id),
+	FOREIGN KEY (IdModelo) REFERENCES pmate.Modelo(id),
+);
+
 
 CREATE TABLE pmate.SubProvas(    	-- dbo.tblsubcompeticoes
 							            -- idsubcompeticao
@@ -426,18 +415,6 @@ CREATE TABLE pmate.EquipaAlunos( -- OLD dbo.tblalunosequipas
 );
 
 
-
-CREATE TABLE pmate.ProvaModelos( -- OLD dbo.tblcompmodel 
-	idModelo nvarchar(15) NOT NULL,
-	idProva int NOT NULL,
-	Nivel int NOT NULL,
-
-	PRIMARY KEY(idModelo,idProva),
-	FOREIGN KEY(idModelo) REFERENCES pmate.Modelo(id),
-	FOREIGN KEY(idProva) REFERENCES pmate.Prova(id)
-);
-
-
 CREATE TABLE pmate.EquipaProva( -- OLD:  tblequipascomp
 	IdEquipa int NOT NULL,
 	IdProva int NOT NULL,
@@ -461,6 +438,7 @@ CREATE TABLE pmate.ProvaEquipaEnunciado( -- OLD JogoGerado
 	FOREIGN KEY(IdEquipa) REFERENCES pmate.Equipa(id),
 );
 
+
 CREATE TABLE pmate.ProvaEqEnunNivel( 
 	-- FALTAM AQUI ATTRS!!!!!!!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
@@ -474,17 +452,11 @@ CREATE TABLE pmate.ProvaEqEnunNivelUserResp(  --dbo.tbl????  Em que tabela está
 	id int IDENTITY(1,1) PRIMARY KEY,
 	IdNivel int,
 
-	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.ProvaEqEnunNivel(id),
+	FOREIGN KEY(IdNivel) REFERENCES pmate.ProvaEqEnunNivel(id),
 );
 
 
 ------------------------------------ TRAINNING_TESTS  RELATED -----------------------------------
-CREATE TABLE pmate.cicloensino( -- OLD dbo.cicloensino
-	id int PRIMARY KEY NOT NULL, --CicloEnsinoID
-	Descritivo nvarchar(100) NOT NULL,
-	Abreviatura char(10) NOT NULL
-);
-
 CREATE TABLE pmate.Treino(
 	id int IDENTITY(1,1) PRIMARY KEY, -- OLD IdCompeticao
 	IdAuthor nvarchar(450) NULL, 				  -- OLD IdUser
@@ -504,24 +476,26 @@ CREATE TABLE pmate.Treino(
 	Estilo nvarchar(25) NULL,
 	URL nvarchar(250) NULL,
 	TreinoVisivel bit NOT NULL,
-	IdCicloEnsino int NULL, -- Old RefIdCicloEnsino
+	RefIdCicloEnsino int NULL, -- Old RefIdCicloEnsino
 	plataforma int NULL, 
 	-- IconName nvarchar(25) NULL, ESTA NULL EM 1870/2018 ROWS
 
 	FOREIGN KEY(IdAuthor)     REFERENCES dbo.AspNetUsers(id),
-	FOREIGN KEY (IdCicloEnsino) REFERENCES pmate.CicloEnsino(id)
+	FOREIGN KEY (RefIdCicloEnsino) REFERENCES pmate.CicloEnsino(id)
 
 	-- Possivelmente adicionar : IdCategoria int, FOREIGN KEY(IdCategoria) REFERENCES pmate.Categoria(id),
 );
 
 
-CREATE TABLE pmate.TreinoModelos( -- OLD dbo.tblcompmodel 
-	IdModelo nvarchar(15) NOT NULL,
-	IdTreino int NOT NULL,
+CREATE TABLE pmate.TreinoModelos(
+	IdTreino int NOT NULL, --OLD: refIdComp
+	IdModelo int NOT NULL, --OLD: refModelId
 	Nivel int NOT NULL,
-	PRIMARY KEY(idTreino,idModelo),
-	FOREIGN KEY(idModelo) REFERENCES pmate.Modelo(id),
-	FOREIGN KEY(idTreino) REFERENCES pmate.Treino(id),
+
+	PRIMARY KEY (IdTreino,IdModelo,Nivel),
+
+	FOREIGN KEY (IdTreino) REFERENCES pmate.Treino(id),
+	FOREIGN KEY (IdModelo) REFERENCES pmate.Modelo(id),
 );
 
 CREATE TABLE pmate.TreinoEnunciado( -- Antigo JogoGerado PRECISA DE MODIFICA�OES!!!
@@ -544,16 +518,16 @@ CREATE TABLE pmate.TreinoEnunciado( -- Antigo JogoGerado PRECISA DE MODIFICA�O
 
 CREATE TABLE pmate.TreinoEnunNivel( -- FALTAM AQUI ATTRS!!!!!!!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
-	IdEnunciadoEquipa int,
+	IdEnunciado int,
 
-	FOREIGN KEY(IdEnunciadoEquipa) REFERENCES pmate.EnunciadoEquipa(id), 
+	FOREIGN KEY(IdEnunciado) REFERENCES pmate.TreinoEnunciado(id), 
 );
 
 CREATE TABLE pmate.TreinoEnunNivelUserResp(  -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
 	IdEnunciadoEquipaNivel int,
 
-	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.EnunciadoEquipaNivel(id),
+	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.TreinoEnunNivel(id),
 );
 
 

@@ -123,6 +123,10 @@
     <dl class="row">
         <dt>
             <a asp-action="Index" class="btn btn-outline-primary"> Voltar à lista de escolas </a>
+            <a asp-controller="Users"
+               asp-action="Index"
+               asp-route-escola="@Model.Id"
+               class="btn btn-outline-primary"> Ver alunos e professores </a>
         </dt>
         <dd class="col-sm-3">
             <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning"> Editar </a>

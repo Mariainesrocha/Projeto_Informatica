@@ -21,28 +21,43 @@ namespace Pmat_PI
         }
 
         // GET: Escola
-        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        public async Task<IActionResult> Index(string sortOrder, string searchString, string filterType, int? pageNumber)
         {
-            
-            var escolas = from e in _context.Escolas.Include(e => e.IdTipoEscolaNavigation).Include(e => e.IdconcelhoNavigation) select e;
-          
-            if (searchString != null)
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentType"] = filterType;
+
+            IQueryable<Escola> escolas = _context.Escolas.Where(e => e.NomeEscola.Equals("Just some random stuff to initialize the variable.. Haha"));
+
+            if (!String.IsNullOrEmpty(searchString) && !String.IsNullOrEmpty(filterType))
             {
-                pageNumber = 1;
+
+                switch (filterType)
+                {
+                    case "nome":
+                        escolas = _context.Escolas.Include(e => e.IdTipoEscolaNavigation).Include(e => e.IdconcelhoNavigation).Where(e => e.NomeEscola.Contains(searchString));
+                        break;
+                    case "codigoPostal":
+                        string[] codigoPostal = searchString.Split("-");
+                        if (codigoPostal.Length == 2)
+                        {
+                            string codigoPart1 = codigoPostal[0];
+                            string codigoPart2 = codigoPostal[1];
+                            escolas = _context.Escolas.Include(e => e.IdTipoEscolaNavigation).Include(e => e.IdconcelhoNavigation).Where(e => e.CodigoPostal.Contains(codigoPart1) && e.ExtensaoCodPostal.Contains(codigoPart2));
+                        }
+                        break;
+                    case "localidade":
+                        escolas = _context.Escolas.Include(e => e.IdTipoEscolaNavigation).Include(e => e.IdconcelhoNavigation).Where(e => e.Localidade.Contains(searchString));
+                        break;
+                    default:
+                        break;
+                }
             }
             else
             {
-                searchString = currentFilter;
+                escolas = _context.Escolas.Include(e => e.IdTipoEscolaNavigation).Include(e => e.IdconcelhoNavigation);
             }
 
-            ViewData["CurrentFilter"] = searchString;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                escolas = escolas.Where(e => e.NomeEscola.Contains(searchString));
-            }
-
-            int pageSize = 50;
-
+            int pageSize = 30;
             return View(await PaginatedList<Escola>.CreateAsync(escolas.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
@@ -189,11 +204,44 @@ namespace Pmat_PI
         {
             var escola = await _context.Escolas.FindAsync(id);
             _context.Escolas.Remove(escola);
+
+            var students = _context.UserEscolas.Where(u => u.IdEscola == id);
+
+            // This school has no students associated so it is safe to delete.
+            if (students.Count() == 0)
+            {
+                _context.Escolas.Remove(escola);
+            }
+            else
+            {
+                // Make this school anonymous
+                escola.Idconcelho = 0;
+                escola.IdFreguesia = 0;
+                escola.Latitude = null;
+                escola.Longitude = null;
+                escola.Morada = "[DELETED]";
+                escola.CodigoPostal = null;
+                escola.ExtensaoCodPostal = null;
+                escola.Localidade = "[DELETED]";
+                escola.Telefone = null;
+                escola.Fax = null;
+                escola.Email = "[DELETED]";
+                escola.Website = "[DELETED]";
+                escola.Ensinos = "[DELETED]";
+                escola.Gruponatureza = "[DELETED]";
+                escola.CodDgeec = 0;
+                escola.CodDgpgf = 0;
+                escola.NomeEscola = "[DELETED]";
+                escola.IdTipoEscola = 0;
+
+                _context.Escolas.Update(escola);
+            }
+
+
             await _context.SaveChangesAsync();
             TempData["successMessage"] = "Escola apagada.";
             return RedirectToAction(nameof(Index));
         }
-
         private bool EscolaExists(int id)
         {
             return _context.Escolas.Any(e => e.Id == id);

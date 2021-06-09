@@ -1,4 +1,4 @@
-﻿@model Pmat_PI.Models.Prova
+﻿@model Pmat_PI.Models.ViewModel_ProvaDetails
 
 @{
     ViewData["Title"] = "Detalhes";
@@ -47,12 +47,12 @@
             <div class="col">
                 @if ((bool)ViewData["FileExists"] == true)
                 {
-                    <button type="button" class="btn btn-primary">Ver HTML</button>
-                    <a asp-action="DeleteHTML" asp-route-id="@Model.Id" class="btn btn-danger">Apagar HTML</a>
+                    <a asp-action="OpenHTML" asp-route-id="@Model.prova.Id" class="btn btn-primary">Ver HTML</a>
+                    <a asp-action="DeleteHTML" asp-route-id="@Model.prova.Id" class="btn btn-danger">Apagar HTML</a>
                 }
                 else
                 {
-                    <a asp-action="GenerateHTML" asp-route-id="@Model.Id" class="btn btn-primary"> Gerar Html </a>
+                    <a asp-action="GenerateHTML" asp-route-id="@Model.prova.Id" class="btn btn-primary"> Gerar Html </a>
                 }
             </div>
         </div>
@@ -66,55 +66,55 @@
                     Nome
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.NomeProva)
+                    @Html.DisplayFor(model => model.prova.NomeProva)
                 </dd>
                 <dt class="col-sm-4">
                     Data de Criação
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.DataCriacao)
+                    @Html.DisplayFor(model => model.prova.DataCriacao)
                 </dd>
                 <dt class="col-sm-4">
                     Nº de escolas
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.MaxEscolas)
+                    @Html.DisplayFor(model => model.prova.MaxEscolas)
                 </dd>
                 <dt class="col-sm-4">
                     Tentativas por jogo
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.MaxTentJogo)
+                    @Html.DisplayFor(model => model.prova.MaxTentJogo)
                 </dd>
                 <dt class="col-sm-4">
                     Duração da prova
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.TempoTotalJogo) (mins)
+                    @Html.DisplayFor(model => model.prova.TempoTotalJogo) (mins)
                 </dd>
                 <dt class="col-sm-4">
                     Nº de níveis
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.NumNiveis)
+                    @Html.DisplayFor(model => model.prova.NumNiveis)
                 </dd>
                 <dt class="col-sm-4">
                     Vidas por nível
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.VidasPorNivel)
+                    @Html.DisplayFor(model => model.prova.VidasPorNivel)
                 </dd>
                 <dt class="col-sm-4">
                     Tamanho da equipa
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.NumElemsEquipa)
+                    @Html.DisplayFor(model => model.prova.NumElemsEquipa)
                 </dd>
                 <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.Calculadora)
+                    @Html.DisplayNameFor(model => model.prova.Calculadora)
                 </dt>
                 <dd class="col-sm-8">
-                    @if (Model.Calculadora.Equals(false))
+                    @if (Model.prova.Calculadora.Equals(false))
                     {
                         <span> Não</span>
                     }
@@ -124,35 +124,35 @@
                     }
                 </dd>
                 <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.Estilo)
+                    @Html.DisplayNameFor(model => model.prova.Estilo)
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.Estilo)
+                    @Html.DisplayFor(model => model.prova.Estilo)
                 </dd>
                 <dt class="col-sm-4">
                     URL
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.Url)
+                    @Html.DisplayFor(model => model.prova.Url)
                 </dd>
                 <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.Plataforma)
+                    @Html.DisplayNameFor(model => model.prova.Plataforma)
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.Plataforma)
+                    @Html.DisplayFor(model => model.prova.Plataforma)
                 </dd>
 
                 <dt class="col-sm-4">
                     Ciclo de Ensino
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.RefIdCicloEnsinoNavigation.Descritivo)
+                    @Html.DisplayFor(model => model.prova.RefIdCicloEnsinoNavigation.Descritivo)
                 </dd>
                 <dt class="col-sm-4">
                     Treino Visível
                 </dt>
                 <dd class="col-sm-8">
-                    @if (Model.TreinoVisivel.Equals(false))
+                    @if (Model.prova.TreinoVisivel.Equals(false))
                     {
                         <span> Não</span>
                     }
@@ -165,32 +165,32 @@
                     Data de Inscrições
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.InicioInscricaoEquipas) até @Html.DisplayFor(model => model.FimInscricaoEquipas)
+                    @Html.DisplayFor(model => model.prova.InicioInscricaoEquipas) até @Html.DisplayFor(model => model.prova.FimInscricaoEquipas)
                 </dd>
                 <dt class="col-sm-4">
                     Data da prova
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.DataProva) até @Html.DisplayFor(model => model.FimProva)
+                    @Html.DisplayFor(model => model.prova.DataProva) até @Html.DisplayFor(model => model.prova.FimProva)
                 </dd>
                 <dt class="col-sm-4">
                     Autor
                 </dt>
                 <dd class="col-sm-8">
-                    @if (Model.IdAuthorNavigation == null)
+                    @if (Model.prova.IdAuthorNavigation == null)
                     {
                         <span> --- </span>
                     }
                     else
                     {
-                        <span>id: @Html.DisplayFor(model => model.IdAuthorNavigation.Id) - @Html.DisplayFor(model => model.IdAuthorNavigation.Name)</span>
+                        <span>id: @Html.DisplayFor(model => model.prova.IdAuthorNavigation.Id) - @Html.DisplayFor(model => model.prova.IdAuthorNavigation.Name)</span>
                     }
                 </dd>
                 <dt class="col-sm-4">
                     Competição
                 </dt>
                 <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.IdCompeticaoNavigation.Etiqueta)
+                    @Html.DisplayFor(model => model.prova.IdCompeticaoNavigation.Etiqueta)
                 </dd>
             </dl>
             <div>
@@ -199,7 +199,7 @@
                         <a asp-action="Index" class="btn btn-outline-primary"> Voltar à lista de provas </a>
                     </dt>
                     <dd class="col-sm-3">
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning"> Editar </a>
+                        <a asp-action="Edit" asp-route-id="@Model.prova.Id" class="btn btn-outline-warning"> Editar </a>
                     </dd>
                 </dl>
             </div>
@@ -243,7 +243,7 @@
                                     Deseja realmente remover este modelo da prova?
                                     <input hidden id="myId" name="modeloId" />
                                     <input hidden id="nivel" name="nivel" />
-                                    <input hidden value="@Html.DisplayFor(model => model.Id)" name="provaId" />
+                                    <input hidden value="@Html.DisplayFor(model => Model.prova.Id)" name="provaId" />
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">Não</button>
@@ -261,6 +261,65 @@
         </div>
     </div>
 </div>
+
+<br />
+<h2> Participantes da prova</h2>
+@if (Model.enunciados.Count == 0)
+{
+    <p> Nenhum participante fez esta prova ainda. </p>
+}
+else
+{
+    <table class="table table-sm table-bordered  table-hover text-md-center">
+        <thead>
+            <tr>
+                <th style="display: table-cell; vertical-align: middle;"> ID enunciado</th>
+                <th style="display: table-cell; vertical-align: middle;"> ID Equipa</th>
+                <th style="display: table-cell; vertical-align: middle;"> Alunos </th>
+                <th style="display: table-cell; vertical-align: middle;"> Ultimo Nivel </th>
+                <th style="display: table-cell; vertical-align: middle;"> Tempo </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.enunciados)
+            {
+                <tr>
+                    <td style="width: 10%">
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td style="width: 25%">
+                        @Html.DisplayFor(modelItem => item.idEquipa)
+                    </td>
+                    <td style="width: 25%">
+                        <a asp-area="" asp-controller="Users" asp-action="UpdateUser" asp-route-id="@item.userId"> @Html.DisplayFor(modelItem => item.name)</a>
+
+                    </td>
+                    <td style="width: 25%">
+                        @Html.DisplayFor(modelItem => item.ultimoNivel)
+                    </td>
+                    <td style="width: 25%">
+                        @Html.DisplayFor(modelItem => item.tempo)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    var prevDisabled = Model.pageNumber < 2 ? "disabled" : "";
+
+    <div style="text-align:center">
+        <a style="margin-right:2%" asp-action="Details"
+           asp-route-pageNumber="@(Model.pageNumber -1)"
+           class="btn btn-info" prevDisabled>
+            Anterior
+        </a>
+        <a asp-action="Details"
+           asp-route-pageNumber="@(Model.pageNumber +1)"
+           class="btn btn-info">
+            Próximo
+        </a>
+    </div>
+}
 
 
 <!-- Success modal-->
@@ -339,7 +398,7 @@
                         }
                 });
         }
-        </script>
+    </script>
 }
-@await Html.PartialAsync("_ModeloPartial", new ProvaModelo(), new ViewDataDictionary(new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider(), new Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary()) { { "ProvaId", Model.Id } })
-@await Html.PartialAsync("_CopiarModeloPartial", new ViewDataDictionary(new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider(), new Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary()) { { "ProvaId", Model.Id } })
+@await Html.PartialAsync("_ModeloPartial", new ProvaModelo(), new ViewDataDictionary(new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider(), new Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary()) { { "ProvaId", Model.prova.Id } })
+@await Html.PartialAsync("_CopiarModeloPartial", new ViewDataDictionary(new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider(), new Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary()) { { "ProvaId", Model.prova.Id } })
