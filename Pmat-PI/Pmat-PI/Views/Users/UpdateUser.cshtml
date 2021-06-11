@@ -45,6 +45,15 @@
 <h4> Escola do utilizador:</h4>
 <li> <b>Escola ID:</b> <a asp-controller="Escolas" asp-action="Details" asp-route-id="@ViewData["EscolaID"]"> @ViewData["EscolaID"] </a> </li>
 <li> <b>Escola Nome:</b> <a asp-controller="Escolas" asp-action="Details" asp-route-id="@ViewData["EscolaID"]">  @ViewData["EscolaNome"]</a> </li>
+@if (!ViewData["EscolaID"].Equals("N/A"))
+{
+    <a style="margin-top:10px;margin-bottom:10px;cursor:pointer" class="btn btn-danger" asp-controller="Users" asp-action="RemoveFromSchool" asp-route-idUser="@Model.Id" asp-route-idEscola="@ViewData["EscolaID"]"> Desassociar da escola </a>
+}
+else {
+    <a style="margin-top:10px;margin-bottom:10px;cursor:pointer" class="btn btn-success" asp-controller="AssociarProfs" asp-action="CreateAluno" asp-route-idUser="@Model.Id">Associar Aluno-Escola</a>
+    <a style="margin-top:10px;margin-bottom:10px;cursor:pointer" class="btn btn-success" asp-controller="AssociarProfs" asp-action="Create" asp-route-idUser="@Model.Id">Associar Professor-Escola</a>
+}
+
 <h4> Lista de funções deste utilizador:</h4>
 @if (ViewBag.UserRoles != null)
 {

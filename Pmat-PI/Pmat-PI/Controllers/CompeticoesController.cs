@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pmat_PI.Models;
 using Microsoft.AspNetCore.Identity;
+using System.IO;
+using MimeKit;
+using Ionic.Zip;
 
 namespace Pmat_PI.Views
 {
@@ -69,6 +72,26 @@ namespace Pmat_PI.Views
             model.provas = provas;
             model.provasPai = provasPai;
             ViewData["compId"] = competicao.Id;
+
+            List<Prova> provasL = provas.ToList();
+            Dictionary<int, bool> mapa = new Dictionary<int, bool>();
+
+            foreach (Prova p in provasL)
+            {
+                // Verify if HTML already exists
+                string path = Directory.GetCurrentDirectory() + "\\CompetitionsResults" + "\\" + p.Id + ".html";
+                if (!String.IsNullOrEmpty(p.IdCompeticao.ToString()))
+                {
+                    path = Directory.GetCurrentDirectory() + "\\CompetitionsResults\\" + p.IdCompeticao + "\\" + p.Id + ".html";
+                }
+                mapa[p.Id]=false;
+                if (System.IO.File.Exists(path))
+                {
+                    mapa[p.Id] = true;
+                }
+            }
+            ViewBag.mapa = mapa;
+
             return View(model);  
         }
 
@@ -305,6 +328,261 @@ namespace Pmat_PI.Views
                 return Content("Erro: competição nao selecionada ou escolas nao escolhidas");
             }
         }
+
+        // Generate HTML
+        public async Task<IActionResult> GenerateHTML(int? id)
+        {
+
+            if (id == null)
+            {
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
+            }
+
+            var competicao = await _context.Competicaos
+               .FirstOrDefaultAsync(m => m.Id == id);
+            if (competicao == null)
+            {
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
+            }
+
+            IQueryable<Prova> provas = from p in _context.Provas where !(from sp in _context.SubProvas select sp.IdProvaFilho).Contains(p.Id) && !(from sp in _context.SubProvas select sp.IdProvaPai).Contains(p.Id) && (p.IdCompeticao.Equals(id)) select p;
+
+            IQueryable<Prova> provasPai = from p in _context.Provas join sp in _context.SubProvas on p.Id equals sp.IdProvaPai where p.IdCompeticao.Equals(id) select p;
+
+            List<Prova> provasL = provas.ToList();
+            List<Prova> provasPaiL = provasPai.ToList();
+
+            foreach (Prova p in provasL) {
+                // Generate HTML file and Save it 
+                create_saveFile(p);
+            }
+
+            foreach (Prova pai in provasPaiL)
+            {
+                IQueryable<Prova> filhos = from f in _context.Provas where (from sp in _context.SubProvas where sp.IdProvaPai == pai.Id select sp.IdProvaFilho).Contains(f.Id) && (f.IdCompeticao.Equals(pai.IdCompeticao)) select f;
+                List<Prova> filhosL = filhos.ToList();
+                foreach (Prova filho in filhosL)
+                {
+                    create_saveFile(filho);
+                }
+            }
+            
+            // Return to details page
+            return RedirectToAction("Details", new { id = competicao.Id });
+        }
+
+        public async Task<IActionResult> DeleteHTML(int? id)
+        {
+            if (id == null)
+            {
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
+            }
+
+            var competicao = await _context.Competicaos
+               .FirstOrDefaultAsync(m => m.Id == id);
+            if (competicao == null)
+            {
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
+            }
+
+            IQueryable<Prova> provas = from p in _context.Provas where !(from sp in _context.SubProvas select sp.IdProvaFilho).Contains(p.Id) && !(from sp in _context.SubProvas select sp.IdProvaPai).Contains(p.Id) && (p.IdCompeticao.Equals(id)) select p;
+
+            IQueryable<Prova> provasPai = from p in _context.Provas join sp in _context.SubProvas on p.Id equals sp.IdProvaPai where p.IdCompeticao.Equals(id) select p;
+
+            List<Prova> provasL = provas.ToList();
+            List<Prova> provasPaiL = provasPai.ToList();
+
+            foreach (Prova p in provasL)
+            {
+                // Delete HTML File
+                string path = Directory.GetCurrentDirectory() + "\\CompetitionsResults" + "\\" + p.Id + ".html";
+                if (!String.IsNullOrEmpty(p.IdCompeticao.ToString()))
+                {
+                    path = Directory.GetCurrentDirectory() + "\\CompetitionsResults\\" + p.IdCompeticao + "\\" + p.Id + ".html";
+                }
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+
+            }
+
+            foreach (Prova pai in provasPaiL) {
+                IQueryable<Prova> filhos = from f in _context.Provas where (from sp in _context.SubProvas where sp.IdProvaPai == pai.Id select sp.IdProvaFilho).Contains(f.Id) && (f.IdCompeticao.Equals(pai.IdCompeticao)) select f;
+                List<Prova> filhosL = filhos.ToList();
+                foreach (Prova filho in filhosL) {
+                    // Delete HTML File
+                    string path = Directory.GetCurrentDirectory() + "\\CompetitionsResults" + "\\" + filho.Id + ".html";
+                    if (!String.IsNullOrEmpty(filho.IdCompeticao.ToString()))
+                    {
+                        path = Directory.GetCurrentDirectory() + "\\CompetitionsResults\\" + filho.IdCompeticao + "\\" + filho.Id + ".html";
+                    }
+                    if (System.IO.File.Exists(path))
+                    {
+                        System.IO.File.Delete(path);
+                    }
+                }
+            }
+
+            string checkP = Directory.GetCurrentDirectory() + "\\CompetitionsResults";
+            foreach (var directory in Directory.GetDirectories(checkP))
+            {
+                if (Directory.GetFiles(directory).Length == 0 &&
+                    Directory.GetDirectories(directory).Length == 0)
+                {
+                    Directory.Delete(directory, false);
+                }
+            }
+
+            // Return to details page
+            return RedirectToAction("Details", new { id = competicao.Id });
+        }
+
+        public async Task<IActionResult> DownloadHtml(int? id)
+        {
+            if (id == null)
+            {
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
+            }
+
+            var competicao = await _context.Competicaos
+               .FirstOrDefaultAsync(m => m.Id == id);
+            if (competicao == null)
+            {
+                Response.StatusCode = 404;
+                return View(nameof(NotFound));
+            }
+
+            string path = Directory.GetCurrentDirectory() + "\\CompetitionsResults\\" + competicao.Id;
+            if (Directory.Exists(path))
+            {
+                using (ZipFile zip = new ZipFile())
+                {
+                    zip.AddDirectory(path);
+                    MemoryStream output = new MemoryStream();
+                    zip.Save(output);
+                    return File(output.ToArray(), "application/zip", competicao.Nome+".zip");
+                }
+            }
+
+            // Return to details page
+            return RedirectToAction("Details", new { id = competicao.Id });
+        }
+
+        public void create_saveFile(Prova prova)
+        {
+            string path = Directory.GetCurrentDirectory() + "\\CompetitionsResults";
+            string[] template_lines = System.IO.File.ReadAllLines(path + "\\00template.html");
+
+            if (!String.IsNullOrEmpty(prova.IdCompeticao.ToString()))
+            {
+                path = Directory.GetCurrentDirectory() + "\\CompetitionsResults\\" + prova.IdCompeticao;
+                template_lines = System.IO.File.ReadAllLines(path + "\\..\\00template.html");
+                if (!Directory.Exists(path))
+                {
+                    DirectoryInfo dinfo = Directory.CreateDirectory(path);
+                }
+            }
+
+
+            if (!Directory.Exists(path))
+            {
+                // Create the Directory 
+                DirectoryInfo dinfo = Directory.CreateDirectory(path);
+            }
+
+            if (!System.IO.File.Exists(path + "\\" + prova.Id + ".html"))
+            {
+                // Create a file to write to.
+                using (StreamWriter sw = System.IO.File.CreateText(path + "\\" + prova.Id + ".html"))
+                {
+                     bool beforeTable = true;
+                    string contentBeforeTable = "";
+                    string tableContent = "";
+                    string contentAfterTable = "";
+
+
+                    // Use Template and fill the Document with this exam's results
+                    foreach (string line in template_lines)
+                    {
+                        if (beforeTable)
+                        {
+                            if (line.Contains("<h5>"))
+                            {
+                                contentBeforeTable += "<h4> Prova : " + prova.NomeProva + "</h4>";
+                            }
+                            else
+                            {
+                                contentBeforeTable += line;
+                            }
+
+                            if (line.Contains("Estado"))
+                            {
+                                contentBeforeTable += "</tr><tr> ";
+                                // Fill table with students results
+                                tableContent = getProvaResults(prova);
+                                // Change beforeTable to false
+                                beforeTable = false;
+                            }
+                        }
+                        else
+                        {
+                            contentAfterTable += line;
+                        }
+                    }
+                    sw.Write(contentBeforeTable);
+                    sw.Write(tableContent);
+                    sw.Write(contentAfterTable);
+                }
+            }
+        }
+
+
+
+        public string getProvaResults(Prova prova)
+        {
+            string tableContent = "";
+            List<ProvaEquipaEnunciado> provaEnunciados =
+                _context.ProvaEquipaEnunciados.Include(e => e.IdEquipaNavigation.IdEscolaNavigation.IdconcelhoNavigation.DistritoNavigation)
+                .Where(e => e.IdProva.Equals(prova.Id))
+                .OrderByDescending(u => u.UltimoNivel).ThenBy(t => t.Tempo).ToList();
+
+            int counter = 0;
+            foreach (ProvaEquipaEnunciado enunciado in provaEnunciados)
+            {
+                counter += 1;
+                var alunos = _context.EquipaAlunos.Where(e => e.IdEquipa.Equals(enunciado.IdEquipa)).Include(z => z.IdUserNavigation).ToList();
+                string alunosNomes = "";
+
+                foreach (EquipaAluno equipa_aluno in alunos)
+                {
+                    alunosNomes += equipa_aluno.IdUserNavigation.Name + "\n ";
+                }
+                string row = "<tr>" +
+                "<td>" + counter + "</td>" +
+                "<td>" + enunciado.IdEquipa + "</td>" +
+                "<td>" + alunosNomes + "</td>" +
+                "<td>" + enunciado.UltimoNivel + "</td>" +
+                "<td>" + enunciado.Tempo + "</td>" +
+                "<td>" + enunciado.Data + "</td>" +
+                "<td>" + enunciado.IdEquipaNavigation.IdEscola + "</td>" +
+                "<td>" + enunciado.IdEquipaNavigation.IdEscolaNavigation.NomeEscola + "</td>" +
+                "<td>" + (enunciado.IdEquipaNavigation.IdEscolaNavigation.IdconcelhoNavigation.DistritoNavigation.Nome != null ? enunciado.IdEquipaNavigation.IdEscolaNavigation.IdconcelhoNavigation.DistritoNavigation.Nome : "Unknown") + "</td>" +
+                "<td>" + (enunciado.Status != null ? enunciado.Status.ToString() : "Unknown") + "</td></tr>";
+
+                tableContent += row;
+
+                //TimeSpan enunciadoTime =  TimeSpan.Parse(enunciado.Tempo);
+                //double tempo = enunciadoTime.TotalSeconds;
+            }
+            return tableContent;
+        }
+
     }
 }
 

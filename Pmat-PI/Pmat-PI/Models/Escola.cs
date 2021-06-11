@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -23,7 +24,11 @@ namespace Pmat_PI.Models
         public string CodigoPostal { get; set; }
         public string ExtensaoCodPostal { get; set; }
         public string Localidade { get; set; }
+
+        [RegularExpression("^[0 - 9] *$", ErrorMessage="Número de telefone inválido")]
+        [StringLength(9, MinimumLength = 9)]
         public string Telefone { get; set; }
+
         public string Fax { get; set; }
         public string Email { get; set; }
         public string Website { get; set; }

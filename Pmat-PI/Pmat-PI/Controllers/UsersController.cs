@@ -45,7 +45,7 @@ namespace Identity.Controllers
             {
                 users = from u in _context.AspNetUsers
                         join ue in _context.UserEscolas
-                        .Where(e => e.IdEscola.ToString().Equals(escola) || e.IdEscolaNavigation.NomeEscola.ToLower().Equals(escola.ToLower()))
+                        .Where(e => e.IdEscola.ToString().Equals(escola) || e.IdEscolaNavigation.NomeEscola.ToLower().Contains(escola.ToLower()))
                         on u.Id equals ue.IdUser
                         select new User { UserName = u.UserName, Id = u.Id, Email = u.Email, Age = u.Age, Name = u.Name, PasswordHash = u.PasswordHash };
             }
@@ -61,7 +61,7 @@ namespace Identity.Controllers
                         users = users.Where(u => u.Email.ToLower().Contains(searchString.ToLower()));
                         break;
                     case "id":
-                        users = users.Where(u => u.Id.ToLower().Contains(searchString.ToLower()));
+                        users = users.Where(u => u.Id.ToLower().Equals(searchString.ToLower()));
                         break;
                     default:
                         break;
@@ -124,8 +124,17 @@ namespace Identity.Controllers
                 ViewBag.UserRoles = userRoles;
 
                 var userEscola = await _context.UserEscolas.Include(u => u.IdEscolaNavigation).FirstOrDefaultAsync(u => u.IdUser == id);
-                ViewData["EscolaID"] = userEscola.IdEscola;
-                ViewData["EscolaNome"] = userEscola.IdEscolaNavigation.NomeEscola;
+                if (userEscola != null)
+                {
+                    ViewData["EscolaID"] = userEscola.IdEscola;
+                    ViewData["EscolaNome"] = userEscola.IdEscolaNavigation.NomeEscola;
+                }
+                else {
+                    ViewData["EscolaID"] = "N/A";
+                    ViewData["EscolaNome"] = "N/A";
+                }
+
+                
                 
                 return View(user);
             }
@@ -180,6 +189,22 @@ namespace Identity.Controllers
             else
                 ModelState.AddModelError("", "Utilizador não encontrado");
             return View(user);
+        }
+
+        public async Task<IActionResult> RemoveFromSchool(string idUser, int idEscola)
+        {
+            User user = await userManager.FindByIdAsync(idUser);
+            if (user != null) {
+                var userEscola = _context.UserEscolas.Where(u => u.IdUser.Equals(idUser) && u.IdEscola == idEscola).First();
+                if (userEscola != null) {
+                    _context.UserEscolas.Remove(userEscola);
+                    await _context.SaveChangesAsync();
+                    //_context.UserEscolaHistoricos.Add(userEscola);
+                    return RedirectToAction("UpdateUser", new { id = user.Id });
+                }
+            }
+            return View(nameof(NotFound));
+
         }
 
         private void Errors(IdentityResult result)

@@ -7,6 +7,7 @@ namespace Pmat_PI.Models
 {
     public partial class UserEscolaHistorico
     {
+
         public int Id { get; set; }
         public string IdUser { get; set; }
         public int IdEscola { get; set; }

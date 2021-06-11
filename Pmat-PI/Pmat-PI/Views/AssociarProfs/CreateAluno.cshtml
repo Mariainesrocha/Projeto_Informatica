@@ -1,0 +1,251 @@
+﻿@model Pmat_PI.Models.UserEscola
+
+@{
+    ViewData["Title"] = "Associar";
+}
+<style>
+    .scrollbar-morpheus-den::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+        background-color: #F5F5F5;
+        border-radius: 10px;
+    }
+
+    .scrollbar-morpheus-den::-webkit-scrollbar {
+        width: 12px;
+        background-color: #F5F5F5;
+    }
+
+    .scrollbar-morpheus-den::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+        background-image: -webkit-gradient(linear, left bottom, left top, from(#30cfd0), to(#330867));
+        background-image: -webkit-linear-gradient(bottom, #30cfd0 0%, #330867 100%);
+        background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+    }
+
+    .scrollbar-morpheus-den {
+        scrollbar-color: #330867 #F5F5F5;
+    }
+</style>
+
+<h4>Associar Aluno à Escola</h4>
+<hr />
+
+<!-- Success modal-->
+<div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" style="color: forestgreen; bold;">Sucesso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @TempData["msg"]
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["msg"] != null)
+{
+    <script>
+        $("#mymodal").modal('show');
+    </script>
+}
+
+<br />
+<div class="col-lg-12">
+    <div class="form-row">
+        <div class="form-actions no-color form-group col-md-5">
+            <label>Pesquisar escola: </label>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input id="escolaInput" type="text" name="nomeEscola" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <button id="escolasbtn" class="btn btn-primary" type="button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="escolasList" class="form-group col-md-6 scrollbar-morpheus-den" style="display: none; overflow-y: scroll; height: 100px; background: #fff;">
+        </div>
+        <div class="form-group col-md-6" id="notfound" style="display:none">
+            <p>Não foram encontradas escolas para essa pesquisa</p>
+        </div>
+    </div>
+</div>
+<hr />
+<br />
+<div class="col-lg-12">
+    <div class="form-row">
+        <div class="form-actions no-color form-group col-md-5">
+            <label>Pesquisar alunos: </label>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input id="profsInput" type="text" name="professor" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <button id="profsbtn" class="btn btn-primary" type="button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="profsList" class="form-group col-md-6 scrollbar-morpheus-den" style="display: none; overflow-y: scroll; height: 100px; background: #fff;">
+        </div>
+        <div class="form-group col-md-6" id="notfound2" style="display:none">
+            <p>Não foram encontrados alunos para essa pesquisa</p>
+        </div>
+    </div>
+</div>
+<hr />
+<br />
+<br />
+<div class="row">
+    <div class="col-lg-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="aluno" value="1">  
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label asp-for="IdUser" class="control-label">Id do Aluno</label>
+                    <input asp-for="IdUser" class="form-control" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="IdEscola" class="control-label">Id da Escola</label>
+                    <input asp-for="IdEscola" class="form-control" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="IdProjeto" class="control-label">Projeto</label>
+                    <select asp-for="IdProjeto" class="form-control" asp-items="ViewBag.IdProjeto"></select>
+                </div>
+                <div class="form-group col-md-1 text-center">
+                    <label class="control-label">Outro</label>
+                    <a class="btn" data-toggle="modal" href="#modalProjeto"><i style="font-size:30px;" class="fa fa-plus-circle text-primary"> </i></a>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label asp-for="IdAnoEscolar" class="control-label">Ano Escolar</label>
+                    <select asp-for="IdAnoEscolar" class="form-control" asp-items="ViewBag.IdAnoEscolar"></select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="AnoLetivo" class="control-label">Ano Letivo</label>
+                    <select asp-for="AnoLetivo" class="form-control" asp-items="ViewBag.AnoLetivo"></select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="Data" class="control-label"></label>
+                    <input asp-for="Data" class="form-control" />
+                    <span asp-validation-for="Data" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <input type="submit" value="Associar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@await Html.PartialAsync("_NewProjectPartial", new Projeto())
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script type="text/javascript">
+
+    function fillSchool(itemId) {
+        $("#IdEscola").val(itemId);
+    }
+
+
+    $('#profsInput').val("@ViewData["idUser"]");
+    $('#escolaInput').val("@ViewData["idSchool"]");
+    fillSchool(@ViewData["idSchool"]);
+
+    setTimeout(function () {
+        $("#profsbtn").click();
+    }, 1);
+
+    setTimeout(function () {
+        $("#escolasbtn").click();
+    }, 1);
+
+    $('#escolasbtn').click();
+    $('#profsbtn').click();
+
+
+    $('#escolasbtn').click(function () {
+        callAjaxGet();
+    });
+    $('#profsbtn').click(function () {
+        callAjaxGet2();
+    });
+
+    function fillUser(itemId) {
+        $("#IdUser").val(itemId);
+    }
+
+    function callAjaxGet() {
+        $('#escolasList').children().remove();
+        $.ajax
+            ({
+                type: "GET",
+                url: '@Url.Action("SearchEscolas", "AssociarProfs")',
+                contentType: "application/json; charset=utf-8",
+                data: { nomeEscola: $("#escolaInput").val() },
+                dataType: 'json',
+                success: function (data) {
+                    $('#escolasList').show();
+                    $('#notfound').hide();
+                    if (data.length > 0) {
+                        var newHTML = ""
+                        data.forEach(function (item, index) {
+                            newHTML += '<p style="color:blue;cursor:pointer" onclick="fillSchool(\'' + item.id +'\')">' + item.id + ' <span> ' + item.nomeEscola + '</span></p>';
+                        });
+                        $('#escolasList').append(newHTML);
+                    }
+                    else {
+                        $('#escolasList').hide();
+                        $('#notfound').show().delay(10000).hide("slow");
+                    }
+                },
+                error: function (err) {
+                    console.log(err)
+                    }
+            });
+    }
+    function callAjaxGet2() {
+        $('#profsList').children().remove();
+            $.ajax
+            ({
+                type: "GET",
+                url: '@Url.Action("SearchUsers", "AssociarProfs")',
+                contentType: "application/json; charset=utf-8",
+                data: { user: $("#profsInput").val() },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.length > 0) {
+                        $('#profsList').show();
+                        $('#notfound2').hide();
+                        var newHTML = ""
+
+                        data.forEach(function (item, index) {
+                            newHTML += '<p style="color:blue;cursor:pointer" onclick="fillUser(\''+item.id+'\')">' + item.id + ' <span> ' + item.name + '</span> <span> (' + item.userName + ') </span> </p>';
+                        });
+                        $('#profsList').append(newHTML);
+                    }
+                    else {
+                        $('#profsList').hide();
+                        $('#notfound2').show().delay(10000).hide("slow");
+                    }
+                    },
+                    error: function (err) {
+                        console.log(err)
+                     }
+            });
+    }
+</script>
+}

@@ -5,30 +5,37 @@
     ViewData["Title"] = "Escolas";
 }
 
-<h1>Lista de escolas</h1>
+<h1>Lista de Escolas</h1>
 <div class="col-lg-12">
     <div class="form-row">
-        <div class="form-actions no-color form-group col-md-8">
+        <div class="form-actions no-color form-group col-lg-12">
             <form asp-action="Index" method="get">
                 <label>Pesquisar escolas por nome, localidade ou codigo postal:</label>
                 <div class="form-group" style=" display: block;">
-                    <select name="filterType" class="form-control col-md-3" id="pesquisaSelect" style="display: inline-block;">
-                        <option value="" selected> Escolha um filtro </option>
-                        <option value="nome">Nome</option>
-                        <option value="localidade">Localidade</option>
-                        <option value="codigoPostal">Codigo Postal</option>
-                    </select>
-                    <input type="hidden" name="pageNumber" value="1">
-                    <input type="text" name="searchString" placeholder="pesquisa" class="form-control col-md-4" value="@ViewData["CurrentFilter"]" style=" display: inline-block;" />
-                    <button type="submit" value="Pesquisa" class="btn btn-primary row-cols-sm-1" style=" display: inline-block;">
-                        <i class="fa fa-search"></i>
-                    </button>
-                    <a asp-action="Index" class="btn btn-outline-info row-cols-sm-1" style=" display: inline-block;"><i class="fa fa-close"></i></a>
-                </div>
-            </form>
-        </div>
-        <div class="form-group col-md-2" style="padding-top: 3%">
-            <a asp-action="Create" class="btn btn-success">Criar Nova Escola</a>
+                    <div class="row">
+                        <div class="col-lg">
+                            <select name="filterType" class="form-control" id="pesquisaSelect" style="display: inline-block;">
+                                <option value="" selected> Escolha um filtro </option>
+                                <option value="nome">Nome</option>
+                                <option value="localidade">Localidade</option>
+                                <option value="codigoPostal">Codigo Postal</option>
+                            </select>
+                        </div>
+                        <div class="col-lg">
+                            <input type="text" name="searchString" placeholder="Escolas" class="form-control" value="@ViewData["CurrentFilter"]" style=" display: inline-block;" />
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="submit" value="Pesquisa" class="btn btn-primary" style=" display: inline-block;">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-info" style=" display: inline-block;"><i class="fa fa-close"></i></a>
+                        </div>
+                        <div class="col-lg" style="margin:auto">
+                            <a asp-action="Create" class="btn btn-success">Criar Nova Escola</a>
+                        </div>
+                        <input type="hidden" name="pageNumber" value="1">
+                    </div>
+</form>
         </div>
     </div>
 </div>
@@ -85,7 +92,7 @@ else
                     </td>
                     <td>
                         <a id="deleteModal" data-toggle="modal" data-target="#modal-delete" data-id="@item.Id" class="btn">
-                            <i style="font-size:30px; color: red;" class="fa fa-trash"></i>
+                            <i style="font-size:30px; color: red; cursor:pointer" class="fa fa-trash"></i>
                         </a>
                     </td>
 
@@ -169,6 +176,21 @@ else
 
 @section scripts{
     <script>
+        $(document).ready(function () {
+            $("#pesquisaSelect option:selected").removeAttr("selected");
+            $("#pesquisaSelect option[value='@ViewData["CurrentType"]']").attr('selected', 'selected');
+        });
+
+        $("form").on("submit", function (e) {
+            dataString = $(this).serialize();
+            var params = dataString.split("&");
+            if (params[0] == "filterType=" && params[1] != "searchString=") {
+                e.preventDefault();
+                $("#pesquisaSelect").css("border-color", "red");
+                $("#pesquisaSelect").css("color", "red");
+            }
+        });
+
         $(function () {
             $('#modal-delete').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal

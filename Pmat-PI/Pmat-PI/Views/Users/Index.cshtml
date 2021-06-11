@@ -10,19 +10,29 @@
         <form asp-action="Index" method="get">
             <label>Pesquisar utilizadores por: </label>
             <div class="form-group" style=" display: block;">
-                <select name="filterType" class="form-control col-md-3" id="pesquisaSelect" style="display: inline-block;">
-                    <option value="" selected>-- Escolha um filtro --</option>
-                    <option value="nome">Nome</option>
-                    <option value="email">Email</option>
-                    <option value="id">ID</option>
-                </select>
-                <input type="hidden" name="pageNumber" value="1">
-                <input type="text" name="searchString" placeholder="Utilizadores" class="form-control col-md-4" value="@ViewData["CurrentFilter"]" style=" display: inline-block;" />
-                <input type="text" name="escola" placeholder="Escola ID ou Nome" class="form-control col-md-4" value="@ViewData["EscolaFilter"]" style=" display: inline-block;" />
-                <button type="submit" value="Pesquisa" class="btn btn-primary row-cols-sm-1" style=" display: inline-block;">
-                    <i class="fa fa-search"></i>
-                </button>
-                <a asp-action="Index" class="btn btn-outline-info row-cols-sm-1" style=" display: inline-block;"><i class="fa fa-close"></i></a>
+                <div class="row">
+                    <div style="padding-right:2px" class="col-lg">
+                        <select name="filterType" class="form-control" id="pesquisaSelect" style="display: inline-block;">
+                            <option value="" selected>Filtro Utilizador</option>
+                            <option value="nome">Nome</option>
+                            <option value="email">Email</option>
+                            <option value="id">ID</option>
+                        </select>
+                    </div>
+                    <div style="padding-left:0" class="col-lg">
+                        <input type="text" name="searchString" placeholder="Utilizadores" class="form-control" value="@ViewData["CurrentFilter"]" style=" display: inline-block;" />
+                    </div>
+                    <div class="col-lg">
+                        <input type="text" name="escola" placeholder="Escola ID ou Nome" class="form-control" value="@ViewData["EscolaFilter"]" style=" display: inline-block;" />
+                    </div>
+                    <div class="col-lg">
+                        <button type="submit" value="Pesquisa" class="btn btn-primary row-cols-sm-1" style=" display: inline-block;">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-info row-cols-sm-1" style=" display: inline-block;"><i class="fa fa-close"></i></a>
+                    </div>
+                </div>
+                <input type="hidden" name="pageNumber" value="1">  
             </div>
         </form>
     </div>
@@ -49,7 +59,7 @@ else
                 </td>
                 <td>
                     <a id="deleteModal" data-toggle="modal" data-target="#modal-delete" data-id="@user.Id" class="btn">
-                        <i style="font-size:30px; color: red;" class="fa fa-trash"></i>
+                        <i style="font-size:30px; color: red; cursor:pointer" class="fa fa-trash"></i>
                     </a>
                 </td>
             </tr>
@@ -89,6 +99,16 @@ else
                 $("#pesquisaSelect option:selected").removeAttr("selected");
                 $("#pesquisaSelect option[value='@ViewData["CurrentType"]']").attr('selected', 'selected');
             });
+        
+        $("form").on("submit", function (e) {
+            dataString = $(this).serialize();
+            var params = dataString.split("&");
+            if (params[0] == "filterType=" && params[1] != "searchString=") {
+                e.preventDefault();
+                $("#pesquisaSelect").css("border-color", "red");
+                $("#pesquisaSelect").css("color", "red");
+            }   
+        });
     </script>
 }
 

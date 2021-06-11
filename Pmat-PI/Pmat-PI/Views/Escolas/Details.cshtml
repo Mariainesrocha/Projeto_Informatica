@@ -127,6 +127,9 @@
                asp-action="Index"
                asp-route-escola="@Model.Id"
                class="btn btn-outline-primary"> Ver alunos e professores </a>
+            <a style="cursor:pointer" class="btn btn-outline-primary" asp-controller="AssociarProfs" asp-action="CreateAluno" asp-route-idSchool="@Model.Id">Associar Aluno-Escola</a>
+            <a style="cursor:pointer" class="btn btn-outline-primary" asp-controller="AssociarProfs" asp-action="Create" asp-route-idSchool="@Model.Id">Associar Professor-Escola</a>
+
         </dt>
         <dd class="col-sm-3">
             <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning"> Editar </a>

@@ -153,13 +153,38 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    <script type="text/javascript">
+<script type="text/javascript">
+
+    function fillSchool(itemId) {
+        $("#IdEscola").val(itemId);
+    }
+
+    $('#profsInput').val("@ViewData["idUser"]");
+    $('#escolaInput').val("@ViewData["idSchool"]");
+    fillSchool(@ViewData["idSchool"]);
+
+    setTimeout(function () {
+        $("#profsbtn").click();
+    }, 1);
+
+    setTimeout(function () {
+        $("#escolasbtn").click();
+    }, 1);
+
+
+    $('#escolasbtn').click();
+    $('#profsbtn').click();
+
     $('#escolasbtn').click(function () {
         callAjaxGet();
     });
     $('#profsbtn').click(function () {
         callAjaxGet2();
     });
+
+    function fillUser(itemId) {
+        $("#IdUser").val(itemId);
+    }
 
     function callAjaxGet() {
         $('#escolasList').children().remove();
@@ -176,7 +201,7 @@
                     if (data.length > 0) {
                         var newHTML = ""
                         data.forEach(function (item, index) {
-                            newHTML += '<p>' + item.id + ' <span> ' + item.nomeEscola + '</span></p>';
+                            newHTML += '<p style="color:blue;cursor:pointer" onclick="fillSchool(\'' + item.id +'\')">' + item.id + ' <span> ' + item.nomeEscola + '</span></p>';
                         });
                         $('#escolasList').append(newHTML);
                     }
@@ -195,9 +220,9 @@
             $.ajax
             ({
                 type: "GET",
-                url: '@Url.Action("SearchProfs", "AssociarProfs")',
+                url: '@Url.Action("SearchUsers", "AssociarProfs")',
                 contentType: "application/json; charset=utf-8",
-                data: { professor: $("#profsInput").val() },
+                data: { user: $("#profsInput").val() },
                 dataType: 'json',
                 success: function (data) {
                     if (data.length > 0) {
@@ -206,7 +231,7 @@
                         var newHTML = ""
 
                         data.forEach(function (item, index) {
-                            newHTML += '<p>' + item.id + ' <span> ' + item.name + '</span> <span> (' + item.userName + ') </span> </p>';
+                            newHTML += '<p style="color:blue;cursor:pointer" onclick="fillUser(\'' + item.id +'\')">' + item.id + ' <span> ' + item.name + '</span> <span> (' + item.userName + ') </span> </p>';
                         });
                         $('#profsList').append(newHTML);
                     }
@@ -220,5 +245,5 @@
                      }
             });
     }
-    </script>
+</script>
 }

@@ -47,7 +47,7 @@
             <div class="col">
                 @if ((bool)ViewData["FileExists"] == true)
                 {
-                    <a asp-action="OpenHTML" asp-route-id="@Model.prova.Id" class="btn btn-primary">Ver HTML</a>
+                    <a asp-action="OpenHTML" asp-route-id="@Model.prova.Id" class="btn btn-primary">Download HTML</a>
                     <a asp-action="DeleteHTML" asp-route-id="@Model.prova.Id" class="btn btn-danger">Apagar HTML</a>
                 }
                 else
@@ -286,7 +286,13 @@ else
             {
                 <tr>
                     <td style="width: 10%">
-                        @Html.DisplayFor(modelItem => item.Id)
+                        <a style="margin-right:2%" 
+                           asp-controller="ProvaEquipaEnunciados"
+                           asp-action="Details"
+                           asp-route-id="@item.Id"
+                           >
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </a>
                     </td>
                     <td style="width: 25%">
                         @Html.DisplayFor(modelItem => item.idEquipa)

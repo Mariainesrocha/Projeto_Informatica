@@ -74,6 +74,12 @@ namespace Pmat_PI
 
             // Verify if HTML already exists
             string path = Directory.GetCurrentDirectory() + "\\CompetitionsResults" + "\\" + prova.Id + ".html";
+            Console.WriteLine("((((" + prova.IdCompeticao.ToString());
+            Console.WriteLine("((((" + !String.IsNullOrEmpty(prova.IdCompeticao.ToString()));
+            if (!String.IsNullOrEmpty(prova.IdCompeticao.ToString())) { 
+                path = Directory.GetCurrentDirectory() + "\\CompetitionsResults\\" + prova.IdCompeticao + "\\" + prova.Id + ".html";
+                Console.WriteLine("Pedro: " + path);
+            }
             ViewData["FileExists"] = false;
             if (System.IO.File.Exists(path))
             {
@@ -175,7 +181,7 @@ namespace Pmat_PI
             create_saveFile(prova);
 
             // Return to details page
-            return RedirectToAction("Details", new { id = prova.Id });
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
         // Delete HTML
@@ -199,13 +205,23 @@ namespace Pmat_PI
 
             // Delete HTML File
             string path = Directory.GetCurrentDirectory() + "\\CompetitionsResults" + "\\" + prova.Id + ".html";
+            if (!String.IsNullOrEmpty(prova.IdCompeticao.ToString()))
+            {
+                path = Directory.GetCurrentDirectory() + "\\CompetitionsResults\\" + prova.IdCompeticao + "\\" + prova.Id + ".html";
+            }
             if (System.IO.File.Exists(path))
             {
                 System.IO.File.Delete(path);
+                string pathcheck = Path.GetDirectoryName(path);
+                if (Directory.GetFiles(pathcheck).Length == 0 &&
+                    Directory.GetDirectories(pathcheck).Length == 0)
+                {
+                    Directory.Delete(path, false);
+                }
             }
 
             // Return to details page
-            return RedirectToAction("Details", new { id = prova.Id });
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
         // GET: Provas/Create
@@ -354,7 +370,16 @@ namespace Pmat_PI
         public void create_saveFile(Prova prova)
         {
             string path = Directory.GetCurrentDirectory() + "\\CompetitionsResults";
+            string[] template_lines = System.IO.File.ReadAllLines(path + "\\00template.html");
 
+            if (!String.IsNullOrEmpty(prova.IdCompeticao.ToString())) {
+                path = Directory.GetCurrentDirectory() + "\\CompetitionsResults\\" + prova.IdCompeticao;
+                template_lines = System.IO.File.ReadAllLines(path + "\\..\\00template.html");
+                if (!Directory.Exists(path))
+                { 
+                    DirectoryInfo dinfo = Directory.CreateDirectory(path);
+                }
+            }
 
             if (!Directory.Exists(path))
             {
@@ -367,8 +392,6 @@ namespace Pmat_PI
                 // Create a file to write to.
                 using (StreamWriter sw = System.IO.File.CreateText(path + "\\" + prova.Id + ".html"))
                 {
-                    string[] template_lines = System.IO.File.ReadAllLines(path+"\\00template.html");
-
                     bool beforeTable = true;
                     string contentBeforeTable="";
                     string tableContent = "";
@@ -426,15 +449,19 @@ namespace Pmat_PI
                 return NotFound();
             }
 
-            // Delete HTML File
+
             string path = Directory.GetCurrentDirectory() + "\\CompetitionsResults" + "\\" + prova.Id + ".html";
+            if (!String.IsNullOrEmpty(prova.IdCompeticao.ToString()))
+            {
+                path = Directory.GetCurrentDirectory() + "\\CompetitionsResults\\" + prova.IdCompeticao + "\\" + prova.Id + ".html";
+            }
             if (System.IO.File.Exists(path))
             {
                 return PhysicalFile(path, MimeTypes.GetMimeType(path), Path.GetFileName(path));
             }
 
             // Return to details page
-            return RedirectToAction("Details", new { id = prova.Id });
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
         public string getProvaResults(Prova prova)

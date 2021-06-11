@@ -11,7 +11,25 @@ SET IDENTITY_INSERT pmate.NewTable OFF
 COMMIT;
 */
 ------------------------------------ LOCATIONS RELATED ------------------------------
+SET IDENTITY_INSERT pmate.Pais 
+ON INSERT INTO pmate.Pais(id,nome) VALUES(0,'Anonymous') 
+SET IDENTITY_INSERT pmate.Pais OFF  
 
+SET IDENTITY_INSERT pmate.Distrito 
+ON INSERT INTO pmate.Distrito(id,nome,pais) VALUES(0,'Anonymous',0) 
+SET IDENTITY_INSERT pmate.Distrito OFF  
+
+SET IDENTITY_INSERT pmate.Concelho ON 
+INSERT INTO pmate.Concelho(id,nome,distrito) VALUES(0,'Anonymous',0) 
+SET IDENTITY_INSERT pmate.Concelho OFF  
+
+SET IDENTITY_INSERT pmate.Freguesia ON 
+INSERT INTO pmate.Freguesia(id,nome,concelho) VALUES(0,'Anonymous',0) 
+SET IDENTITY_INSERT pmate.Freguesia OFF
+
+SET IDENTITY_INSERT pmate.TipoEscola ON
+INSERT INTO pmate.TipoEscola(id_tipo_escola,TipoEscola,DescricaoTipoEscola) VALUES (0,'Anonymous','-----------')
+SET IDENTITY_INSERT pmate.TipoEscola OFF
 
 
 -- Paises
@@ -178,8 +196,8 @@ GO
 -- Migrate Users from tblUsers to AspNetUsers --
 BEGIN TRANSACTION;
 
-INSERT INTO [pmate2-demo].dbo.AspNetUsers(Id,UserName,PasswordHash, EmailConfirmed, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, Age, Name, Roles) 
-SELECT IdUser,Login, [pmate2-demo].dbo.encodebase64(HASHBYTES('SHA2_512',cast(Password as varchar(max)))), 0, 0, 0, 0, 0, 0, Left(Nome,80), 0
+INSERT INTO [pmate2-demo].dbo.AspNetUsers(Id,UserName,PasswordHash, EmailConfirmed, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, Age, Name) 
+SELECT IdUser,Login, [pmate2-demo].dbo.encodebase64(HASHBYTES('SHA2_512',cast(Password as varchar(max)))), 0, 0, 0, 0, 0, 0, Left(Nome,80)
 FROM [pmate-Equamat2000].dbo.tblUsers
 
 COMMIT;

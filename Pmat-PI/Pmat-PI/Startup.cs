@@ -130,19 +130,18 @@ namespace Pmat_PI
             user.Email = "phantomuser@ua.pt";
             user.UserName = "PhantomUser";
             user.EmailConfirmed = true;
-            user.Age = 0;
+            user.Age = 20;
             user.AccessFailedCount = 0;
             string userPWD = "DannyPhantom123";
 
-            var exists = userManager.FindByEmailAsync("phantomuser@ua.pt");
+           // var exists = userManager.FindByEmailAsync("phantomuser@ua.pt");
             //exists.Wait();
-            exists = null;
-            if (exists == null)
-            {
+            //if (exists == null)
+            //{
                 Console.WriteLine("IT IS NULL");
                 var created_user = userManager.CreateAsync(user, userPWD);
-                //created_user.Wait();
-            }
+                created_user.Wait();
+            //}
 
 
         }

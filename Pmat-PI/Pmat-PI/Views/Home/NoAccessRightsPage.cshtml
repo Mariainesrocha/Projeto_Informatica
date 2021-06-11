@@ -17,11 +17,11 @@
 </head>
 <body>
     <div class="container" style=" text-align: center; padding-top: 5%;">
-        <h1>Você não tem permissões de acesso a este website.</h1>
-        <h3>Se você é um adminstrador, contate o seu superior para lhe conceder as devidas permissões de acesso.</h3>
+        <h1>Não tem permissões de acesso a este website.</h1>
+        <h3>Se é um adminstrador, contacte o seu superior para lhe conceder as devidas permissões de acesso.</h3>
         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <div style="padding-top: 2%;">
-                <button type="submit" class="btn btn-warning text-light">Logout</button>
+            <div style="padding-top: 2%;margin:auto">
+                <button type="submit" class="btn btn-danger text-light">Logout</button>
             </div>
         </form>
     </div>
