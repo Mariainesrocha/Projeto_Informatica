@@ -24,7 +24,17 @@
                                 <a asp-action="Details" asp-controller="Provas" asp-route-id="@p.Id" class="btn"><i style="font-size:30px; color: royalblue ;" class="fa fa-eye"> </i></a>
                             </td>
                             <td>
-                                <a asp-action="GenerateHTML" asp-route-id="@p.Id" class="btn btn-info"> Gerar Html </a>
+                                @if (!ViewBag.mapa[p.Id])
+                                {
+
+                                    <a asp-controller="Provas" asp-action="GenerateHTML" asp-route-id="@p.Id" class="btn btn-info"> Gerar Html </a>
+
+                                }
+                                else
+                                {
+                                    <a asp-controller="Provas" asp-action="OpenHTML" asp-route-id="@p.Id" class="btn btn-outline-primary">Download HTML</a>
+                                    <a asp-controller="Provas" asp-action="DeleteHTML" asp-route-id="@p.Id" class="btn btn-outline-danger">Apagar HTML</a>
+                                }
                             </td>
                         </tr>
                     }

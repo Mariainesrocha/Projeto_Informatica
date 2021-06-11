@@ -216,7 +216,7 @@ namespace Pmat_PI
                 if (Directory.GetFiles(pathcheck).Length == 0 &&
                     Directory.GetDirectories(pathcheck).Length == 0)
                 {
-                    Directory.Delete(path, false);
+                    Directory.Delete(pathcheck, false);
                 }
             }
 

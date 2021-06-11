@@ -9,9 +9,10 @@
 <div>
     <h4>Provas únicas</h4>
     <a asp-action="GenerateHtml" asp-controller="Competicoes" asp-route-id="@ViewBag.compId" class="btn btn-success" style="margin-top:10px;margin-bottom:10px">Gerar HTML (Todos)</a>
+    @if (ViewBag.generated) { 
     <a asp-action="DownloadHtml" asp-controller="Competicoes" asp-route-id="@ViewBag.compId" class="btn btn-info" style="margin-top:10px;margin-bottom:10px">Download HTML (Todos)</a>
     <a asp-action="DeleteHtml" asp-controller="Competicoes" asp-route-id="@ViewBag.compId" class="btn btn-danger" style="margin-top:10px;margin-bottom:10px">Apagar HTML (Todos)</a>
-  
+  }
     <div>
         <table>
             @foreach (Prova p in Model.provas)

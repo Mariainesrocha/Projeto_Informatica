@@ -23,8 +23,9 @@ namespace Pmat_PI.Controllers
         public IActionResult Map(ApplicationDbContextAlmostFinal context)
         {
             econcelhos = new Dictionary<string, ArrayList>();
+           /* List<Escola> escolas = _context.Escolas.ToList();
+            
 
-            var escolas = from e in _context.Escolas select e;
 
             foreach (Escola e in escolas) {
                 Dictionary<string, string> attrs = new Dictionary<string, string>();
@@ -106,7 +107,7 @@ namespace Pmat_PI.Controllers
                     al.Add(attrs);
                 }
             }
-
+           */
             ViewBag.econcelhos = econcelhos;
             return View();
         }

@@ -51,6 +51,8 @@ namespace Pmat_PI.Views
         // GET: Competicoes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ViewBag.generated = false;
+
             if (id == null)
             {
                 Response.StatusCode = 404;
@@ -87,6 +89,7 @@ namespace Pmat_PI.Views
                 mapa[p.Id]=false;
                 if (System.IO.File.Exists(path))
                 {
+                    ViewBag.generated = true;
                     mapa[p.Id] = true;
                 }
             }
@@ -97,6 +100,8 @@ namespace Pmat_PI.Views
 
         public async Task<IActionResult> VerFilhos(int? compId, int? paiId)
         {
+            Dictionary<int, bool> mapa = new Dictionary<int, bool>();
+
             if (compId == null || paiId == null)
             {
                 Response.StatusCode = 404; 
@@ -110,7 +115,25 @@ namespace Pmat_PI.Views
                 return View(nameof(NotFound));
             }
             IQueryable<Prova> provas = from p in _context.Provas where (from sp in _context.SubProvas where sp.IdProvaPai==paiId select sp.IdProvaFilho).Contains(p.Id) && (p.IdCompeticao.Equals(compId)) select p;
-           
+            List<Prova> provasFilhos = provas.ToList();
+
+            foreach (Prova p in provasFilhos)
+            {
+                // Verify if HTML already exists
+                string path = Directory.GetCurrentDirectory() + "\\CompetitionsResults" + "\\" + p.Id + ".html";
+                if (!String.IsNullOrEmpty(p.IdCompeticao.ToString()))
+                {
+                    path = Directory.GetCurrentDirectory() + "\\CompetitionsResults\\" + p.IdCompeticao + "\\" + p.Id + ".html";
+                }
+                mapa[p.Id] = false;
+                if (System.IO.File.Exists(path))
+                {
+                    ViewBag.generated = true;
+                    mapa[p.Id] = true;
+                }
+            }
+            ViewBag.mapa = mapa;
+
             return View("ProvasFilho",provas.ToList());
         }
 
