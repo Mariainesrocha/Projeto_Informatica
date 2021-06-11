@@ -6,6 +6,63 @@ GO
 -- Scaffold-DbContext "Server=localhost;Database=pmate2-demo;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -context 'ApplicationDbContext' -Tables AspNetUsers,AnoLetivo,Competicao,Concelho,Distrito,Equipa,EquipaAlunos,EquipaProva,Escola,Freguesia,Modelo,ModeloNovo,ModeloVelho,Pais,Prova,ProvaEquipaEnunciado,ProvaEscolas,ProvaModelos,TipoEscola,Treino,TreinoEnunciado,TreinoModelos,UserContacto,UserContactoTipo  -force
 -- 
 
+-- DROP TABLES 
+
+------------------------------------ EXAMS  RELATED -----------------------------------
+DROP TABLE pmate.ProvaEqEnunNivelUserResp;
+DROP TABLE pmate.ProvaEqEnunNivel;
+DROP TABLE pmate.ProvaEquipaEnunciado;
+DROP TABLE pmate.ProvaModelos;
+DROP TABLE pmate.EquipaAlunos;
+DROP TABLE pmate.EquipaProva
+DROP TABLE pmate.Equipa;
+DROP TABLE pmate.ProvaEscolas;
+DROP TABLE pmate.SubProvas;
+DROP TABLE pmate.Prova;
+DROP TABLE pmate.Categoria;
+DROP TABLE pmate.Competicao;
+
+------------------------------------ TRAINNING_TESTS  RELATED -----------------------------------
+DROP TABLE pmate.TreinoEnunNivelUserResp;
+DROP TABLE pmate.TreinoEnunNivel;
+DROP TABLE pmate.TreinoEnunciado;
+DROP TABLE pmate.TreinoModelos;
+DROP TABLE pmate.Treino;
+
+
+------------------------------------ MODELS  RELATED -----------------------------------
+DROP TABLE pmate.ModeloNovo
+DROP TABLE pmate.ModeloVelho
+DROP TABLE pmate.Modelo;
+
+------------------------------------ SCHOOL RELATED -----------------------------------
+
+DROP TABLE pmate.EscolaInfoExtra;
+DROP TABLE pmate.UserEscolaHistorico;
+DROP TABLE pmate.UserEscola;
+DROP TABLE pmate.Escola;
+DROP TABLE pmate.Projeto;
+DROP TABLE pmate.AnoLetivo;
+DROP TABLE pmate.AnoEscolar;
+DROP TABLE pmate.TipoEscola;
+
+
+------------------------------------ USER RELATED -----------------------------------
+DROP TABLE pmate.UserContacto;
+DROP TABLE pmate.UserContactoTipo;
+
+------------------------------------ LOCATIONS RELATED -----------------------------------
+DROP TABLE pmate.Freguesia;
+DROP TABLE pmate.Concelho;
+DROP TABLE pmate.Distrito;
+DROP TABLE pmate.Pais;
+DROP TABLE pmate.CicloEnsino
+
+
+
+
+
+-- CREATE TABLES 
 
 ------------------------------------ LOCATIONS RELATED -----------------------------------
 
@@ -48,7 +105,7 @@ CREATE TABLE pmate.Freguesia(
 
 
 ------------------------------------ USER RELATED -----------------------------------
-
+/*
 CREATE TABLE pmate.Users(
     id nvarchar(450) ,
     Nome nvarchar(100) ,
@@ -80,7 +137,7 @@ CREATE TABLE pmate.Users(
     PRIMARY KEY(id),
     FOREIGN KEY(id) REFERENCES dbo.AspNetUsers(Id)
 );
-
+*/
 
 
 
@@ -439,7 +496,7 @@ CREATE TABLE pmate.ProvaEquipaEnunciado( -- OLD JogoGerado
 );
 
 
-CREATE TABLE pmate.ProvaEqEnunNivel( 
+CREATE TABLE pmate.ProvaEqEnunNivel( -- EcraGerado 
 	-- FALTAM AQUI ATTRS!!!!!!!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
 	IdEnunciadoEquipa int,
@@ -447,7 +504,7 @@ CREATE TABLE pmate.ProvaEqEnunNivel(
 	FOREIGN KEY(IdEnunciadoEquipa) REFERENCES pmate.ProvaEquipaEnunciado(id), 
 );
 
-CREATE TABLE pmate.ProvaEqEnunNivelUserResp(  --dbo.tbl????  Em que tabela está guardada a resposta do utilizador ???
+CREATE TABLE pmate.ProvaEqEnunNivelUserResp(  --Tentativa
 	 -- FALTAM AQUI ATTRS!!!!!!!
 	id int IDENTITY(1,1) PRIMARY KEY,
 	IdNivel int,
@@ -533,53 +590,3 @@ CREATE TABLE pmate.TreinoEnunNivelUserResp(  -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!
 
 -- SELECTS 
 
--- DROP TABLES 
-
------------------------------------- EXAMS  RELATED -----------------------------------
-DROP TABLE pmate.ProvaEqEnunNivelResps;
-DROP TABLE pmate.ProvaEqEnunNivelUserResp;
-DROP TABLE pmate.ProvaEqEnunNiveis;
-DROP TABLE pmate.ProvaEquipaEnunciado;
-DROP TABLE pmate.ProvaModelos;
-DROP TABLE pmate.EquipaAlunos;
-DROP TABLE pmate.EquipaProva
-DROP TABLE pmate.Equipa;
-DROP TABLE pmate.ProvaEscolas;
-DROP TABLE pmate.Prova
-DROP TABLE pmate.Categoria;
-DROP TABLE pmate.Competicao;
-
------------------------------------- TRAINNING_TESTS  RELATED -----------------------------------
-DROP TABLE pmate.TreinoEnunNivelResps;
-DROP TABLE pmate.TreinoEnunNivelUserResp;
-DROP TABLE pmate.TreinoEnunNiveis;
-DROP TABLE pmate.TreinoEnunciado;
-DROP TABLE pmate.TreinoModelo;
-DROP TABLE pmate.Treino;
-
-
------------------------------------- MODELS  RELATED -----------------------------------
-DROP TABLE pmate.Modelo;
-
------------------------------------- SCHOOL RELATED -----------------------------------
-
-DROP TABLE pmate.EscolaInfoExtra;
-DROP TABLE pmate.Projeto;
-DROP TABLE pmate.UserEscolaHistorico;
-DROP TABLE pmate.UserEscola;
-DROP TABLE pmate.Escola;
-DROP TABLE pmate.AnoLetivo;
-DROP TABLE pmate.AnoEscolar;
-DROP TABLE pmate.TipoEscola;
-
-
------------------------------------- USER RELATED -----------------------------------
-DROP TABLE pmate.Users;
-DROP TABLE pmate.UserContacto;
-DROP TABLE pmate.UserContactoTipo;
-
------------------------------------- LOCATIONS RELATED -----------------------------------
-DROP TABLE pmate.Freguesia;
-DROP TABLE pmate.Concelho;
-DROP TABLE pmate.Distrito;
-DROP TABLE pmate.Pais;
