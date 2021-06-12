@@ -660,4 +660,24 @@ COMMIT;
 
 
 ------------------------------------ TRAINNING_TESTS  RELATED -----------------------------------
+Insert into pmate.TreinoEnunNivel
+Select RefIdJogo, IdNivel, RefModelId, PerguntaMathML, Resp1, Resp2, Resp3, Resp4, Sol1, Sol2, Sol3, Sol4, OperadorPergunta, OperadorResp1, OperadorResp2, OperadorResp3, OperadorResp4, ParametroPergunta, ParametroResp1, ParametroResp2, ParametroResp3, ParametroResp4, Obs1, Obs2, Obs3, Obs4
+From [pmate-Equamat2000].dbo.tblEcraGerado_2020_2021
+Join pmate.TreinoEnunciado on RefIdJogo=id
+
+Insert into pmate.ProvaEqEnunNivel
+Select RefIdJogo, IdNivel, RefModelId, PerguntaMathML, Resp1, Resp2, Resp3, Resp4, Sol1, Sol2, Sol3, Sol4, OperadorPergunta, OperadorResp1, OperadorResp2, OperadorResp3, OperadorResp4, ParametroPergunta, ParametroResp1, ParametroResp2, ParametroResp3, ParametroResp4, Obs1, Obs2, Obs3, Obs4
+From [pmate-Equamat2000].dbo.tblEcraGerado_2020_2021
+Join pmate.ProvaEquipaEnunciado on RefIdJogo=id
+
+Insert into pmate.TreinoEnunNivelUserResp
+Select Distinct RefIdJogo, RefIdNivel, Tentativa, RespDada1, RespDada2, RespDada3, RespDada4, [pmate-Equamat2000].dbo.tblTentativa_2020_2021.tempo, Data
+From [pmate-Equamat2000].dbo.tblTentativa_2020_2021
+Join pmate.TreinoEnunNivel on RefIdJogo=IdEnunciadoEquipa AND RefIdNivel=IdNivel
+
+Insert into pmate.ProvaEqEnunNivelUserResp
+Select Distinct RefIdJogo, RefIdNivel, Tentativa, RespDada1, RespDada2, RespDada3, RespDada4, [pmate-Equamat2000].dbo.tblTentativa_2020_2021.tempo, Data
+From [pmate-Equamat2000].dbo.tblTentativa_2020_2021
+Join pmate.ProvaEqEnunNivel on RefIdJogo=IdEnunciadoEquipa AND RefIdNivel=IdNivel
+
 

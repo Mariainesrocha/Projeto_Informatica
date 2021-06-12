@@ -440,19 +440,50 @@ CREATE TABLE pmate.ProvaEquipaEnunciado( -- OLD JogoGerado
 
 
 CREATE TABLE pmate.ProvaEqEnunNivel( 
-	-- FALTAM AQUI ATTRS!!!!!!!!!!!!!
-	id int IDENTITY(1,1) PRIMARY KEY,
-	IdEnunciadoEquipa int,
+	[IdEnunciadoEquipa] [int] NOT NULL,
+	[IdNivel] [int] NOT NULL,
+	[IdModel] [int] NOT NULL,
+	[PerguntaMathML] [ntext] NOT NULL,
+	[Resp1] [ntext] NOT NULL,
+	[Resp2] [ntext] NOT NULL,
+	[Resp3] [ntext] NOT NULL,
+	[Resp4] [ntext] NOT NULL,
+	[Sol1] [bit] NOT NULL,
+	[Sol2] [bit] NOT NULL,
+	[Sol3] [bit] NOT NULL,
+	[Sol4] [bit] NOT NULL,
+	[OperadorPergunta] [nvarchar](max) NULL,
+	[OperadorResp1] [nvarchar](150) NULL,
+	[OperadorResp2] [nvarchar](150) NULL,
+	[OperadorResp3] [nvarchar](150) NULL,
+	[OperadorResp4] [nvarchar](150) NULL,
+	[ParametroPergunta] [nvarchar](max) NULL,
+	[ParametroResp1] [nvarchar](300) NULL,
+	[ParametroResp2] [nvarchar](300) NULL,
+	[ParametroResp3] [nvarchar](300) NULL,
+	[ParametroResp4] [nvarchar](300) NULL,
+	[Obs1] [nvarchar](50) NULL,
+	[Obs2] [nvarchar](50) NULL,
+	[Obs3] [nvarchar](50) NULL,
+	[Obs4] [nvarchar](50) NULL
 
+	PRIMARY Key(IdEnunciadoEquipa, IdNivel),
 	FOREIGN KEY(IdEnunciadoEquipa) REFERENCES pmate.ProvaEquipaEnunciado(id), 
 );
 
-CREATE TABLE pmate.ProvaEqEnunNivelUserResp(  --dbo.tbl????  Em que tabela está guardada a resposta do utilizador ???
-	 -- FALTAM AQUI ATTRS!!!!!!!
-	id int IDENTITY(1,1) PRIMARY KEY,
-	IdNivel int,
+CREATE TABLE pmate.ProvaEqEnunNivelUserResp( 
+	[IdEnunciadoEquipa] [int] NOT NULL,
+	[IdNivel] [int] NOT NULL,
+	[Tentativa] [int] NOT NULL,
+	[RespDada1] [int] NULL,
+	[RespDada2] [int] NOT NULL,
+	[RespDada3] [int] NULL,
+	[RespDada4] [int] NULL,
+	[tempo] [char](10) NOT NULL,
+	[Data] [datetime] NULL
 
-	FOREIGN KEY(IdNivel) REFERENCES pmate.ProvaEqEnunNivel(id),
+	PRIMARY Key(IdEnunciadoEquipa, IdNivel, Tentativa),
+	FOREIGN KEY(IdEnunciadoEquipa,IdNivel) REFERENCES pmate.ProvaEqEnunNivel(IdEnunciadoEquipa, IdNivel),
 );
 
 
@@ -516,18 +547,51 @@ CREATE TABLE pmate.TreinoEnunciado( -- Antigo JogoGerado PRECISA DE MODIFICA�O
 
 
 
-CREATE TABLE pmate.TreinoEnunNivel( -- FALTAM AQUI ATTRS!!!!!!!!!!!!!
-	id int IDENTITY(1,1) PRIMARY KEY,
-	IdEnunciado int,
+CREATE TABLE pmate.TreinoEnunNivel( 
+	[IdEnunciadoEquipa] [int] NOT NULL,
+	[IdNivel] [int] NOT NULL,
+	[IdModel] [int] NOT NULL,
+	[PerguntaMathML] [ntext] NOT NULL,
+	[Resp1] [ntext] NOT NULL,
+	[Resp2] [ntext] NOT NULL,
+	[Resp3] [ntext] NOT NULL,
+	[Resp4] [ntext] NOT NULL,
+	[Sol1] [bit] NOT NULL,
+	[Sol2] [bit] NOT NULL,
+	[Sol3] [bit] NOT NULL,
+	[Sol4] [bit] NOT NULL,
+	[OperadorPergunta] [nvarchar](max) NULL,
+	[OperadorResp1] [nvarchar](150) NULL,
+	[OperadorResp2] [nvarchar](150) NULL,
+	[OperadorResp3] [nvarchar](150) NULL,
+	[OperadorResp4] [nvarchar](150) NULL,
+	[ParametroPergunta] [nvarchar](max) NULL,
+	[ParametroResp1] [nvarchar](300) NULL,
+	[ParametroResp2] [nvarchar](300) NULL,
+	[ParametroResp3] [nvarchar](300) NULL,
+	[ParametroResp4] [nvarchar](300) NULL,
+	[Obs1] [nvarchar](50) NULL,
+	[Obs2] [nvarchar](50) NULL,
+	[Obs3] [nvarchar](50) NULL,
+	[Obs4] [nvarchar](50) NULL,
 
-	FOREIGN KEY(IdEnunciado) REFERENCES pmate.TreinoEnunciado(id), 
+	PRIMARY Key(IdEnunciadoEquipa, IdNivel),
+	FOREIGN KEY(IdEnunciadoEquipa) REFERENCES pmate.TreinoEnunciado(id), 
 );
 
-CREATE TABLE pmate.TreinoEnunNivelUserResp(  -- FALTAM AQUI ATTRS!!!!!!!!!!!!!!!!
-	id int IDENTITY(1,1) PRIMARY KEY,
-	IdEnunciadoEquipaNivel int,
+CREATE TABLE pmate.TreinoEnunNivelUserResp(  
+	[IdEnunciadoEquipa] [int] NOT NULL,
+	[IdNivel] [int] NOT NULL,
+	[Tentativa] [int] NOT NULL,
+	[RespDada1] [int] NULL,
+	[RespDada2] [int] NOT NULL,
+	[RespDada3] [int] NULL,
+	[RespDada4] [int] NULL,
+	[tempo] [char](10) NOT NULL,
+	[Data] [datetime] NULL
 
-	FOREIGN KEY(IdEnunciadoEquipaNivel) REFERENCES pmate.TreinoEnunNivel(id),
+	PRIMARY Key(IdEnunciadoEquipa, IdNivel, Tentativa),
+	FOREIGN KEY(IdEnunciadoEquipa,IdNivel) REFERENCES pmate.TreinoEnunNivel(IdEnunciadoEquipa, IdNivel),
 );
 
 
