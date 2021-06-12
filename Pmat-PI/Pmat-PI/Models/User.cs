@@ -15,5 +15,20 @@ namespace Pmat_PI.Models
         [Required]
         public int Age { get; set; }
 
+        [MaxLength(100, ErrorMessage = "Morada can't exceed 80 chars")]
+        public string Morada { get; set; }
+
+        public int sexo { get; set; }
+            
+        public DateTime? DataRegisto { get; set; }
+
+        [MaxLength(4, ErrorMessage = "Codigo Postal first half can't exceed 4 chars")]
+        public string CodPostal { get; set; }
+
+        [MaxLength(3, ErrorMessage = "Codigo Postal second half can't exceed 3 chars")]
+        public string ExtensaoCodPostal { get; set; }
+
+        [MaxLength(30, ErrorMessage = "Localidade can't exceed 30 chars")]
+        public string Localidade { get; set; }
     }
 }

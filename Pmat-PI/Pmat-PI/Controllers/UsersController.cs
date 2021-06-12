@@ -134,8 +134,8 @@ namespace Identity.Controllers
                     ViewData["EscolaNome"] = "N/A";
                 }
 
-                
-                
+                var escolas_historico = _context.UserEscolaHistoricos.Where(u => u.IdUser.Equals(id)).Include(h=>h.IdEscolaNavigation).OrderBy(a=> a.AnoLetivo).ThenBy(d=>d.Data);
+                ViewBag.historico = escolas_historico;
                 return View(user);
             }
             else
@@ -143,7 +143,8 @@ namespace Identity.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateUser(string id, string email,string username, string password, string name, string age)
+        public async Task<IActionResult> UpdateUser(string id, string email,string username, string password,
+            string name, string age, string morada, int sexo,string codpostal, string extensaocodpostal,string localidade)
         {
             User user = await userManager.FindByIdAsync(id);
             if (user != null)
@@ -164,7 +165,6 @@ namespace Identity.Controllers
 
                 if (!string.IsNullOrEmpty(password))
                     user.PasswordHash = passwordHasher.HashPassword(user, password);
-            
 
                 if (!string.IsNullOrEmpty(name))
                     user.Name = name;
@@ -176,9 +176,23 @@ namespace Identity.Controllers
                 else
                     ModelState.AddModelError("", "A idade não pode estar vazia.");
 
+                if (!string.IsNullOrEmpty(morada))
+                    user.Morada = morada;
 
-                if (!string.IsNullOrEmpty(email))
-                {
+                if (sexo!= null)
+                    user.sexo = sexo;
+
+                if (!string.IsNullOrEmpty(codpostal))
+                    user.CodPostal = codpostal;
+
+                if (!string.IsNullOrEmpty(extensaocodpostal))
+                    user.ExtensaoCodPostal = extensaocodpostal;
+
+                if (!string.IsNullOrEmpty(localidade))
+                    user.Localidade = localidade;
+
+
+                if(ModelState.IsValid){
                     IdentityResult result = await userManager.UpdateAsync(user);
                     if (result.Succeeded)
                         return RedirectToAction("Index");
@@ -188,6 +202,21 @@ namespace Identity.Controllers
             }
             else
                 ModelState.AddModelError("", "Utilizador não encontrado");
+
+
+            var userEscola = await _context.UserEscolas.Include(u => u.IdEscolaNavigation).FirstOrDefaultAsync(u => u.IdUser == id);
+            if (userEscola != null)
+            {
+                ViewData["EscolaID"] = userEscola.IdEscola;
+                ViewData["EscolaNome"] = userEscola.IdEscolaNavigation.NomeEscola;
+            }
+            else
+            {
+                ViewData["EscolaID"] = "N/A";
+                ViewData["EscolaNome"] = "N/A";
+            }
+
+            Console.WriteLine("Returned with view(user)");
             return View(user);
         }
 

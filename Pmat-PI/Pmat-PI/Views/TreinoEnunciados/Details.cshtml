@@ -1,0 +1,59 @@
+﻿@model Pmat_PI.Models.TreinoEnunciado
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Data)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Data)
+        </dd>
+        <dt class="col-sm-2">
+            Estado
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt class="col-sm-2">
+            Ultimo Nivel
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UltimoNivel)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Tempo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Tempo)
+        </dd>
+        <dt class="col-sm-2">
+            Id Equipa
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdUser)
+        </dd>
+        <dt class="col-sm-2">
+            Prova
+        </dt>
+        <dd class="col-sm-10">
+            Id: @Html.DisplayFor(model => model.IdTreino) | @Html.DisplayFor(model => model.IdTreinoNavigation.NomeProva)
+        </dd>
+    </dl>
+</div>
+<div>
+    <dl class="row">
+        <dt>
+            <button onclick="history.go(-1); return false;" class="btn btn-outline-primary"> Voltar à lista de enunciados </button>
+        </dt>
+        <dt style="padding-left:1%">
+            <button class="btn btn-success">Recuperar Estado</button>
+        </dt>
+    </dl>
+</div>

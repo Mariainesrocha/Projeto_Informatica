@@ -10,8 +10,8 @@ using Pmat_PI.Data;
 namespace Pmat_PI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210610121435_GoGo")]
-    partial class GoGo
+    [Migration("20210611185145_GOOOOOOOOOOOOOOOOOO")]
+    partial class GOOOOOOOOOOOOOOOOOO
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -163,9 +163,15 @@ namespace Pmat_PI.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
+                    b.Property<string>("CodPostal")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DataRegisto")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -174,11 +180,21 @@ namespace Pmat_PI.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ExtensaoCodPostal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Localidade")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Morada")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -211,6 +227,9 @@ namespace Pmat_PI.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<int>("sexo")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

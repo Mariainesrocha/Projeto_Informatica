@@ -10,6 +10,11 @@ FROM dbo.OldTable
 SET IDENTITY_INSERT pmate.NewTable OFF
 COMMIT;
 */
+
+
+ -- INDEXES 
+ CREATE NONCLUSTERED INDEX IX_User_Username ON dbo.AspNetUsers (Name)  WITH (FILLFACTOR = 85, PAD_INDEX = ON);
+ 
 ------------------------------------ LOCATIONS RELATED ------------------------------
 SET IDENTITY_INSERT pmate.Pais 
 ON INSERT INTO pmate.Pais(id,nome) VALUES(0,'Anonymous') 
@@ -45,9 +50,6 @@ INSERT INTO pmate.Pais (id,nome) VALUES (4,'Outros Países');
 SET IDENTITY_INSERT pmate.Pais OFF
 COMMIT;
 
-select * from  [pmate-Equamat2000].dbo.tblpais
-select * FROM pmate.Pais order by id
--- select * FROM [pmate-Equamat2000].[pmate].[Pais] order by id
 GO
 
 
@@ -71,8 +73,6 @@ WHERE id > 20;
 SET IDENTITY_INSERT pmate.Distrito OFF
 COMMIT;
 
-select * FROM [pmate-Equamat2000].dbo.tbldistritos
-select * FROM pmate.Distrito order by id
 GO
 
 
@@ -196,8 +196,8 @@ GO
 -- Migrate Users from tblUsers to AspNetUsers --
 BEGIN TRANSACTION;
 
-INSERT INTO [pmate2-demo].dbo.AspNetUsers(Id,UserName,PasswordHash, EmailConfirmed, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, Age, Name) 
-SELECT IdUser,Login, [pmate2-demo].dbo.encodebase64(HASHBYTES('SHA2_512',cast(Password as varchar(max)))), 0, 0, 0, 0, 0, 0, Left(Nome,80)
+INSERT INTO [pmate2-demo].dbo.AspNetUsers(Id,UserName,PasswordHash, EmailConfirmed, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, Age, Name, Morada, sexo, DataRegisto, CodPostal,ExtensaoCodPostal, Localidade ) 
+SELECT IdUser,Login, [pmate2-demo].dbo.encodebase64(HASHBYTES('SHA2_512',cast(Password as varchar(max)))), 0, 0, 0, 0, 0, 0, Left(Nome,80),Morada,idsexo,Data,CodPostal,ExtensaoCodPostal,Localidade
 FROM [pmate-Equamat2000].dbo.tblUsers
 
 COMMIT;
@@ -206,7 +206,7 @@ COMMIT;
 
 -- Fix AspNetUsers after Migration --
 Update [pmate2-demo].dbo.AspNetUsers
-Set EmailConfirmed=1, NormalizedUserName = Upper(UserName), SecurityStamp = 'abc'
+Set EmailConfirmed=1, NormalizedUserName = Upper(UserName), SecurityStamp = 'nvjowvv982h298tv92vg9hgu2hg9u2g082hioGNBQPYGQ79VN298Y289N28YF982Y9YT02TGBIGBBOUW2G'
 --------------------------
 /*-----------
 
@@ -281,7 +281,7 @@ COMMIT;
 /*
 -- After Doing External Authentication 
 INSERT INTO [pmate2-demo].dbo.AspNetUserRoles(Userid,RoleId) 
-VALUES ((Select Id from [pmate2-demo].dbo.AspNetUsers where Email='phantomuser@ua.pt'),(Select Id from [pmate2-demo].dbo.AspNetRoles where NormalizedName='ADMIN'))
+VALUES ((Select Id from [pmate2-demo].dbo.AspNetUsers where Email='fabiospar99@gmail.com'),(Select Id from [pmate2-demo].dbo.AspNetRoles where NormalizedName='ADMIN'))
 ------------------------------------------------------------------------
 */
 
@@ -543,7 +543,7 @@ SET IDENTITY_INSERT pmate.Equipa ON
 
 INSERT INTO pmate.Equipa(id,Nome,DataCriacao,IdEscola)
 SELECT IdEquipa,NomeEquipa,dataI,IdEscola
-FROM [pmate-Equamat2000].dbo.tblEquipas
+FROM [pmate-Equamat2000].dbo.tblequipas
 join pmate.Escola on IdEscola=pmate.Escola.id -- Avoid deleted schools
 
 SET IDENTITY_INSERT pmate.Equipa OFF
