@@ -47,13 +47,76 @@
         </dd>
     </dl>
 </div>
+
 <div>
     <dl class="row">
         <dt>
             <button onclick="history.go(-1); return false;" class="btn btn-outline-primary"> Voltar à lista de enunciados </button>
         </dt>
         <dt style="padding-left:1%">
-            <button class="btn btn-success">Recuperar Estado</button>
+            @if (ViewBag.but)
+            {
+            <a asp-action="Recover" asp-route-id="@Model.Id" class="btn btn-success">Recuperar Estado</a>
+            }
         </dt>
     </dl>
+</div>
+
+<div>
+    <h2>Respostas do Utilizador</h2>
+    @if (ViewBag.userResps != null)
+    {
+        <hr />
+        <table class="table table-sm table-bordered text-md-center">
+            <tbody>
+
+            <thead>
+                <tr>
+                    <th>
+                        Id Nivel
+                    </th>
+                    <th>
+                        Tentativa
+                    </th>
+                    <th>
+                        RespDada1
+                    </th>
+                    <th>
+                        RespDada2
+                    </th>
+                    <th>
+                        RespDada3
+                    </th>
+                    <th>
+                        RespDada4
+                    </th>
+                    <th>
+                        Tempo
+                    </th>
+                    <th>
+                        Data
+                    </th>
+                </tr>
+            </thead>
+
+            @foreach (TreinoEnunNivelUserResp resp in ViewBag.userResps)
+            {
+                <tr>
+                    <td> @resp.IdNivel </td>
+                    <td> @resp.Tentativa </td>
+                    <td> @resp.RespDada1 </td>
+                    <td> @resp.RespDada2 </td>
+                    <td> @resp.RespDada3 </td>
+                    <td> @resp.RespDada4 </td>
+                    <td> @resp.Tempo </td>
+                    <td> @resp.Data </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Não há respostas para este enunciado</p>
+    }
 </div>

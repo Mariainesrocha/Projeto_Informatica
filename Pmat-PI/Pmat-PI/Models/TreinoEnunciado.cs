@@ -7,6 +7,11 @@ namespace Pmat_PI.Models
 {
     public partial class TreinoEnunciado
     {
+        public TreinoEnunciado()
+        {
+            TreinoEnunNivels = new HashSet<TreinoEnunNivel>();
+        }
+
         public int Id { get; set; }
         public string IdUser { get; set; }
         public int IdTreino { get; set; }
@@ -17,5 +22,6 @@ namespace Pmat_PI.Models
 
         public virtual Treino IdTreinoNavigation { get; set; }
         public virtual AspNetUser IdUserNavigation { get; set; }
+        public virtual ICollection<TreinoEnunNivel> TreinoEnunNivels { get; set; }
     }
 }

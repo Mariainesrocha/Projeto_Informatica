@@ -273,6 +273,7 @@ else
     <table class="table table-sm table-bordered  table-hover text-md-center">
         <thead>
             <tr>
+                <th style="display: table-cell; vertical-align: middle;"> #</th>
                 <th style="display: table-cell; vertical-align: middle;"> ID enunciado</th>
                 <th style="display: table-cell; vertical-align: middle;"> ID Equipa</th>
                 <th style="display: table-cell; vertical-align: middle;"> Alunos </th>
@@ -281,16 +282,18 @@ else
             </tr>
         </thead>
         <tbody>
-
+            @{
+                int rown = @ViewBag.pagesize * @Model.pageNumber - @ViewBag.pagesize + 1;
+            }
             @foreach (var item in Model.enunciados)
             {
                 <tr>
+                    <td> @rown </td>
                     <td style="width: 10%">
-                        <a style="margin-right:2%" 
+                        <a style="margin-right:2%"
                            asp-controller="ProvaEquipaEnunciados"
                            asp-action="Details"
-                           asp-route-id="@item.Id"
-                           >
+                           asp-route-id="@item.Id">
                             @Html.DisplayFor(modelItem => item.Id)
                         </a>
                     </td>
@@ -308,6 +311,10 @@ else
                         @Html.DisplayFor(modelItem => item.tempo)
                     </td>
                 </tr>
+               
+                 rown += 1;
+                
+
             }
         </tbody>
     </table>

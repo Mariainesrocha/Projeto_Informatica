@@ -18,6 +18,8 @@ namespace Pmat_PI.Models
         }
 
         public string Id { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
         public string UserName { get; set; }
         public string NormalizedUserName { get; set; }
         public string Email { get; set; }
@@ -32,8 +34,12 @@ namespace Pmat_PI.Models
         public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
-        public int Age { get; set; }
-        public string Name { get; set; }
+        public string CodPostal { get; set; }
+        public DateTime? DataRegisto { get; set; }
+        public string ExtensaoCodPostal { get; set; }
+        public string Localidade { get; set; }
+        public string Morada { get; set; }
+        public int Sexo { get; set; }
 
         public virtual ICollection<EquipaAluno> EquipaAlunos { get; set; }
         public virtual ICollection<Prova> Provas { get; set; }
@@ -42,5 +48,4 @@ namespace Pmat_PI.Models
         public virtual ICollection<UserEscolaHistorico> UserEscolaHistoricos { get; set; }
         public virtual ICollection<UserEscola> UserEscolas { get; set; }
     }
-
 }

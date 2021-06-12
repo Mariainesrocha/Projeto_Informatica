@@ -25,7 +25,7 @@ namespace Pmat_PI
             ViewData["searchEnunciado"] = searchEnunciado;
             ViewData["searchUser"] = searchUser;
 
-            IQueryable<TreinoEnunciado> enunciados = _context.TreinoEnunciados.Include(p => p.IdUserNavigation).Include(p => p.IdTreinoNavigation);
+            IQueryable<TreinoEnunciado> enunciados = _context.TreinoEnunciados.Include(p => p.IdUserNavigation).Include(p => p.IdTreinoNavigation).OrderBy(e=>e.Id);
 
             if (!String.IsNullOrEmpty(searchTreino))
             {
@@ -48,7 +48,7 @@ namespace Pmat_PI
         }
 
         // GET: TreinoEnunciados/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == null)
             {
@@ -59,6 +59,25 @@ namespace Pmat_PI
                 .Include(t => t.IdTreinoNavigation)
                 .Include(t => t.IdUserNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var userResps = _context.TreinoEnunNivelUserResps.Where(r => r.IdEnunciadoEquipa == id).OrderByDescending(r => r.IdNivel).ThenByDescending(r => r.Tentativa).ToList();
+            if (userResps.Count() == 0)
+            {
+                ViewBag.userResps = null;
+            }
+            else
+            {
+                ViewBag.userResps = userResps;
+            }
+
+            if (userResps.Count() < 2)
+            {
+                ViewBag.but = false;
+            }
+            else {
+                ViewBag.but = true;
+            }
+
             if (treinoEnunciado == null)
             {
                 return NotFound();
@@ -86,6 +105,27 @@ namespace Pmat_PI
             }
 
             return View(treinoEnunciado);
+        }
+
+
+        public async Task<IActionResult> Recover(int id) {
+            var treinoEnunciado = await _context.TreinoEnunciados.FirstOrDefaultAsync(m => m.Id == id);
+            var userResps = _context.TreinoEnunNivelUserResps.Where(r => r.IdEnunciadoEquipa == id).OrderByDescending(r => r.IdNivel).ThenByDescending(r => r.Tentativa);
+            var userResp1 = userResps.FirstOrDefault();
+            var userResp2 = userResps.Skip(1).FirstOrDefault();
+            Console.WriteLine("Piggy:" + userResps.ToList().Count());
+            //Apagar a ultima reposta;
+            //Atualizar o ultimo nivel e o tempo do enunciado;
+            //Meter o status do enunciado a 1;
+            ViewBag.but = true;
+            _context.Remove(userResp1);
+            treinoEnunciado.Tempo = userResp2.Tempo;
+            treinoEnunciado.UltimoNivel = userResp2.IdNivel;
+            treinoEnunciado.Status = 1;
+            _context.Update(treinoEnunciado);
+            _context.SaveChanges();
+            
+            return RedirectToAction("Details", new { id = id });
         }
 
 

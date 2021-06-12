@@ -88,13 +88,14 @@ namespace Pmat_PI
 
             // Get Enunciados
             int pageSize = 20;
-            var enunciados_alunos = (from e in _context.ProvaEquipaEnunciados.Where(e => e.IdProva.Equals(id)).OrderByDescending(e => e.UltimoNivel)
+            var enunciados_alunos = (from e in _context.ProvaEquipaEnunciados.Where(e => e.IdProva.Equals(id)).OrderByDescending(e => e.UltimoNivel).ThenByDescending(e=>e.Tempo)
                                      join aluno in _context.EquipaAlunos.Include(aluno => aluno.IdUserNavigation) on e.IdEquipa equals aluno.IdEquipa
                                      select new Join_EnunciadoAlunos(e.Id, e.IdEquipa, e.UltimoNivel, e.Tempo, aluno.IdUserNavigation.Id, aluno.IdUserNavigation.Name))
                              .Skip(pageSize * (pageNumber ?? 1 - 1))
                              .Take(pageSize)
                              .ToList();
 
+            ViewBag.pagesize = pageSize;
             ViewModel_ProvaDetails prova_details = new ViewModel_ProvaDetails();
             prova_details.prova = prova;
             prova_details.enunciados = enunciados_alunos;
@@ -470,7 +471,7 @@ namespace Pmat_PI
             List<ProvaEquipaEnunciado> provaEnunciados = 
                 _context.ProvaEquipaEnunciados.Include(e=> e.IdEquipaNavigation.IdEscolaNavigation.IdconcelhoNavigation.DistritoNavigation)
                 .Where(e => e.IdProva.Equals(prova.Id))
-                .OrderByDescending(u => u.UltimoNivel).ThenBy(t => t.Tempo).ToList();
+                .OrderByDescending(u => u.UltimoNivel).ThenByDescending(t => t.Tempo).ToList();
                 
             int counter = 0;
             foreach (ProvaEquipaEnunciado enunciado in provaEnunciados)

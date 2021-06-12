@@ -9,12 +9,12 @@ namespace Pmat_PI.Models
     {
         public Prova()
         {
-            SubProvaIdProvaFilhoNavigations = new HashSet<SubProva>();
-            SubProvaIdProvaPaiNavigations = new HashSet<SubProva>();
             EquipaProvas = new HashSet<EquipaProva>();
             ProvaEquipaEnunciados = new HashSet<ProvaEquipaEnunciado>();
             ProvaEscolas = new HashSet<ProvaEscola>();
             ProvaModelos = new HashSet<ProvaModelo>();
+            SubProvaIdProvaFilhoNavigations = new HashSet<SubProva>();
+            SubProvaIdProvaPaiNavigations = new HashSet<SubProva>();
         }
 
         public int Id { get; set; }
@@ -49,7 +49,6 @@ namespace Pmat_PI.Models
         public virtual ICollection<ProvaEquipaEnunciado> ProvaEquipaEnunciados { get; set; }
         public virtual ICollection<ProvaEscola> ProvaEscolas { get; set; }
         public virtual ICollection<ProvaModelo> ProvaModelos { get; set; }
-
         public virtual ICollection<SubProva> SubProvaIdProvaFilhoNavigations { get; set; }
         public virtual ICollection<SubProva> SubProvaIdProvaPaiNavigations { get; set; }
     }

@@ -3,7 +3,7 @@ GO
 
 
 -- Command to add tables to Net Core App's Context
--- Scaffold-DbContext "Server=localhost;Database=pmate2-demo;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -context 'ApplicationDbContext' -Tables AspNetUsers,AnoLetivo,Competicao,Concelho,Distrito,Equipa,EquipaAlunos,EquipaProva,Escola,Freguesia,Modelo,ModeloNovo,ModeloVelho,Pais,Prova,ProvaEquipaEnunciado,ProvaEscolas,ProvaModelos,TipoEscola,Treino,TreinoEnunciado,TreinoModelos,UserContacto,UserContactoTipo  -force
+-- Scaffold-DbContext "Server=localhost;Database=pmate2-demo;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -context 'ApplicationDbContext' -Tables AspNetUsers,AnoLetivo,Competicao,Concelho,Distrito,Equipa,EquipaAlunos,EquipaProva,Escola,Freguesia,Modelo,ModeloNovo,ModeloVelho,Pais,Prova,ProvaEquipaEnunciado,ProvaEscolas,ProvaModelos,TipoEscola,Treino,TreinoEnunciado,TreinoModelos,UserContacto,UserContactoTipo,TreinoEnunNivel,ProvaEqEnunNivel,TreinoEnunNivelUserResp,ProvaEqEnunNivelUserResp,AnoEscolar,Projeto,UserEscola,CicloEnsino, SubProvas,  UserEscolaHistorico -force
 -- 
 
 
