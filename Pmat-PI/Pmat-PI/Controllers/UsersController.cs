@@ -134,8 +134,8 @@ namespace Identity.Controllers
                     ViewData["EscolaNome"] = "N/A";
                 }
 
-                
-                
+                var escolas_historico = _context.UserEscolaHistoricos.Where(u => u.IdUser.Equals(id)).Include(h=>h.IdEscolaNavigation).OrderBy(a=> a.AnoLetivo).ThenBy(d=>d.Data);
+                ViewBag.historico = escolas_historico;
                 return View(user);
             }
             else
@@ -146,8 +146,6 @@ namespace Identity.Controllers
         public async Task<IActionResult> UpdateUser(string id, string email,string username, string password,
             string name, string age, string morada, int sexo,string codpostal, string extensaocodpostal,string localidade)
         {
-            Console.WriteLine("aaaaaaaaaaaaaaaaaaaaaaaaaaa:" + morada);
-
             User user = await userManager.FindByIdAsync(id);
             if (user != null)
             {
@@ -173,6 +171,11 @@ namespace Identity.Controllers
                 else
                     ModelState.AddModelError("", "O nome não pode estar vazio.");
 
+                if (!string.IsNullOrEmpty(age))
+                    user.Age = int.Parse(age);
+                else
+                    ModelState.AddModelError("", "A idade não pode estar vazia.");
+
                 if (!string.IsNullOrEmpty(morada))
                     user.Morada = morada;
 
@@ -188,20 +191,14 @@ namespace Identity.Controllers
                 if (!string.IsNullOrEmpty(localidade))
                     user.Localidade = localidade;
 
-                if (!string.IsNullOrEmpty(age))
-                    user.Age = int.Parse(age);
-                else
-                    ModelState.AddModelError("", "A idade não pode estar vazia.");
 
-
-                IdentityResult result = await userManager.UpdateAsync(user);
-                if (result.Succeeded)
-                    return RedirectToAction("Index");
-                else
-                    Errors(result);
-             
-
-                
+                if(ModelState.IsValid){
+                    IdentityResult result = await userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                        return RedirectToAction("Index");
+                    else
+                        Errors(result);
+                }
             }
             else
                 ModelState.AddModelError("", "Utilizador não encontrado");
@@ -219,6 +216,7 @@ namespace Identity.Controllers
                 ViewData["EscolaNome"] = "N/A";
             }
 
+            Console.WriteLine("Returned with view(user)");
             return View(user);
         }
 

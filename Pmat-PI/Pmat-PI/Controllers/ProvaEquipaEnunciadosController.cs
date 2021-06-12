@@ -28,7 +28,7 @@ namespace Pmat_PI
             IQueryable<ProvaEquipaEnunciado> enunciados = _context.ProvaEquipaEnunciados.Include(p => p.IdEquipaNavigation).Include(p => p.IdProvaNavigation);
 
             if (!String.IsNullOrEmpty(searchProva))
-            {
+            {   
                 enunciados = enunciados.Where(e => e.IdProva.ToString().Equals(searchProva));
             }
 

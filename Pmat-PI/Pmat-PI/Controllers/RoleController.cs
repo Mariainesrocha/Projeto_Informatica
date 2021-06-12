@@ -26,8 +26,7 @@ namespace Pmat_PI.Identity.Controllers
 
         private void Errors(IdentityResult result)
         {
-            foreach (IdentityError error in result.Errors)
-                ModelState.AddModelError("", error.Description);
+                ModelState.AddModelError("", result.Errors.First().Description);
         }
 
         public IActionResult Create() => View();
@@ -36,7 +35,6 @@ namespace Pmat_PI.Identity.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([Required] string name)
         {
-            Console.WriteLine("INSIDE CREATE ROLE!");
             if (ModelState.IsValid)
             {
                 IdentityResult result = await roleManager.CreateAsync(new IdentityRole(name));
@@ -45,7 +43,7 @@ namespace Pmat_PI.Identity.Controllers
                 else
                     Errors(result);
             }
-            return View(name);
+            return View();
         }
 
         // DELETE ROLE 

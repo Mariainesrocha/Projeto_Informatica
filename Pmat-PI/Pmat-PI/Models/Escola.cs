@@ -25,7 +25,7 @@ namespace Pmat_PI.Models
         public string ExtensaoCodPostal { get; set; }
         public string Localidade { get; set; }
 
-        [RegularExpression("^[0 - 9] *$", ErrorMessage="Número de telefone inválido")]
+        // [RegularExpression("^[0 - 9] *$", ErrorMessage="Número de telefone inválido")]
         [StringLength(9, MinimumLength = 9)]
         public string Telefone { get; set; }
 
