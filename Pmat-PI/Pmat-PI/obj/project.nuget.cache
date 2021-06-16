@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "Ru0Jin6tIgej84Y6TBBeSeyS1ohUt5TAZjiQ4tx4AEV1S62Et30lzC76QhdZcyR6M4BuHpd1gEIMnO1cOEMcsA==",
+  "dgSpecHash": "cHZtecA7W9Rl7pCNx9PQGzHzYSMXEWzeiGUaWghACX2FgURlYpAPqUrhrGJpkcsrNn8hglIdGYIgJ241GSsQlg==",
   "success": true,
   "projectFilePath": "C:\\Pedro Souto\\repos\\Projeto_Informatica\\Pmat-PI\\Pmat-PI\\Pmat-PI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\blued\\.nuget\\packages\\bootstrap\\3.0.0\\bootstrap.3.0.0.nupkg.sha512",
     "C:\\Users\\blued\\.nuget\\packages\\bootstrap-select\\1.13.18\\bootstrap-select.1.13.18.nupkg.sha512",
+    "C:\\Users\\blued\\.nuget\\packages\\dataannotationsextensions\\5.0.1.27\\dataannotationsextensions.5.0.1.27.nupkg.sha512",
     "C:\\Users\\blued\\.nuget\\packages\\dotnetzip\\1.15.0\\dotnetzip.1.15.0.nupkg.sha512",
     "C:\\Users\\blued\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\blued\\.nuget\\packages\\jquery\\1.9.1\\jquery.1.9.1.nupkg.sha512",
@@ -179,6 +180,16 @@
     "C:\\Users\\blued\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
   ],
   "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'DataAnnotationsExtensions 5.0.1.27' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0'. This package may not be fully compatible with your project.",
+      "libraryId": "DataAnnotationsExtensions",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
     {
       "code": "NU1701",
       "level": "Warning",

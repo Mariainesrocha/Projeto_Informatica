@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -17,14 +18,21 @@ namespace Pmat_PI.Models
             SubProvaIdProvaPaiNavigations = new HashSet<SubProva>();
         }
 
+        [Required]
         public int Id { get; set; }
         public string IdAuthor { get; set; }
         public int? IdCompeticao { get; set; }
+
+        [Required]
+        [MinLength(3, ErrorMessage = "Nome da prova deve ter pelo menos 3 caracteres")]
+        [StringLength(60, ErrorMessage = "Nome da prova não pode exceder 60 caracteres")]
         public string NomeProva { get; set; }
         public DateTime? DataCriacao { get; set; }
         public int? MaxEscolas { get; set; }
         public int? MaxTentJogo { get; set; }
         public int? TempoTotalJogo { get; set; }
+
+        [Required]
         public int NumNiveis { get; set; }
         public int? VidasPorNivel { get; set; }
         public int? NumElemsEquipa { get; set; }
@@ -36,8 +44,14 @@ namespace Pmat_PI.Models
         public DateTime? InicioInscricaoEquipas { get; set; }
         public DateTime? FimInscricaoEquipas { get; set; }
         public DateTime? FimProva { get; set; }
+
+        [StringLength(25, ErrorMessage = "Nome da prova não pode exceder 25 caracteres")]
         public string Estilo { get; set; }
+
+        [Url(ErrorMessage = "URL inválido. Exemplo: http://www.exemplo.com")]
         public string Url { get; set; }
+
+        [Required]
         public bool TreinoVisivel { get; set; }
         public int? RefIdCicloEnsino { get; set; }
         public int? Plataforma { get; set; }
