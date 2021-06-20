@@ -12,9 +12,11 @@ using MailKit.Security;
 using Microsoft.AspNetCore.Identity;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pmat_PI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class EmailController : Controller
     {
         private UserManager<User> userManager;

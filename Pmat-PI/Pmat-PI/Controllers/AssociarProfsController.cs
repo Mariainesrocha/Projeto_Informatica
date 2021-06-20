@@ -124,7 +124,17 @@ namespace Pmat_PI.Views
                 _context.Add(userEscola);
                 await _context.SaveChangesAsync();
 
-                saveHistory(userEscola);
+                UserEscolaHistorico historico = new UserEscolaHistorico();
+                historico.IdUser = userEscola.IdUser;
+                historico.IdEscola = userEscola.IdEscola;
+                historico.IdResponsavel = userEscola.IdResponsavel;
+                historico.IdAnoEscolar = userEscola.IdAnoEscolar;
+                historico.AnoLetivo = userEscola.AnoLetivo;
+                historico.IdProjeto = userEscola.IdProjeto;
+                historico.Data = userEscola.Data;
+                _context.Add(historico);
+                await _context.SaveChangesAsync();
+        
 
                 //It's a teacher
                 if (String.IsNullOrEmpty(aluno))
@@ -157,19 +167,7 @@ namespace Pmat_PI.Views
             return View(userEscola);
         }
 
-        public async void saveHistory(UserEscola userEscola) {
-            UserEscolaHistorico historico = new UserEscolaHistorico();
-            historico.IdUser = userEscola.IdUser;
-            historico.IdEscola = userEscola.IdEscola;
-            historico.IdResponsavel = userEscola.IdResponsavel;
-            historico.IdAnoEscolar = userEscola.IdAnoEscolar;
-            historico.AnoLetivo = userEscola.AnoLetivo;
-            historico.IdProjeto = userEscola.IdProjeto;
-            historico.Data = userEscola.Data;
-            _context.Add(historico);
-            await _context.SaveChangesAsync();
-        }
-
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateProj(string descricao,string URL)
