@@ -1,373 +1,447 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-    <link href="assets/index.css" rel="stylesheet">
-    <link rel="icon" href="assets/imgs/pmat_logo.png" type="image/png" sizes="160x160">
-    <script src="https://kit.fontawesome.com/1f7ac707cd.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
-    <title>PmatE</title>
+  <title>PmatE Project</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/pmat_logo2.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
 </head>
+
 <body>
-    <div id="wp">
-        <nav id="my-nav" class=" sticky-top navbar navbar-expand-lg navbar-light bg-light py-0 bg-transparent">
-            <div class="container-fluid">
-                <div class="navbar-header d-flex justify-content-start">
-                    <a class="navbar-brand" href="#"><img src="assets/imgs/pmat_logo.png" width="30%" /></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </div>
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top header-transparent">
+    <div class="container d-flex align-items-center justify-content-between">
 
-                <div id="navbar" class="collapse navbar-collapse d-flex justify-content-end">
-                    <ul id="navItems" class="nav navbar-nav navbar-right">
-                        <li class="nav-item">
-                            <a class="nav-link" id="HomeNav" aria-current="page" href="#aboutHomeStart">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="TechNav" href="#aboutTechStart">Technologies</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="AboutNav" href="#aboutAboutStart">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="ResourcesNav" href="#aboutResourcesStart">Resources</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="FAQNav" href="#aboutFAQStart">FAQ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="ContactNav" href="#aboutContactStart">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+      <div class="logo">
+        <a href="index.html"><img src="assets/img/pmat_logo2.png" alt="PmatE" class="img-fluid"></a>
+      </div>
 
-        <a id="aboutHomeStart" class="aboutAnchorStart"></a>
-        <section id="Home">
-            <div class="jumbotron">
-                <img src="assets/imgs/pmat_logo_cut.png" />
-                <h1 class="display-4">BackOffice</h1>
-                <h2>Administration Website</h2>
-                <p class="lead">System for PmatE exams and results managment</p>
-                <a><button type="button" class="btn btn-primary"><i class="fas fa-globe fa-1x"> To the website</i></button></a>
-                <br>
-            </div>
-            
-        </section>
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+          <li><a class="nav-link scrollto" href="#about">About</a></li>
+          <li><a class="nav-link scrollto" href="#services">Technologies</a></li>
+          <li><a class="nav-link scrollto" href="#portfolio">Resources</a></li>
+          <li><a class="nav-link scrollto" href="#demo">Demo</a></li>
+          <li><a class="nav-link scrollto" href="#team">Team</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
 
-        <a id="aboutTechStart" class="aboutAnchorStart"></a>
-        <section id="Tech">
-            <h1 class="text-title">Technologies</h1>
-            <div class="row">
-                <div class="col-md-4 col-sm-6 col-xs-12">
-                    <div class="card">
-                        <img src="assets/imgs/image.png" class="card-img-top" alt="...">
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 col-xs-12">
-                    <div class="card">
-                        <img src="assets/imgs/image2.png" class="card-img-top" alt="...">
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 col-xs-12">
-                    <div class="card">
-                        <img src="assets/imgs/image3.png" class="card-img-top" alt="...">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2 hidden-sm"></div>
-                <div class="col-md-4 col-sm-6 col-xs-12">
-                    <div class="card">
-                        <img src="assets/imgs/image4.png" class="card-img-top" alt="...">
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 col-xs-12">
-                    <div class="card">
-                        <img src="assets/imgs/image5.png" class="card-img-top" alt="...">
-                    </div>
-                </div>
-                <div class="col-md-2 hidden-sm"></div>
-            </div>
-        </section>
-        
-
-
-        <a id="aboutAboutStart" class="aboutAnchorStart"></a>
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="text-title">About us</h1>
-            </div>
-        </div>
-        <section id="About">
-            <div class="row">
-                <div class="AboutCol col-md-4 col-sm-6 col-xs-12">
-                    <div class="AboutCol">
-                        <i class="fas fa-child fa-3x"></i>
-                        <span class="AboutColCounter">5</span>
-                        <span class="AboutColLabel">Members</span>
-                    </div>
-                </div>
-                <div class="AboutCol col-md-4 col-sm-6 col-xs-12">
-                    <div class="AboutCol">
-                        <i class="fab fa-cloudscale fa-3x"></i>
-                        <span class="AboutColCounter">10</span>
-                        <span class="AboutColLabel">Working hours</span>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 col-xs-12">
-                    <div class="AboutCol">
-                        <i class="far fa-calendar-alt fa-3x"></i>
-                        <span class="AboutColCounter" id="AboutDaysLeft">Calculating...</span>
-                        <span class="AboutColLabel">Days Left</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!--  FABIO / MARIA  -->
-               
-
-        <a id="aboutResourcesStart" class="aboutAnchorStart"></a>
-        <section id="Resources">
-            <div class="row">
-                <div class="col-md-12 section-heading text-center">
-                    <h1 style="text-decoration: underline; font-weight: bold; color: white">Resources</h1>  
-                </div>
-            </div>
-            
-            <div class="row row-bottom-padded-sm " style="padding-bottom: 20px" >
-            
-                <div class="col-md-4 col-sm-6 col-xxs-12" id="rounded">
-                    <a href=" https://github.com/PedroMGSouto/Projeto_Informatica" target="_blank" style="text-decoration: none">
-                        <div class="rcard">
-                            <img src="assets/imgs/github-mark.png" alt="repo" style="width: 100%; border-top-left-radius: 25px; border-top-right-radius: 25px;">
-                            <div class="rcontainer">
-                                <h4><b>Web Application</b></h4>
-                                <p style="color: whitesmoke;">Github Project Repository</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                
-                <div class="col-md-4 col-sm-6 col-xxs-12" id="rounded">
-                    <a href="https://github.com/PedroMGSouto/Projeto_Informatica/tree/main/Docs/PowerPoints" target="_blank" style="text-decoration: none">
-                        <div class="rcard">
-                            <img src="assets/imgs/ppt-img.jpg" alt="PPt Image" style="width: 100%; border-top-left-radius: 25px; border-top-right-radius: 25px;">
-                            <div class="rcontainer">
-                                <h4><b>Presentations</b></h4>
-                                <p style="color: whitesmoke;">PowerPoints</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                    <div class="col-md-4 col-sm-6 col-xxs-12" id="rounded">
-                        <a target="_blank" style="text-decoration: none">
-                            <div class="rcard">
-                                <img src="assets/imgs/calendar.jpg" alt="calendar" style="width: 100%; border-top-left-radius: 25px; border-top-right-radius: 25px;">
-                                <div class="rcontainer">
-                                    <h4><b>Project calendar</b></h4>
-                                    <p style="color: whitesmoke;">Planning</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-            </div>
-            <div class="row row-bottom-padded-sm ">
-                    <div class="col-md-4 col-sm-6 col-xxs-12" id="rounded">
-                        <a href=" https://github.com/PedroMGSouto/Projeto_Informatica" target="_blank" style="text-decoration: none">
-                            <div class="rcard">
-                                <img src="assets/imgs/coming.png" alt="repo" style="width: 100%; border-top-left-radius: 25px; border-top-right-radius: 25px;">
-                                <div class="rcontainer">
-                                    <h4><b>Architeture Diagram</b></h4>
-                                    <p style="color: whitesmoke;">Something blabla</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-md-4 col-sm-6 col-xxs-12" id="rounded">
-                        <a href=" https://github.com/PedroMGSouto/Projeto_Informatica" target="_blank" style="text-decoration: none">
-                            <div class="rcard">
-                                <img src="assets/imgs/coming.png" alt="repo" style="width: 100%; border-top-left-radius: 25px; border-top-right-radius: 25px;">
-                                <div class="rcontainer">
-                                    <h4><b>Deployment Diagram</b></h4>
-                                    <p style="color: whitesmoke;">Something blabla</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-md-4 col-sm-6 col-xxs-12" id="rounded">
-                        <a href=" https://github.com/PedroMGSouto/Projeto_Informatica" target="_blank" style="text-decoration: none">
-                            <div class="rcard">
-                                <img src="assets/imgs/coming.png" alt="repo" style="width: 100%; border-top-left-radius: 25px; border-top-right-radius: 25px;">
-                                <div class="rcontainer">
-                                    <h4><b>Project Planning</b></h4> 
-                                    <p style="color: whitesmoke;">Requirements and other Documentation</p>
-                                </div>
-                            </div>
-                        </a>    
-                    </div>
-            </div>
-        </section>
-        
-        
-
-        <!--  FABIO / MARIA  -->
-        <a id="aboutFAQStart" class="aboutAnchorStart"></a>
-        <section id="FAQ">
-            <h1 style="text-decoration: underline; font-weight: bold; color: white">FAQ</h1>
-            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="carouselDiv">
-                            <h3>Têm reuniões semanais?</h3>
-                            <p>Sim temos reuniões semanais às quartas à tarde</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="carouselDiv">
-                            <h3>Qual a linguagem predominante na realização do projeto</h3>
-                            <p>C# (.net core)</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="carouselDiv">
-                            <h3>O serviço vai suportar múltiplos métodos de autenticação?</h3>
-                            <p>Sim, temos planos para implementar o IDP da UA, google, facebook...</p>
-                        </div>
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-        </section>
-        
-        <a id="aboutContactStart" class="aboutAnchorStart"></a>
-        <section id="Contact">
-            <h1 style="text-decoration: underline; font-weight: bold; color: white">Contact</h1>    
-            <div class="container">
-                <div class="row justify-content-evenly">
-                  <div class="col-md-2 col-s-12">
-                    <div class="Mycard">
-                        <div class="Mybanner">
-                            <div class="Myavatar" id="Pedro"></div>
-                         </div>
-                         <h3>Pedro Souto</h3>
-                         <h4> Team Manager </h4>
-                        <a><i class="fas fa-paper-plane"></i> pedromgsouto@ua.pt</a>
-                         <ul>
-                            <a href="https://github.com/PedroMGSouto"><i class="fa fa-github" style="font-size:16px"></i></a>
-                        </ul>
-                     </div>
-                  </div>
-                  <div class="col-md-2 col-sm-12">
-                    <div class="Mycard">
-                        <div class="Mybanner">
-                            <div class="Myavatar" id="Fabio"></div>
-                         </div>
-                         <h3>Fábio Carmelino</h3>
-                         <h4> DevOps Master </h4>
-                        <a><i class="fas fa-paper-plane"></i> faac@ua.pt</a>
-                         <ul>
-                            <a href="https://github.com/FabioSparta"><i class="fa fa-github" style="font-size:16px"></i></a>
-                        </ul>
-                     </div>
-                  </div>
-                  <div class="col-md-2 col-sm-12">
-                    <div class="Mycard">
-                        <div class="Mybanner">
-                            <div class="Myavatar" id="Diogo"></div>
-                         </div>
-                         <h3>Diogo Moreira</h3>
-                         <h4> Lead Developer </h4>
-                        <a><i class="fas fa-paper-plane"></i> diogo.e.moreira@ua.pt</a>
-                         <ul>
-                            <a href="https://github.com/diogoemoreira"><i class="fa fa-github" style="font-size:16px"></i></a>
-                        </ul>
-                     </div>
-                  </div>
-                  <div class="col-md-2 col-sm-12">
-                    <div class="Mycard">
-                        <div class="Mybanner">
-                            <div class="Myavatar" id="Maria"></div>
-                         </div>
-                         <h3>Maria Rocha</h3>
-                         <h4> Architect </h4>
-                        <a><i class="fas fa-paper-plane"></i> ines.seabrarocha@ua.pt</a>
-                         <ul>
-                            <a href="https://github.com/Mariainesrocha"><i class="fa fa-github" style="font-size:16px"></i></a>
-                        </ul>
-                     </div>
-                  </div>
-                  <div class="col-md-2 col-sm-12">
-                    <div class="Mycard">
-                        <div class="Mybanner">
-                            <div class="Myavatar" id="Luis"></div>
-                         </div>
-                         <h3>Luís Pereira</h3>
-                         <h4> Product Owner </h4>
-                        <a><i class="fas fa-paper-plane"></i> luis.pinto.pereira@ua.pt</a>
-                         <ul>
-                            <a href="https://github.com/Luis-UA"><i class="fa fa-github" style="font-size:16px"></i></a>
-                        </ul>
-                     </div>
-                  </div>
-                  <div class="row justify-content-center">
-                    <div class="col-md-2 col-sm-12">
-                        <div class="Mycard">
-                            <div class="Mybanner">
-                                <div class="Myavatar" id="Andre"></div>
-                             </div>
-                             <h3>André Monteiro</h3>
-                             <h4> Advisor </h4>
-                            <a><i class="fas fa-paper-plane"></i> andremonteiro@ua.pt</a>
-                             <ul>
-                                <a><i class="fa fa-github" style="font-size:16px"></i></a>
-                            </ul>
-                         </div>
-                      </div>
-                      <div class="col-md-1 hidden-sm"></div>
-                      <div class="col-md-2 col-sm-12">
-                        <div class="Mycard">
-                            <div class="Mybanner">
-                                <div class="Myavatar" id="Joaquim"></div>
-                             </div>
-                             <h3>Joaquim Pinto</h3>
-                             <h4> Co-Advisor </h4>
-                            <a><i class="fas fa-paper-plane"></i> jsp@ua.pt</a>
-                             <ul>
-                                <a><i class="fa fa-github" style="font-size:16px"></i></a>
-                            </ul>
-                         </div>
-                      </div>
-                  </div>
-                </div>
-        </section>
-    
     </div>
+  </header><!-- End Header -->
 
+  <!-- ======= Hero Section ======= -->
+  <section id="hero">
+    <div class="hero-container" data-aos="fade-up">
+      <img src="assets/img/pmat_logo.png" />
+      <h1>BackOffice</h1>
+      <h2>Administration website</h2>
+      <h2>System for PmatE exams and results managment</h2>
+      <a href="#about" class="btn-get-started scrollto"><i class="bx bx-chevrons-down"></i></a>
+    </div>
+  </section>
+  <!-- End Hero -->
 
-    <script src="assets/js/index.js"></script>
+  <main id="main">
+
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+      <div class="container">
+
+        <div class="row no-gutters">
+          <div class="content col-xl-5 d-flex align-items-stretch" data-aos="fade-up">
+            <div class="content">
+              <h3>Some things about us</h3>
+              <p>
+                From how many members and working hours we had to how many days we have left to work on this project. Here you can have an idea about how our group worked.
+              </p>
+              <a href="#" class="about-btn">About us <i class="bx bx-chevron-right"></i></a>
+            </div>
+          </div>
+          <div class="col-xl-7 d-flex align-items-stretch">
+            <div class="icon-boxes d-flex flex-column justify-content-center">
+              <div class="row">
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
+                  <i class="bx bx-bot"></i>
+                  <h4>Members</h4>
+                  <span class="AboutColCounter">5</span>
+                </div>
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
+                  <i class="bx bx-coffee"></i>
+                  <h4>Working hours</h4>
+                  <span class="AboutColCounter">326</span>
+                </div>
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="300">
+                  <i class="bx bx-hourglass"></i>
+                  <h4>Days left</h4>
+                  <span class="AboutColCounter" id="AboutDaysLeft">Calculating...</span>
+                </div>
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="400">
+                  <i class="bx bx-chalkboard"></i>
+                  <h4>Meetings organized</h4>
+                  <span class="AboutColCounter">5</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- End About Section -->
+
+    <!-- ======= Technologies Section ======= -->
+    <section id="services" class="services">
+      <div class="container">
+
+        <div class="section-title" data-aos="fade-in" data-aos-delay="100">
+          <h2>Technologies</h2>
+          <p>Wanna know which technologies where used in the making of this project? Here they are</p>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up">
+              <div class="icon"><i class="bx bx-code-curly"></i></div>
+              <h4 class="title"><a href="">.Net Core</a></h4>
+              <p class="description">Main framework used with C# due to its compatability</p>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
+              <div class="icon"><i class="bx bxl-html5"></i><i class="bx bxl-css3"></i><i class="bx bxl-bootstrap"></i></div>
+              <h4 class="title"><a href="">Frontend Related</a></h4>
+              <p class="description">HTML, CSS and Bootstrap were used for the frontend development</p>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
+              <div class="icon"><i class="bx bxl-javascript"></i><i class="bx bxl-jquery"></i></div>
+              <h4 class="title"><a href="">Javascript/Jquery</a></h4>
+              <p class="description">Main tools for the backend development of the website</p>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
+              <div class="icon"><i class="bx bxs-data"></i></div>
+              <h4 class="title"><a href="">SQL Server</a></h4>
+              <p class="description">Relational Database Management System used</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+    <!-- End Technologies Section -->
+
+    <!-- ======= Portfolio Section ======= -->
+    <section id="portfolio" class="portfolio">
+      <div class="container">
+
+        <div class="section-title" data-aos="fade-in" data-aos-delay="100">
+          <h2>Resources</h2>
+        </div>
+
+        <div class="row" data-aos="fade-in">
+          <div class="col-lg-12 d-flex justify-content-center">
+            <ul id="portfolio-flters">
+              <li data-filter="*" class="filter-active">All</li>
+              <li data-filter=".filter-app">Link</li>
+              <li data-filter=".filter-card">File</li>
+              <li data-filter=".filter-web">Folder</li>
+            </ul>
+          </div>
+        </div>
+        <div class="row portfolio-container" data-aos="fade-up">
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+            <div class="portfolio-wrap">
+              <img src="assets/img/github-mark.png" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="https://github.com/PedroMGSouto/Projeto_Informatica" title="More Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+            <div class="portfolio-wrap">
+              <img src="assets/img/ppt-img.jpg" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="https://github.com/PedroMGSouto/Projeto_Informatica/tree/main/Docs/PowerPoints" title="More Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+            <div class="portfolio-wrap">
+              <img src="assets/img/calendar.jpg" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/calendar.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Project Calendar"><i class="bx bx-plus"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+            <div class="portfolio-wrap">
+              <img src="assets/img/pdf_icon.PNG" class="img-fluid" alt=""> <!--change image to pdf image-->
+              <div class="portfolio-links">
+                <a href="assets/PI_relatorio.pdf" title="More Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+            <div class="portfolio-wrap">
+              <img src="assets/img/architecture.png" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/architecture.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Architecture Diagram"><i class="bx bx-plus"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+            <div class="portfolio-wrap">
+              <img src="assets/img/Deployment.png" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/Deployment.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Deployment Diagram"><i class="bx bx-plus"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+            <div class="portfolio-wrap">
+              <img src="assets/img/Database.png" class="img-fluid" alt="">
+              <div class="portfolio-links">
+                <a href="assets/img/Database.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Database Diagram"><i class="bx bx-plus"></i></a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Portfolio Section -->
+    <section id="demo" class="demo">
+      <div style="text-align: center;">
+        <div class="section-title" data-aos="fade-in" data-aos-delay="100">
+          <h2>Demo</h2>
+        </div>
+        <video width="640" height="380" controls>
+          <source src="assets/img/Demo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+        </video>
+      </div>
+    </section>
+    
+    <!-- ======= Team Section ======= -->
+    <section id="team" class="team">
+      <div class="container">
+
+        <div class="section-title" data-aos="fade-in" data-aos-delay="100">
+          <h2>Team</h2>
+          <p>Our team is composed by 5 members each one with a core role in this project</p>
+        </div>
+
+        <div class="row justify-content-evenly">
+
+          <div class="col-lg-2 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up">
+              <div class="pic"><img src="assets/img/pedro.jpg" class="img-fluid fix-img" alt=""></div>
+              <div class="member-info">
+                <h4>Pedro Souto</h4>
+                <span>Team Manager</span>
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up" data-aos-delay="150">
+              <div class="pic"><img src="assets/img/fabio.png" class="img-fluid fix-img" alt=""></div>
+              <div class="member-info">
+                <h4>Fábio Carmelino</h4>
+                <span>DevOps Master</span>
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up" data-aos-delay="200">
+              <div class="pic"><img src="assets/img/diogo.jpg" class="img-fluid fix-img" alt=""></div>
+              <div class="member-info">
+                <h4>Diogo Moreira</h4>
+                <span>Lead Developer</span>
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up" data-aos-delay="250">
+              <div class="pic"><img src="assets/img/maria.jpg" class="img-fluid fix-img" alt=""></div>
+              <div class="member-info">
+                <h4>Maria Rocha</h4>
+                <span>Architect</span>
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up" data-aos-delay="300">
+              <div class="pic"><img src="assets/img/luis.jpg" class="img-fluid fix-img" alt=""></div>
+              <div class="member-info">
+                <h4>Luis Pereira</h4>
+                <span>Product Owner</span>
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div  style="padding-top: 35px" class="row justify-content-center">
+
+          <div class="col-lg-2 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up">
+              <div class="pic"><img src="assets/img/profandre.png " class="img-fluid fix-img" alt=""></div>
+              <div class="member-info">
+                <h4>André Monteiro</h4>
+                <span>Advisor</span>
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up" data-aos-delay="150">
+              <div class="pic"><img src="assets/img/profjoaquim.jpg" class="img-fluid fix-img" alt=""></div>
+              <div class="member-info">
+                <h4>Joaquim Pinto</h4>
+                <span>Co-Advisor</span>
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Team Section -->
+
+  </main>
+  <!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          <h6>About</h6>
+          <p class="text-justify">PmatE Project Website</p>
+        </div>
+
+        <div class="col-xs-6 col-md-3">
+        </div>
+
+        <div class="col-xs-6 col-md-3">
+          <h6>Navigation</h6>
+          <ul class="footer-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Technologies</a></li>
+            <li><a href="#portfolio">Resources</a></li>
+            <li><a href="#demo">Demo</a></li>
+            <li><a href="#team">Team</a></li>
+          </ul>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-sm-6 col-xs-12">
+          <p class="copyright-text">Copyright &copy; 2021 All Rights Reserved by PmatE
+          </p>
+        </div>
+
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <ul class="social-icons">
+            <li><a class="facebook" href="https://github.com/PedroMGSouto/Projeto_Informatica"><i class="bx bxl-github"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
 </body>
+
 </html>
